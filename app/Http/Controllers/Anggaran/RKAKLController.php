@@ -83,7 +83,6 @@ class RKAKLController extends Controller
         session()->flash('success','Data berhasil diubah.');
         return redirect()->route('rkakl.index');
     }
-
    
     public function listPokja($id)
     {
@@ -99,6 +98,13 @@ class RKAKLController extends Controller
         $pokja = Pokja::where('pokja','!=','Keuangan')->get();
 
         return view('anggaran/keuangan/rkakl_awal/pokja/list-pokja', compact('pokja','rkakl'));
+    }
+
+    public function dataRKAKL()
+    {
+        $rkakl_years = RKAKLAwal::distinct()->pluck('tahun');
+        
+        return view('anggaran/keuangan/rkakl_awal/data_rkakl/index', compact('rkakl_years'));
     }
 
 

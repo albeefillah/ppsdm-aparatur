@@ -113,7 +113,7 @@ PPSDM Aparatur -Rencana Kerja Anggaran Kementrian Negara/Lembaga
                                 <td style="background: #DDEBF7;">
                                     @if(strlen($item->kode) === 1 && ctype_alpha($item->kode))
                                         <center>
-                                            <a href="{{ route('rkakl.list-pokja', $item->id) }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Detail Pokja"> <i class="mdi mdi-plus"></i><i class="mdi mdi-parking"></i></a>
+                                            <a href="{{ route('rkakl.list-pokja', $item->id) }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Detail Pokja"> <i class="mdi mdi-eye"></i><i class="mdi mdi-parking"></i></a>
                                             <a href="#" data-toggle="modal" data-target="#editModal{{ $item->id }}"class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ubah Data"> <i class="mdi mdi-plus"></i><i class="mdi mdi-pencil"></i></a>
                                         </center>
                                         @include('anggaran.keuangan.rkakl_awal.modal-edit', ['item' => $item])
