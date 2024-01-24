@@ -41,6 +41,8 @@ class RencanaController extends Controller
 
         $rkakl = RKAKLAwal::whereIn('id',$id_rkakl)->get();
 
+        $tahunRKAKL = $rkakl[0]->tahun ?? null;
+
         $akun = $rencana->akun ?? [];
         $dataAkun = [];
 
@@ -62,7 +64,7 @@ class RencanaController extends Controller
 
         // return $dataAkun;
 
-        return view('anggaran/pokja/rencana/index', compact('rkakl','pokja','pagu','rencana','dataAkun'));
+        return view('anggaran/pokja/rencana/index', compact('rkakl','pokja','pagu','rencana','dataAkun','tahunRKAKL'));
     }
 
     /**
@@ -73,7 +75,7 @@ class RencanaController extends Controller
         $tahun = Carbon::now()->format('Y');
         $prevYear = Carbon::now()->subYear()->year;   
 
-        $test = RKAKLAwal::where('tahun',$tahun)->get();
+        $test = RKAKLAwal::where('tahun','2023')->get();
         $rkakl = null;
 
         if (isset($test)) {
@@ -240,7 +242,7 @@ class RencanaController extends Controller
         ]);
         
        session()->flash('success','Akun berhasil ditambahkan.');
-       return redirect()->route('rencana.list-akun',['id_rencana' => $rencana->id_rencana, 'id_rkakl' => $request->id_rkakl]);
+       return redirect()->route('rencana.list-akun',['id_rencana' => $rencana->id, 'id_rkakl' => $rkakl->id, 'pagu' => $rkakl->jumlah_biaya]);
    }
 
 
@@ -297,5 +299,14 @@ class RencanaController extends Controller
         $kro = KRO::with('kegiatanProgram')->get();
 
         return response()->json($kro);
+    }
+    public function getMataAnggaran()
+    {
+        try {
+            $mataAnggaran = MataAnggaran::get();
+            return response()->json($mataAnggaran);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
