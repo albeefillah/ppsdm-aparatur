@@ -35,10 +35,10 @@ class DetailKomponenController extends Controller
     public function store(Request $request)
     {
         $detail = DetailKomponen::create([
-            'id_sub_komponen'    => $request->id_sub_komponen,
-            'kode'    => $request->kode,
-            'deskripsi'    => $request->deskripsi,
-            'pagu_awal'    => $request->pagu_awal,
+            'id_sub_komponen' => $request->id_sub_komponen,
+            'kode'            => $request->kode,
+            'deskripsi'       => $request->deskripsi,
+            'pagu_awal'       => $request->pagu_awal,
         ]);
 
         session()->flash('success', 'Data berhasil ditambahkan');
@@ -58,7 +58,7 @@ class DetailKomponenController extends Controller
      */
     public function edit(string $id)
     {
-        $detail = DetailKomponen::find($id);
+        $detail      = DetailKomponen::find($id);
         $subKomponen = SubKomponen::all();
         
         return view('program-ppsdm/detail-komponen/edit', compact('detail','subKomponen'));
@@ -71,10 +71,10 @@ class DetailKomponenController extends Controller
     {
         $detail = DetailKomponen::find($id);
         $detail->update([
-            'id_sub_komponen'    => $request->id_sub_komponen,
-            'kode'    => $request->kode,
-            'deskripsi'    => $request->deskripsi,
-            'pagu_awal'    => $request->pagu_awal,
+            'id_sub_komponen' => $request->id_sub_komponen,
+            'kode'            => $request->kode,
+            'deskripsi'       => $request->deskripsi,
+            'pagu_awal'       => $request->pagu_awal,
         ]);
 
         session()->flash('success', 'Data berhasil diubah');

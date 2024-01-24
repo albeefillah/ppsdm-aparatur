@@ -32,9 +32,9 @@ class KegiatanProgramController extends Controller
     public function store(Request $request)
     {
         $kegiatanProgram = KegiatanProgram::create([
-            'kode'  => $request->kode,
-            'deskripsi'  => $request->deskripsi,
-            'pagu_awal'  => $request->pagu_awal,
+            'kode'      => $request->kode,
+            'deskripsi' => $request->deskripsi,
+            'pagu_awal' => $request->pagu_awal,
         ]);
 
         session()->flash('success', 'Data berhasil ditambahkan.');
@@ -66,9 +66,9 @@ class KegiatanProgramController extends Controller
     {
         $kegiatanProgram = KegiatanProgram::find($id);
         $kegiatanProgram->update([
-            'kode'  => $request->kode,
-            'deskripsi'  => $request->deskripsi,
-            'pagu_awal'  => $request->pagu_awal,
+            'kode'      => $request->kode,
+            'deskripsi' => $request->deskripsi,
+            'pagu_awal' => $request->pagu_awal,
         ]);
 
         session()->flash('success', 'Data berhasil diubah.');
