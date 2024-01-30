@@ -53,7 +53,7 @@
                   </a>
                 </li> --}}
 
-                <li {{ (request()->is('rencana*')) ? 'active' : '' }}>
+                <li {{ (request()->is('rencana*')) || (request()->is('rkakl*'))  ? 'active' : '' }}>
                     <a href="javaScript:void();">
                       @can('isKeuangan')
                       <i class="icon-layers"></i><span>RKAKL</span><i class="icon-arrow-right pull-right"></i>
@@ -64,7 +64,7 @@
                     <ul class="xp-vertical-submenu">
                       @can('isKeuangan')
                         <li><a href="{{ route('rkakl.index') }}">RKAKL Awal (DIPA 0)</a></li>
-                        <li><a href="{{url('/maintenance')}}">Data RKAKL</a></li>
+                        <li><a href="{{ route('data-rkakl.index') }}">Data RKAKL</a></li>
                       @else
                         <li><a href="{{ route('rencana.index') }}">Rencana Anggaran</a></li>
                         <li><a href="{{url('/maintenance')}}">Rekap Anggaran</a></li>
@@ -77,11 +77,11 @@
                     <a href="{{url('/maintenance')}}">
                       <i class="icon-screen-desktop"></i><span>Monitoring BPA</span><i class="icon-arrow-right pull-right"></i>
                     </a>
-                    <ul class="xp-vertical-submenu">
-                        <li><a href="{{url('/maintenance')}}">BPAU</a></li>
-                        <li><a href="{{url('/maintenance')}}">BPAS</a></li>
-                        <li><a href="{{url('/maintenance')}}">BPAK</a></li>
-                        <li><a href="{{url('/maintenance')}}">BPAP</a></li>
+                    <ul    class = "xp-vertical-submenu">
+                    <li><a href  = "{{ route('bpau.index') }}">BPAU</a></li>
+                    <li><a href  = "{{url('/maintenance')}}">BPAS</a></li>
+                    <li><a href  = "{{url('/maintenance')}}">BPAK</a></li>
+                    <li><a href  = "{{url('/maintenance')}}">BPAP</a></li>
                     </ul>
                 </li>
                 <li  {{ (request()->is('pengawasan*')) ? 'active' : '' }}>
@@ -89,7 +89,7 @@
                       <i class="icon-book-open"></i><span>Pengawasan</span><i class="icon-arrow-right pull-right"></i>
                     </a>
                     <ul class="xp-vertical-submenu">
-                        <li><a href="{{ route('realisasi.index') }}">Realisasi Anggaran</a></li>
+                        <li><a href="{{ url('/maintenance') }}">Realisasi Anggaran</a></li>
                         <li><a href="{{url('/maintenance')}}">Sisa Anggaran</a></li>
                     </ul>
                 </li>

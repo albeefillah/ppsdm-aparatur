@@ -23,39 +23,37 @@ class RencanaController extends Controller
      */
     public function index()
     {
-        $pokja = Auth::user()->role->pokja->pokja;
+        $pokja   = Auth::user()->role->pokja->pokja;
         $id_role = Auth::user()->role->id;
-        $tahun = Carbon::now()->format('Y');
+        $tahun   = Carbon::now()->format('Y');
         $rencana = RencanaAnggaran::where('id_role', $id_role)
                     ->where('tahun',$tahun)        
                     ->first();
         $arrayRencana = $rencana->rencana ?? [];
-
+        
         $id_rkakl = [];
-        $pagu = [];
+        $pagu     = [];
 
         foreach ($arrayRencana as $item) {
             $id_rkakl[] = $item['id_rkakl'];
-            $pagu[] = $item['pagu'];
+            $pagu[]     = $item['pagu'];
         }
 
-        $rkakl = RKAKLAwal::whereIn('id',$id_rkakl)->get();
-
+        $rkakl      = RKAKLAwal::whereIn('id',$id_rkakl)->get();
         $tahunRKAKL = $rkakl[0]->tahun ?? null;
-
-        $akun = $rencana->akun ?? [];
-        $dataAkun = [];
+        $akun       = $rencana->akun ?? [];
+        $dataAkun   = [];
 
         $cekAkunUsed = AkunUsed::whereIn('id',$akun)->get();
         foreach ($cekAkunUsed as $key => $akun_used_item) {
             foreach ($akun_used_item['data']['mata_anggaran'] as $key => $value) {
                 $matang_data =[
-                    'id'    => $value['id'],
-                    'id_rkakl' => $value['id_rkakl'],
-                    'kode'    => $value['kode'],
-                    'deskripsi'    => $value['deskripsi'],
-                    'pagu_awal'    => $value['pagu_awal'],
-                    'pagu'    => $value['pagu'],
+                    'id'        => $value['id'],
+                    'id_rkakl'  => $value['id_rkakl'],
+                    'kode'      => $value['kode'],
+                    'deskripsi' => $value['deskripsi'],
+                    'pagu_awal' => $value['pagu_awal'],
+                    'pagu'      => $value['pagu'],
                 ];
         
                 $dataAkun['mata_anggaran'][] = $matang_data;
@@ -72,12 +70,12 @@ class RencanaController extends Controller
      */
     public function create()
     {
-        $tahun = Carbon::now()->format('Y');
-        $prevYear = Carbon::now()->subYear()->year;   
+        $tahun    = Carbon::now()->format('Y');
+        $prevYear = Carbon::now()->subYear()->year;
 
-        $test = RKAKLAwal::where('tahun','2023')->get();
+        $test  = RKAKLAwal::where('tahun','2023')->get();
         $rkakl = null;
-
+        
         if (isset($test)) {
             $rkakl = $test;
         }else{
@@ -87,25 +85,13 @@ class RencanaController extends Controller
         return view('anggaran/pokja/rencana/create', compact('rkakl'));
     }
 
-    // public function tambahAkun()
-    // {
-    //     $mataAnggaran = MataAnggaran::all();
-    //     return view('anggaran/pokja/rencana/tambah-akun', compact('mataAnggaran'));
-    // }
-    // public function dummyAkun()
-    // {
-    //     $mataAnggaran = MataAnggaran::all();   
-    //     return view('anggaran/pokja/rencana/akundummy', compact('mataAnggaran'));
-    // }
-
-
     public function store(Request $request)
     {
-        $id_role = Auth::user()->role->id;
+        $id_role  = Auth::user()->role->id;
         $id_pokja = Auth::user()->role->pokja->id;
-        $tahun = Carbon::now()->format('Y');
+        $tahun    = Carbon::now()->format('Y');
 
-        $arrayPagu = array_values($request->input('pagu'));
+        $arrayPagu    = array_values($request->input('pagu'));
         $arrayIdRKAKL = array_values($request->input('id_rkakl'));
 
         $rencana = [];
@@ -113,15 +99,15 @@ class RencanaController extends Controller
         for ($i = 0; $i < count($arrayIdRKAKL); $i++) {
             $rencana[] = [
                 'id_rkakl' => intval($arrayIdRKAKL[$i]),
-                'pagu' => ($arrayPagu[$i]),
+                'pagu'     => ($arrayPagu[$i]),
             ];
         }
         
         RencanaAnggaran::create([
-            'id_pokja'  => $id_pokja,
+            'id_pokja' => $id_pokja,
             'id_role'  => $id_role,
             'rencana'  => $rencana,
-            'tahun'  => $tahun,
+            'tahun'    => $tahun,
         ]);
         
         session()->flash('success','Data berhasil ditambahkan.');
@@ -131,9 +117,8 @@ class RencanaController extends Controller
     public function isiPagu(Request $request)
     {
         $arrayIdRKAKL = array_keys($request->input('pilih'));
-        $pokja = Auth::user()->role->pokja->pokja;
-        
-        $rencana = RKAKLAwal::whereIn('id', $arrayIdRKAKL)->get();
+        $pokja        = Auth::user()->role->pokja->pokja;
+        $rencana      = RKAKLAwal::whereIn('id', $arrayIdRKAKL)->get();
 
         return view('anggaran/pokja/rencana/isi-pagu', compact('rencana','pokja'));
     }
@@ -142,13 +127,12 @@ class RencanaController extends Controller
    // Bagian tmabah akun
    public function listAkun(Request $request)
    {
-        $pagu = $request->pagu;
+        $pagu       = $request->pagu;
         $id_rencana = $request->id_rencana;
-        $rkakl = RKAKLAwal::find($request->id_rkakl);
+        $rkakl      = RKAKLAwal::find($request->id_rkakl);
         
         $akun = AkunUsed::where('id_rkakl',$rkakl->id)
                         ->where('id_rencana',$id_rencana)->first();
-
         $dataAkun = $akun->data['mata_anggaran'] ?? [];
 
         return view('anggaran/pokja/rencana/akun/list-akun', compact('pagu','rkakl','dataAkun','id_rencana','akun'));
@@ -160,9 +144,9 @@ class RencanaController extends Controller
        $mataAnggaran = MataAnggaran::all();
        
 
-       $pagu = $request->pagu;
+       $pagu       = $request->pagu;
        $id_rencana = $request->id_rencana;
-       $rkakl = RKAKLAwal::find($request->id_rkakl);
+       $rkakl      = RKAKLAwal::find($request->id_rkakl);
 
        return view('anggaran/pokja/rencana/akun/tambah-akun', compact('mataAnggaran','rkakl','pagu', 'id_rencana'));
    }
@@ -170,9 +154,9 @@ class RencanaController extends Controller
    public function storeAkun(Request $request)
    {
     //    return $request;
-       $matang = MataAnggaran::whereIn('id', $request->mata_anggaran)->get();
-       $rkakl = RKAKLAwal::find($request->id_rkakl);
-       $rencana = RencanaAnggaran::find($request->id_rencana);
+       $matang    = MataAnggaran::whereIn('id', $request->mata_anggaran)->get();
+       $rkakl     = RKAKLAwal::find($request->id_rkakl);
+       $rencana   = RencanaAnggaran::find($request->id_rencana);
        $akunCheck = AkunUsed::where('id_rencana',$request->id_rencana)
                             ->where('id_rkakl',$rkakl->id)->first();
 
@@ -181,12 +165,12 @@ class RencanaController extends Controller
 
        foreach ($matang as $key => $matang_item) {
         $matang_data =[
-            'id'    => $matang_item['id'],
-            'id_rkakl' => $request->id_rkakl,
-            'kode'    => $matang_item['akun'],
-            'deskripsi'    => $matang_item['jenis_belanja'],
-            'pagu_awal'    => $matang_item['pagu_awal'],
-            'pagu'    => $request['pagu_mata_anggaran'][$key],
+            'id'        => $matang_item['id'],
+            'id_rkakl'  => $request->id_rkakl,
+            'kode'      => $matang_item['akun'],
+            'deskripsi' => $matang_item['jenis_belanja'],
+            'pagu_awal' => $matang_item['pagu_awal'],
+            'pagu'      => $request['pagu_mata_anggaran'][$key],
         ];
 
         $data['mata_anggaran'][] = $matang_data;
@@ -197,36 +181,36 @@ class RencanaController extends Controller
 
     
         // Validasi merge tambah akun di akun_used
-        $akunMataAnggaran = $akunCheck->data['mata_anggaran'] ?? [];
-        $mergeAkun = array_merge($akunMataAnggaran, $dataMataAnggaran) ?? [];
+        $akunMataAnggaran          = $akunCheck->data['mata_anggaran'] ?? [];
+        $mergeAkun                 = array_merge($akunMataAnggaran, $dataMataAnggaran) ?? [];
         $akunData['mata_anggaran'] = $mergeAkun;
-        $encodeAkun = json_encode($akunData);
-        $akun = json_decode($encodeAkun, true);
+        $encodeAkun                = json_encode($akunData);
+        $akun                      = json_decode($encodeAkun, true);
 
         $listAkunRencana = null;
-        $listAkun = null;
+        $listAkun        = null;
 
-        if (isset($akunCheck)) {
+        if (isset($akunCheck)) {    
             $akunCheck->update([
                 'data'  => $akun
             ]);
         }else{
             AkunUsed::create([
-                'id_rkakl' =>  $request->id_rkakl,
+                'id_rkakl'   => $request->id_rkakl,
                 'id_rencana' => $request->id_rencana,
-                'id_role' => $id_role,
+                'id_role'    => $id_role,
                 'data'       => $data
             ]);
         }
 
         $getRecentId = AkunUsed::select('id')->whereRaw('id = (select max(`id`) from akun_used)')->first();
 
-        $dataAkunRencana = [];
+        $dataAkunRencana   = [];
         $dataAkunRencana[] = $getRecentId['id'];
 
          // Validasi merge akun di tabel rkakl_awal
         $rencanaMataAnggaran = $rencana->akun ?? [];
-        $mergeAkunRencana = array_merge($rencanaMataAnggaran, $dataAkunRencana) ?? [];
+        $mergeAkunRencana    = array_merge($rencanaMataAnggaran, $dataAkunRencana) ?? [];
         
 
         if (isset($rencana->akun)) {
@@ -267,9 +251,6 @@ class RencanaController extends Controller
        session()->flash('success','Akun berhasil dihapus.');
        return redirect()->route('rencana.list-akun',['id_rencana' => $akunUsed->id_rencana, 'id_rkakl' => $akunUsed->id_rkakl]);
    }
-
-
-
 
     public function kegiatan()
     {

@@ -24,10 +24,10 @@ class RKAKLController extends Controller
      */
     public function index()
     {
-        $tahun = Carbon::now()->format('Y');
-        $prevYear = Carbon::now()->subYear()->year;   
+        $tahun    = Carbon::now()->format('Y');
+        $prevYear = Carbon::now()->subYear()->year;
 
-        $test = RKAKLAwal::where('tahun',$tahun)->get();
+        $test  = RKAKLAwal::where('tahun','2023')->get();
         $rkakl = null;
 
         if (isset($test)) {
@@ -36,7 +36,7 @@ class RKAKLController extends Controller
             $rkakl = RKAKLAwal::where('tahun',$prevYear)->get();
         }
 
-        return view('anggaran/keuangan/rkakl_awal/index', compact('rkakl'));
+        return view('anggaran/keuangan/rkakl/rkakl_awal/index', compact('rkakl'));
     }
 
     public function importRKAKL(Request $request)
@@ -52,12 +52,12 @@ class RKAKLController extends Controller
     public function create()
     {
         $kegiatan = KegiatanProgram::all();
-        $kro = KRO::all();
-        $ro = RincianOutput::all();
-        $subkom = SubKomponen::all();
-        $detail = DetailKomponen::all();
+        $kro      = KRO::all();
+        $ro       = RincianOutput::all();
+        $subkom   = SubKomponen::all();
+        $detail   = DetailKomponen::all();
 
-        return view('anggaran/keuangan/rkakl_awal/create', compact('kegiatan','kro','ro','subkom','detail'));
+        return view('anggaran/keuangan/rkakl/rkakl_awal/create', compact('kegiatan','kro','ro','subkom','detail'));
     }
 
    
@@ -75,8 +75,8 @@ class RKAKLController extends Controller
         $rkakl = RKAKLAwal::find($id);
 
         $rkakl->update([
-            'kode' => $request->input('kode'),
-            'deskripsi' => $request->input('deskripsi'),
+            'kode'         => $request->input('kode'),
+            'deskripsi'    => $request->input('deskripsi'),
             'jumlah_biaya' => $request->input('jumlah_biaya'),
         ]);
     
@@ -89,7 +89,7 @@ class RKAKLController extends Controller
         $rkakl = RKAKLAwal::find($id);
         $pokja = Pokja::where('pokja','!=','Keuangan')->get();
 
-        return view('anggaran/keuangan/rkakl_awal/pokja/list-pokja', compact('pokja','rkakl'));
+        return view('anggaran/keuangan/rkakl/rkakl_awal/pokja/list-pokja', compact('pokja','rkakl'));
     }
 
     public function detailPokja($id)
@@ -97,14 +97,31 @@ class RKAKLController extends Controller
         $rkakl = RKAKLAwal::find($id);
         $pokja = Pokja::where('pokja','!=','Keuangan')->get();
 
-        return view('anggaran/keuangan/rkakl_awal/pokja/list-pokja', compact('pokja','rkakl'));
+        return view('anggaran/keuangan/rkakl/rkakl_awal/pokja/list-pokja', compact('pokja','rkakl'));
     }
+
+
+    // Data RKAKL
 
     public function dataRKAKL()
     {
         $rkakl_years = RKAKLAwal::distinct()->pluck('tahun');
+
+     $yearsWithFirstData = [];
+        foreach ($rkakl_years as $year) {
+            $firstData = RKAKLAwal::where('tahun', $year)->first();
+            if ($firstData) {
+                $yearsWithFirstData[] = [
+                    'year'       => $year,
+                    'first_data' => $firstData,
+                ];
+            }
+        }
+
+        // return $yearsWithFirstData[0]['year'];
+
         
-        return view('anggaran/keuangan/rkakl_awal/data_rkakl/index', compact('rkakl_years'));
+        return view('anggaran/keuangan/rkakl/data_rkakl/index', compact('yearsWithFirstData'));
     }
 
 

@@ -57,7 +57,7 @@ PPSDM Aparatur - Rencana Anggaran
         <div class="card m-b-30">
             <div class="card-header bg-white mt-3">
                 <h5 class="text-center text-black">
-                 - Rencana Anggaran {{ Auth::user()->role->role }}  Tahun {{ \Carbon\Carbon::now()->format('Y') }} -
+                 - Rencana Anggaran {{ Auth::user()->role->role }}  Tahun {{ $tahunRKAKL }} -
                 </h5>
             </div>
       

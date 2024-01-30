@@ -24,7 +24,7 @@ Route::get('/get-kro', [App\Http\Controllers\Anggaran\RKAKLController::class, 'g
 Route::get('/get-rincian', [App\Http\Controllers\Anggaran\RKAKLController::class, 'getRincian']);
 Route::get('/get-subkom', [App\Http\Controllers\Anggaran\RKAKLController::class, 'getSubkom']);
 Route::get('/get-detkom', [App\Http\Controllers\Anggaran\RKAKLController::class, 'getDetkom']);
-Route::get('/get-matang', [App\Http\Controllers\Anggaran\RKAKLController::class, 'getMataAnggaran']);
+Route::get('/get-matang', [App\Http\Controllers\Anggaran\RencanaController::class, 'getMataAnggaran']);
 
 
 Auth::routes();
@@ -100,19 +100,12 @@ Route::middleware('Keuangan')->group(function () {
 
         Route::get('/', [App\Http\Controllers\Anggaran\RKAKLController::class, 'index'])->name('rkakl.index');
         Route::get('/create', [App\Http\Controllers\Anggaran\RKAKLController::class, 'create'])->name('rkakl.create');
-        Route::get('/dummy-akun', [App\Http\Controllers\Anggaran\RKAKLController::class, 'dummyAkun'])->name('rkakl.dummy-akun');
         Route::post('/store', [App\Http\Controllers\Anggaran\RKAKLController::class, 'store'])->name('rkakl.store');
         Route::get('/edit/{id}', [App\Http\Controllers\Anggaran\RKAKLController::class, 'edit'])->name('rkakl.edit');
         Route::put('/update/{id}', [App\Http\Controllers\Anggaran\RKAKLController::class, 'update'])->name('rkakl.update');
         Route::get('/destroy/{id}', [App\Http\Controllers\Anggaran\RKAKLController::class, 'destroy'])->name('rkakl.destroy');
         
         Route::post('/import', [App\Http\Controllers\Anggaran\RKAKLController::class, 'importRKAKL'])->name('rkakl.import');
-    
-        // Route::get('/list-akun', [App\Http\Controllers\Anggaran\RKAKLController::class, 'listAkun'])->name('rkakl.list-akun');
-        // Route::get('/tambah-akun', [App\Http\Controllers\Anggaran\RKAKLController::class, 'tambahAkun'])->name('rkakl.tambah-akun');
-        // Route::post('/store-akun', [App\Http\Controllers\Anggaran\RKAKLController::class, 'storeAkun'])->name('rkakl.store-akun');
-        // Route::get('/update-akun', [App\Http\Controllers\Anggaran\RKAKLController::class, 'updateAkun'])->name('rkakl.update-akun');
-        // Route::get('/destroy-akun', [App\Http\Controllers\Anggaran\RKAKLController::class, 'destroyAkun'])->name('rkakl.destroy-akun');
         
         Route::get('/list-pokja/{id}', [App\Http\Controllers\Anggaran\RKAKLController::class, 'listPokja'])->name('rkakl.list-pokja');
         Route::get('/pokja-detail/{id}', [App\Http\Controllers\Anggaran\RKAKLController::class, 'detailPokja'])->name('rkakl.detail-pokja');
@@ -125,9 +118,21 @@ Route::middleware('Keuangan')->group(function () {
         Route::get('/kegiatan-dummy', [App\Http\Controllers\Anggaran\RencanaController::class, 'kegiatanDummy'])->name('kegiatan.index-dummy');
         Route::get('/kegiatan/create', [App\Http\Controllers\Anggaran\RencanaController::class, 'kegiatanCreate'])->name('kegiatan.create');
         Route::get('/kegiatan/create-dummy', [App\Http\Controllers\Anggaran\RencanaController::class, 'kegiatanCreateDummy'])->name('kegiatan.create-dummy');
+
+        // Data RKAKL
+        Route::get('/data-rkakl', [App\Http\Controllers\Anggaran\RKAKLController::class, 'dataRKAKL'])->name('data-rkakl.index');
+        // Route::get('/create', [App\Http\Controllers\Anggaran\RKAKLController::class, 'create'])->name('rkakl.create');
        
     });
 
+    Route::prefix('monitoring-bpa')->group(function () {
+        Route::get('/bpau', [App\Http\Controllers\MonitoringBPA\BPAUController::class, 'index'])->name('bpau.index');
+        // Route::get('/bpau/create', [App\Http\Controllers\MonitoringBPA\BPAUController::class, 'create'])->name('bpau.create');
+        // Route::post('/bpau/store', [App\Http\Controllers\MonitoringBPA\BPAUController::class, 'store'])->name('bpau.store');
+        // Route::get('/bpau/edit/{id}', [App\Http\Controllers\MonitoringBPA\BPAUController::class, 'edit'])->name('bpau.edit');
+        // Route::post('/bpau/update/{id}', [App\Http\Controllers\MonitoringBPA\BPAUController::class, 'update'])->name('bpau.update');
+        // Route::get('/bpau/destroy/{id}', [App\Http\Controllers\MonitoringBPA\BPAUController::class, 'destroy'])->name('bpau.destroy');
+    });
 
     Route::prefix('pengawasan')->group(function () {
         Route::get('/realisasi', [App\Http\Controllers\Pengawasan\RealisasiController::class, 'index'])->name('realisasi.index');

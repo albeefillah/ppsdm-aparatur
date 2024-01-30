@@ -1,5 +1,5 @@
 @section('title') 
-PPSDM Aparatur - Mata Anggaran
+PPSDM Aparatur - Tambah Akun
 @endsection 
 @extends('layouts.main')
 @section('style')
@@ -11,23 +11,31 @@ PPSDM Aparatur - Mata Anggaran
 <!-- Sweet Alert -->
 <link href="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 
+<!-- Select2 CSS -->
+<link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<!-- Tagsinput CSS -->
+<link href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css') }}" rel="stylesheet" type="text/css" />
+
+
 @endsection 
 @section('content')
 <!-- Start XP Breadcrumbbar -->                    
 <div class="xp-breadcrumbbar">
-    <div class="row">
-        <div class="col-md-6 col-lg-6">
-            <h4 class="xp-page-title">Mata Anggaran</h4>
-        </div>
-        <div class="col-md-6 col-lg-6">
-            <div class="xp-breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="icon-home"></i></a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Mata Anggaran</li>
-                </ol>
+        <div class="row">
+            <div class="col-md-1">
+                <a href="{{ route('rkakl.index') }}" class="btn btn-round btn-warning"><i class="mdi mdi-arrow-left"></i></a>
+            </div>
+            <div class="col-md-11 mt-2">
+                <div class="xp-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="icon-home"></i></a></li>
+                        <li class="breadcrumb-item" ><a href="{{ route('rkakl.index') }}">RKAKL Awal</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">List Akun</li>
+                    </ol>
+                </div>
             </div>
         </div>
-    </div>          
 </div>
 <!-- End XP Breadcrumbbar -->
 
@@ -51,39 +59,52 @@ PPSDM Aparatur - Mata Anggaran
       <div class="col-lg-12">
         <div class="card m-b-30">
             <div class="card-header bg-white">
-                <h5 class="card-title text-black">Data Mata Anggaran Tahun {{ $tahun }}</h5>
+                <h5 class="card-title text-black">{{ $detkom['kode'] }}. {{ $detkom['deskripsi'] }} (Rp. {{ number_format( $detkom['pagu'], 0, ",", ".") }})</h5>
             </div>
-            <div class="pl-4">
-                <a href="{{ route('mata_anggaran.create') }}" class="btn btn-secondary">+ Tambah Mata Anggaran</a>
+        <div class="pl-4">
+                <a href="{{ route('rkakl.tambah-akun', ['detkom' => json_encode($detkom), 'id_rkakl' => $rkakl->id]) }}" type="button" class="btn btn-secondary" >
+                    + Tambah Akun
+                </a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="xp-default-datatable" class="table table-striped table-bordered">
+                    <table id="xp-default-datatable" class="table table-striped table-borderless table-font">
                         <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Jenis Belanja</th>
+                            <th>Kode</th>
                             <th>Akun</th>
+                            <th>Deskripsi</th>
                             <th>Pagu</th>
                             <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($mataAnggaran as $key => $item)
+                        @php
+                            $totalPagu = 0;
+                        @endphp
+                        @foreach ($dataAkun as $key => $item)
                             <tr>
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $item->jenis_belanja }}</td>
-                                <td>{{ $item->akun }}</td>
-                                <td align="right"> {{ number_format($item->pagu_awal,0,',','.'); }}</td>
+                                <td>{{ $item['kode'] }}</td>
+                                <td>{{ $item['deskripsi'] }}</td>
+                                <td align="right">{{ number_format($item['pagu'],0,',','.'); }}</td>
                                 <td>
-                                    <a href="{{ route('mata_anggaran.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
-                                    <a href="{{ route('mata_anggaran.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
-                                    <a href="{{ route('rkakl.list-pokja', $item->id) }}" class="btn btn-success"> <i class="fa fa-eye"></i> </a>
-                                   
+                                    {{-- <a href="{{ route('rkakl.update-akun', ['id_akun_used' => $akun->id, 'id' => $item['id']]) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a> --}}
+                                    <a href="{{ route('rkakl.destroy-akun', ['id_akun_used' => $akun->id, 'id' => $item['id']]) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a> 
                                 </td>
                             </tr>
+                        @php
+                            $totalPagu += $item['pagu'];
+                        @endphp
                         @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3"> <b>Total</b> </th>
+                                <th colspan="1" style="text-align: right;"> <b>{{ number_format($totalPagu,0,',','.'); }} </b></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -113,4 +134,9 @@ PPSDM Aparatur - Mata Anggaran
 <!-- Sweet-Alert JS -->
 <script src="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/js/init/sweet-alert-init.js') }}"></script>
+<!-- Select2 JS -->
+<script src="{{ asset('assets/plugins/select2/select2.min.js') }}"></script>
+<script src="{{ asset('assets/js/init/form-select-init.js') }}"></script>
+<!-- Tagsinput JS -->
+<script src="{{ asset('assets/js/init/form-select-init.js') }}"></script>
 @endsection 

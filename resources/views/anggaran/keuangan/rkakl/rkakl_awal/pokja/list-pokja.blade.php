@@ -1,5 +1,5 @@
 @section('title') 
-PPSDM Aparatur - Mata Anggaran
+PPSDM Aparatur - RKAKL POKJA
 @endsection 
 @extends('layouts.main')
 @section('style')
@@ -13,21 +13,21 @@ PPSDM Aparatur - Mata Anggaran
 
 @endsection 
 @section('content')
-<!-- Start XP Breadcrumbbar -->                    
+<!-- Start XP Breadcrumbbar --> 
 <div class="xp-breadcrumbbar">
     <div class="row">
-        <div class="col-md-6 col-lg-6">
-            <h4 class="xp-page-title">Mata Anggaran</h4>
+        <div class="col-md-1">`
+            <a href="{{ url()->previous() }}" class="btn btn-round btn-warning"><i class="mdi mdi-arrow-left"></i></a>
         </div>
-        <div class="col-md-6 col-lg-6">
+        <div class="col-md-11 mt-2">
             <div class="xp-breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="icon-home"></i></a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Mata Anggaran</li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail Pokja</li>
                 </ol>
             </div>
         </div>
-    </div>          
+    </div>
 </div>
 <!-- End XP Breadcrumbbar -->
 
@@ -51,38 +51,34 @@ PPSDM Aparatur - Mata Anggaran
       <div class="col-lg-12">
         <div class="card m-b-30">
             <div class="card-header bg-white">
-                <h5 class="card-title text-black">Data Mata Anggaran Tahun {{ $tahun }}</h5>
-            </div>
-            <div class="pl-4">
-                <a href="{{ route('mata_anggaran.create') }}" class="btn btn-secondary">+ Tambah Mata Anggaran</a>
+                {{-- <h5 class="text-black"> {{ $rkakl->kode }}. {{ $rkakl->deskripsi }}</h5> --}}
+                <h5 class="card-title mt-3">
+                   - LIhat Detail di Setiap Pokja -
+                </h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="xp-default-datatable" class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>No</th>
-                            <th>Jenis Belanja</th>
-                            <th>Akun</th>
-                            <th>Pagu</th>
+                            <th>Nama Pokja</th>
+                            <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($mataAnggaran as $key => $item)
+                            @foreach ($pokja as $key => $item)
                             <tr>
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $item->jenis_belanja }}</td>
-                                <td>{{ $item->akun }}</td>
-                                <td align="right"> {{ number_format($item->pagu_awal,0,',','.'); }}</td>
+                                <td>{{ $item->pokja }}</td>
+                                <td>{{ $item->deskripsi }}</td>
                                 <td>
-                                    <a href="{{ route('mata_anggaran.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
-                                    <a href="{{ route('mata_anggaran.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
-                                    <a href="{{ route('rkakl.list-pokja', $item->id) }}" class="btn btn-success"> <i class="fa fa-eye"></i> </a>
-                                   
+                                    <a href="/maintenance" class="btn btn-success"> <i class="mdi mdi-eye"></i> Detail</a>
+                                    {{-- <a href="{{ route('kegiatan.index') }}" class="btn btn-info"> <i class="mdi mdi-plus"></i> Kegiatan</a> --}}
                                 </td>
                             </tr>
-                        @endforeach
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -113,4 +109,5 @@ PPSDM Aparatur - Mata Anggaran
 <!-- Sweet-Alert JS -->
 <script src="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/js/init/sweet-alert-init.js') }}"></script>
+
 @endsection 

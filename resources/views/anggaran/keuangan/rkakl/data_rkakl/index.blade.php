@@ -1,5 +1,5 @@
 @section('title') 
-PPSDM Aparatur - Mata Anggaran
+PPSDM Aparatur - Data RKAKL
 @endsection 
 @extends('layouts.main')
 @section('style')
@@ -11,19 +11,19 @@ PPSDM Aparatur - Mata Anggaran
 <!-- Sweet Alert -->
 <link href="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 
+
 @endsection 
 @section('content')
 <!-- Start XP Breadcrumbbar -->                    
 <div class="xp-breadcrumbbar">
     <div class="row">
         <div class="col-md-6 col-lg-6">
-            <h4 class="xp-page-title">Mata Anggaran</h4>
         </div>
         <div class="col-md-6 col-lg-6">
             <div class="xp-breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="icon-home"></i></a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Mata Anggaran</li>
+                    <li class="breadcrumb-item active" aria-current="page">Data RKAKL</li>
                 </ol>
             </div>
         </div>
@@ -51,10 +51,7 @@ PPSDM Aparatur - Mata Anggaran
       <div class="col-lg-12">
         <div class="card m-b-30">
             <div class="card-header bg-white">
-                <h5 class="card-title text-black">Data Mata Anggaran Tahun {{ $tahun }}</h5>
-            </div>
-            <div class="pl-4">
-                <a href="{{ route('mata_anggaran.create') }}" class="btn btn-secondary">+ Tambah Mata Anggaran</a>
+                <h5 class="card-title text-black">Data RKAKL</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -62,24 +59,23 @@ PPSDM Aparatur - Mata Anggaran
                         <thead>
                         <tr>
                             <th>No</th>
-                            <th>Jenis Belanja</th>
-                            <th>Akun</th>
-                            <th>Pagu</th>
+                            <th>Tahun RKAKL</th>
+                            <th>Jumlah Pagu</th>
                             <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($mataAnggaran as $key => $item)
+                        @foreach ($yearsWithFirstData as $key => $item)
                             <tr>
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $item->jenis_belanja }}</td>
-                                <td>{{ $item->akun }}</td>
-                                <td align="right"> {{ number_format($item->pagu_awal,0,',','.'); }}</td>
+                                <td>{{ $item['year'] }}</td>
+                                <td align="right"> {{ number_format($item['first_data']['jumlah_biaya'],0,',','.'); }}</td>
                                 <td>
-                                    <a href="{{ route('mata_anggaran.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
-                                    <a href="{{ route('mata_anggaran.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
-                                    <a href="{{ route('rkakl.list-pokja', $item->id) }}" class="btn btn-success"> <i class="fa fa-eye"></i> </a>
-                                   
+                                    <center>
+                                        <a href="{{ route('rkakl.index') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Detail RKAKL"> <i class="mdi mdi-eye"></i>
+                                        Lihat RKAKL
+                                        </a>
+                                    </center>
                                 </td>
                             </tr>
                         @endforeach
