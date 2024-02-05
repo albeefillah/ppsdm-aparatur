@@ -64,7 +64,7 @@
                     <ul class="xp-vertical-submenu">
                       @can('isKeuangan')
                         <li><a href="{{ route('rkakl.index') }}">RKAKL Awal (DIPA 0)</a></li>
-                        <li><a href="{{ route('data-rkakl.index') }}">Data RKAKL</a></li>
+                        {{-- <li><a href="{{ route('data-rkakl.index') }}">Data RKAKL</a></li> --}}
                       @else
                         <li><a href="{{ route('rencana.index') }}">Rencana Anggaran</a></li>
                         <li><a href="{{url('/maintenance')}}">Rekap Anggaran</a></li>
