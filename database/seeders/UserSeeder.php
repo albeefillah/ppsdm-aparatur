@@ -13,76 +13,64 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         \App\Models\User::create([
-            'name'	=> 'Keuangan',
-            'email'	=> 'keuangan@gmail.com',
-            'password'	=> bcrypt('keuangan'),
+            'name'	=> 'Kepala Pusat',
+            'username'	=> 'dashboard_kapus',
+            'email'	=> 'kapus@gmail.com',
+            'password'	=> bcrypt('kapusaparatur'),
             'id_role' => 1,
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
+
         \App\Models\User::create([
-            'name'	=> 'BPAUP',
-            'email'	=> 'bpaup@gmail.com',
-            'password'	=> bcrypt('bpaup'),
+            'name'	=> 'Super Admin',
+            'username'	=> 'superadmin',
+            'email'	=> 'superadmin@gmail.com',
+            'password'	=> bcrypt('superadmin'),
             'id_role' => 2,
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
+
         \App\Models\User::create([
-            'name'	=> 'BPAUK',
-            'email'	=> 'bpauk@gmail.com',
-            'password'	=> bcrypt('bpauk'),
+            'name'	=> 'BPAU',
+            'username'	=> 'dashboard_bpau',
+            'email'	=> 'bpau@gmail.com',
+            'password'	=> bcrypt('bagianumum'),
             'id_role' => 3,
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
+
         \App\Models\User::create([
-            'name'	=> 'BPASP',
-            'email'	=> 'bpasp@gmail.com',
-            'password'	=> bcrypt('bpasp'),
+            'name'	=> 'BPAS',
+            'username'	=> 'dashboard_bpas',
+            'email'	=> 'bpas@gmail.com',
+            'password'	=> bcrypt('diklatsarpras'),
             'id_role' => 4,
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
+
         \App\Models\User::create([
-            'name'	=> 'BPASS',
-            'email'	=> 'bpass@gmail.com',
-            'password'	=> bcrypt('bpass'),
+            'name'	=> 'BPAP',
+            'username'	=> 'dashboard_bpap',
+            'email'	=> 'bpap@gmail.com',
+            'password'	=> bcrypt('prokerevaluasi'),
             'id_role' => 5,
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
+
         \App\Models\User::create([
-            'name'	=> 'BPAPP',
-            'email'	=> 'bpapp@gmail.com',
-            'password'	=> bcrypt('bpapp'),
+            'name'	=> 'BPAK',
+            'username'	=> 'dashboard_bpak',
+            'email'	=> 'bpak@gmail.com',
+            'password'	=> bcrypt('standardisasi'),
             'id_role' => 6,
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
-        \App\Models\User::create([
-            'name'	=> 'BPAPE',
-            'email'	=> 'bpape@gmail.com',
-            'password'	=> bcrypt('bpape'),
-            'id_role' => 7,
-            'created_at' => new \DateTime,
-            'updated_at' => null,
-        ]);
-        \App\Models\User::create([
-            'name'	=> 'BPAKS',
-            'email'	=> 'bpaks@gmail.com',
-            'password'	=> bcrypt('bpaks'),
-            'id_role' => 8,
-            'created_at' => new \DateTime,
-            'updated_at' => null,
-        ]);
-        \App\Models\User::create([
-            'name'	=> 'BPAKP',
-            'email'	=> 'bpakp@gmail.com',
-            'password'	=> bcrypt('bpakp'),
-            'id_role' => 9,
-            'created_at' => new \DateTime,
-            'updated_at' => null,
-        ]);
+      
     }
 }

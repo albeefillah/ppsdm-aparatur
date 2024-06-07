@@ -14,98 +14,30 @@
                       <i class="icon-speedometer"></i><span>Dashboard</span>
                   </a>
                 </li>
-
-                @can('isKeuangan')
-                <li class="xp-vertical-header">Master Data</li>
-
-                <li>
-                    <a href="{{ route('user.index') }}">
-                      <i class="icon-people"></i><span>Data User</span>
-                  </a>
-                </li>
-               
-                <li {{ (request()->is('program-ppsdm*')) ? 'active' : '' }}>
-                  <a href="javaScript:void();">
-                    <i class="icon-event"></i><span>Program PPSDM</span><i class="icon-arrow-right pull-right"></i>
-                  </a>
-                  <ul class="xp-vertical-submenu">
-                      <li><a href="{{ route('kegiatan-program.index') }}">Kegiatan Program</a></li>
-                      <li><a href="{{ route('kro.index') }}">Klasifikasi Rincian Output (KRO)</a></li>
-                      <li><a href="{{ route('rincian-output.index') }}">Rincian Output</a></li>
-                      <li><a href="{{ route('sub-komponen.index') }}">Sub Komponen</a></li>
-                      <li><a href="{{ route('detail-komponen.index') }}">Detail Komponen</a></li>
-                  </ul>
-                </li>
-
-
-                <li class="{{ (request()->is('mata-anggaran*')) ? 'active' : '' }}">
-                    <a href="{{ route('mata_anggaran.index') }}">
-                      <i class="icon-wallet"></i><span>Mata Anggaran</span>
-                  </a>
-                </li>
-
-              @endcan
-                <li class="xp-vertical-header">Fitur Menu</li>
-
-                {{-- <li class="{{ (request()->is('spd*')) ? 'active' : '' }}">
-                    <a href="{{ route('spd.index') }}">
-                      <i class="icon-event"></i><span>SPPD</span>
-                  </a>
-                </li> --}}
-
-                <li {{ (request()->is('rencana*')) || (request()->is('rkakl*'))  ? 'active' : '' }}>
-                    <a href="javaScript:void();">
-                      @can('isKeuangan')
-                      <i class="icon-layers"></i><span>RKAKL</span><i class="icon-arrow-right pull-right"></i>
-                      @else
-                      <i class="icon-layers"></i><span>Anggaran</span><i class="icon-arrow-right pull-right"></i>
-                      @endcan
+                @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
+                    <li class="xp-vertical-header">Master Data</li>
+        
+                    <li class="{{ (request()->is('user*')) ? 'active' : '' }}">
+                        <a href="{{ route('user.index') }}">
+                        <i class="icon-user"></i><span>Data User</span>
                     </a>
-                    <ul class="xp-vertical-submenu">
-                      @can('isKeuangan')
-                        <li><a href="{{ route('rkakl.index') }}">RKAKL Awal (DIPA 0)</a></li>
-                        {{-- <li><a href="{{ route('data-rkakl.index') }}">Data RKAKL</a></li> --}}
-                      @else
-                        <li><a href="{{ route('rencana.index') }}">Rencana Anggaran</a></li>
-                        <li><a href="{{url('/maintenance')}}">Rekap Anggaran</a></li>
-                      @endcan
-                    </ul>
-                </li>
-
-                @can('isKeuangan')
-                <li>
-                    <a href="{{url('/maintenance')}}">
-                      <i class="icon-screen-desktop"></i><span>Monitoring BPA</span><i class="icon-arrow-right pull-right"></i>
+                    </li>
+                @endif
+                <li class="xp-vertical-header">Applications / Dashboard</li>
+                <li class="{{ (request()->is('profile-kepeg/')) ? 'active' : '' }}">
+                    <a href="{{ route('sppd.index') }}">
+                        <i class="icon-book-open"></i><span>Perjadin</span>
                     </a>
-                    <ul    class = "xp-vertical-submenu">
-                    <li><a href  = "{{ route('bpau.index') }}">BPAU</a></li>
-                    <li><a href  = "{{url('/maintenance')}}">BPAS</a></li>
-                    <li><a href  = "{{url('/maintenance')}}">BPAK</a></li>
-                    <li><a href  = "{{url('/maintenance')}}">BPAP</a></li>
-                    </ul>
                 </li>
-                <li  {{ (request()->is('pengawasan*')) ? 'active' : '' }}>
-                    <a href="{{url('/maintenance')}}">
-                      <i class="icon-book-open"></i><span>Pengawasan</span><i class="icon-arrow-right pull-right"></i>
+
+                @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
+                <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
+                    <a href="{{ route('profile-kepeg.index') }}">
+                        <i class="icon-people"></i><span>Profile Kepegawaian</span>
                     </a>
-                    <ul class="xp-vertical-submenu">
-                        <li><a href="{{ url('/maintenance') }}">Realisasi Anggaran</a></li>
-                        <li><a href="{{url('/maintenance')}}">Sisa Anggaran</a></li>
-                    </ul>
                 </li>
+                @endif
 
-                <li class="{{ (request()->is('spd*')) ? 'active' : '' }}">
-                  <a href="{{url('/maintenance')}}">
-                    <i class="icon-refresh"></i><span>Revisi</span>
-                  </a>
-                </li>
-
-                <li class="{{ (request()->is('spd*')) ? 'active' : '' }}">
-                    <a href="{{ route('spd.index') }}">
-                      <i class="icon-folder-alt"></i><span>Laporan</span>
-                  </a>
-                </li>
-                @endcan
 
             </ul>
         </div>

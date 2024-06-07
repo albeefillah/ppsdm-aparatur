@@ -2,9 +2,6 @@
 PPSDM Aparatur - Login
 @endsection
 @extends('layouts.main')
-@section('style')
-<link rel="shortcut icon" href="{{ asset('assets/images/icon.ico') }}">
-@endsection
 <div class="xp-authenticate-bg"></div>
 <!-- Start XP Container -->
 <div id="xp-container" class="xp-container">
@@ -26,16 +23,16 @@ PPSDM Aparatur - Login
                                     @csrf
                                     <div class="text-center mb-3">
                                         <h4 class="text-black">LOGIN</h4>
-                                        <p class="text-muted">Aplikasi Pengawasan Anggaran Aparatur</p>
+                                        <p class="text-muted">Dashboard PPSDM Aparatur</p>
                                     </div>                                        
                                     
                                     <div class="login-or">
                                       
                                     </div>
                                     <div class="form-group">
-                                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Email" required autocomplete="email" autofocus>
+                                        <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" placeholder="Masukkan Username" required autocomplete="username" autofocus>
 
-                                        @error('email')
+                                        @error('username')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>

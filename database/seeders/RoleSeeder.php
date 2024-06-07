@@ -12,59 +12,37 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+
         \App\Models\Role::create([
             'id_pokja' => 5,
-            'role' => 'Keuangan',
-            'deskripsi' => null
+            'role' => 'Kapus',
+            'deskripsi' => 'Kepala Pusat PPSDM Aparatur'
         ]);
-
-        // Role BPAU
+        \App\Models\Role::create([
+            'id_pokja' => 5,
+            'role' => 'Super Admin',
+            'deskripsi' => 'Super Admin'
+        ]);
         \App\Models\Role::create([
             'id_pokja' => 1,
-            'role' => 'BPAUP',
-            'deskripsi' => 'Kepegawaian'
-        ]);
-
-        \App\Models\Role::create([
-            'id_pokja' => 1,
-            'role' => 'BPAUK',
-            'deskripsi' => 'Keuangan'
-        ]);
-
-        // Role BPAS
-        \App\Models\Role::create([
-            'id_pokja' => 2,
-            'role' => 'BPASP',
-            'deskripsi' => 'Penyelenggara Diklat'
+            'role' => 'BPAU',
+            'deskripsi' => 'Bagian Umum'
         ]);
         \App\Models\Role::create([
             'id_pokja' => 2,
-            'role' => 'BPASS',
-            'deskripsi' => 'Sarana Prasarana'
-        ]);
-
-        // Role BPAP
-        \App\Models\Role::create([
-            'id_pokja' => 3,
-            'role' => 'BPAPP',
-            'deskripsi' => 'Program'
+            'role' => 'BPAS',
+            'deskripsi' => 'Diklat & Sarpras'
         ]);
         \App\Models\Role::create([
             'id_pokja' => 3,
-            'role' => 'BPAPE',
-            'deskripsi' => 'Evaluasi'
+            'role' => 'BPAP',
+            'deskripsi' => 'Program, Evaluasi & Kerjasama'
+        ]);
+        \App\Models\Role::create([
+            'id_pokja' => 4,
+            'role' => 'BPAK',
+            'deskripsi' => 'Perencanaan & Standardisasi'
         ]);
 
-        // Role BPAK 
-        \App\Models\Role::create([
-            'id_pokja' => 4,
-            'role' => 'BPAKS',
-            'deskripsi' => 'Standardisasi PSDM'
-        ]);
-        \App\Models\Role::create([
-            'id_pokja' => 4,
-            'role' => 'BPAKP',
-            'deskripsi' => 'Perencanaan PSDM'
-        ]);
     }
 }

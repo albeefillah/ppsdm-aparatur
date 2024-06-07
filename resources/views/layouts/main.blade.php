@@ -10,7 +10,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title> @yield('title') </title>
         <!-- Fevicon -->
-        <link rel="shortcut icon" href="{{ asset('assets/images/icon.ico') }}">
+        <link rel="shortcut icon" href="{{ asset('assets/images/esdm-icon.ico') }}">
         <!-- Start CSS -->   
         @yield('style')
         <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
@@ -79,7 +79,7 @@
                                     </li>
                                     <li class="list-inline-item mr-0">
                                         <div class="dropdown xp-userprofile">
-                                            <a class="dropdown-toggle" href="#" role="button" id="xp-userprofile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/assets/images/topbar/user.jpg" alt="user-profile" class="rounded-circle img-fluid"><span class="xp-user-live"></span></a>
+                                            <a class="dropdown-toggle" href="#" role="button" id="xp-userprofile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/assets/images/esdm-icon.ico" alt="user-profile" class="rounded-circle img-fluid"><span class="xp-user-live"></span></a>
                                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="xp-userprofile">
                                                 <a class="dropdown-item py-3 text-black text-center font-16" href="#">Hallo, {{ Auth::user()->name ?? null }} !</a>
                                                 <a class="dropdown-item" href="#"><i class="icon-user text-primary mr-2"></i> Profile</a>
@@ -102,8 +102,6 @@
                     <!-- End XP Row -->
                 </div>
                 <!-- End XP Topbar -->
-                
-                
 
                 @if (session()->has('warning'))
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -128,7 +126,7 @@
                 <!-- Start XP Footerbar -->
                 <div class="xp-footerbar">
                     <footer class="footer">
-                        <p class="mb-0">© 2023 Keuangan PPSDM Aparatur Kementerian ESDM - All Rights Reserved.</p>
+                        <p class="mb-0">© 2023 Dashboard PPSDM Aparatur - All Rights Reserved.</p>
                     </footer>
                 </div>
                 <!-- End XP Footerbar -->
@@ -143,7 +141,7 @@
         <script src="{{ asset('assets/js/modernizr.min.js') }}"></script>
         <script src="{{ asset('assets/js/detect.js') }}"></script>
         <script src="{{ asset('assets/js/jquery.slimscroll.js') }}"></script>
-        <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script> 
+        <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
         @yield('script')
         <!-- Main JS -->
         <script src="{{ asset('assets/js/main.js') }}"></script>

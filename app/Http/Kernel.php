@@ -44,50 +44,40 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-        'Keuangan' => [
-            \App\Http\Middleware\checkAccessKeuangan::class,
+        'CheckRole' => [
+            \App\Http\Middleware\checkRole::class,
             
         ],
         
-        'BPAUP' => [
-            \App\Http\Middleware\checkAccessBPAUP::class,
+        'SuperAdmin' => [
+            \App\Http\Middleware\checkAccessSuperadmin::class,
             
         ],
 
-        'BPAUK' => [
-            \App\Http\Middleware\checkAccessBPAUK::class,
+        'Kapus' => [
+            \App\Http\Middleware\checkAccessKapus::class,
+            
+        ],
+        
+        'BPAU' => [
+            \App\Http\Middleware\checkAccessBPAU::class,
             
         ],
 
-        'BPASP' => [
-            \App\Http\Middleware\checkAccessBPASP::class,
+        'BPAS' => [
+            \App\Http\Middleware\checkAccessBPAS::class,
             
         ],
 
-        'BPASS' => [
-            \App\Http\Middleware\checkAccessBPASS::class,
+        'BPAP' => [
+            \App\Http\Middleware\checkAccessBPAP::class,
             
         ],
 
-        'BPAPP' => [
-            \App\Http\Middleware\checkAccessBPAPP::class,
+        'BPAK' => [
+            \App\Http\Middleware\checkAccessBPAK::class,
             
-        ],
-
-        'BPAPE' => [
-            \App\Http\Middleware\checkAccessBPAPE::class,
-            
-        ],
-
-        'BPAKS' => [
-            \App\Http\Middleware\checkAccessBPAKS::class,
-            
-        ],
-
-        'BPAKP' => [
-            \App\Http\Middleware\checkAccessBPAKP::class,
-            
-        ],
+        ]
     ];
 
     /**

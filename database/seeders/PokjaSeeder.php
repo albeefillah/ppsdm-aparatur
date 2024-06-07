@@ -28,7 +28,7 @@ class PokjaSeeder extends Seeder
         
         \App\Models\Pokja::create([
             'pokja'	=> 'BPAP',
-            'deskripsi'	=> 'Pokja Prgram dan Evaluasi',
+            'deskripsi'	=> 'Pokja Program, Evaluasi & Kerjasama',
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
@@ -41,8 +41,8 @@ class PokjaSeeder extends Seeder
         ]);
 
         \App\Models\Pokja::create([
-            'pokja'	=> 'Keuangan',
-            'deskripsi'	=> 'Bagian Keuangan',
+            'pokja'	=> 'Kapus',
+            'deskripsi'	=> 'Kepala Pusat PPSDM Aparatur',
             'created_at' => new \DateTime,
             'updated_at' => null,
         ]);
