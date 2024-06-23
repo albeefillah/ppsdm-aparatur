@@ -42,20 +42,20 @@ PPSDM Aparatur - Dashboard
                 </div>
             </div>
         </div>
-        @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
+        {{-- @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin'))) --}}
         <div class="col-md-6 col-lg-6 col-xl-6">
             <div class="card bg-info-gradient m-b-30">
                 <div class="card-body">
-                    <div class="xp-widget-box text-wh   ite text-center pt-3">
+                    <div class="xp-widget-box text-white text-center pt-3">
                         <p class="xp-icon-timer mb-4"><i class="icon-people"></i></p>
                         <h4 class="mb-2 font-20">Profile Kepegawaian</h4>
-                        <p class="mb-3">Database Kepegawaian KESDM (TLCS, TUBEL). Diolah oleh PPSDMA.</p>
+                        <p class="mb-3">Database Kepegawaian KESDM (TLCS, TUBEL, Penyertaan, dll). Diolah oleh PPSDMA.</p>
                         <a href="{{ route('profile-kepeg.index') }}" class="btn btn-white btn-rounded text-info">Lihat Dashboard</a>
                     </div>
                 </div>
             </div>
         </div>
-        @endif
+        {{-- @endif --}}
     </div>
 
 </div>

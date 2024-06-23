@@ -32,10 +32,6 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/destroy/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
     });
 
-    Route::prefix('profile-kepeg')->group(function () {
-        Route::get('/', [App\Http\Controllers\ProfileKepegController::class, 'index'])->name('profile-kepeg.index');
-    });
-    
     
 
     // Route::pref  ix('role')->group(function () {
@@ -50,5 +46,9 @@ Route::middleware('Kapus')->group(function () {
 
 Route::prefix('sppd')->group(function () {
     Route::get('/', [App\Http\Controllers\SPPDController::class, 'index'])->name('sppd.index');
+});
+
+Route::prefix('profile-kepeg')->group(function () {
+    Route::get('/', [App\Http\Controllers\ProfileKepegController::class, 'index'])->name('profile-kepeg.index');
 });
 

@@ -30,13 +30,13 @@
                     </a>
                 </li>
 
-                @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
+                {{-- @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin'))) --}}
                 <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
                     <a href="{{ route('profile-kepeg.index') }}">
                         <i class="icon-people"></i><span>Profile Kepegawaian</span>
                     </a>
                 </li>
-                @endif
+                {{-- @endif --}}
 
 
             </ul>
