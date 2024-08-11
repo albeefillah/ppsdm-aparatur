@@ -32,7 +32,9 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/destroy/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
     });
 
-    
+    Route::prefix('keuangan')->group(function () {
+        Route::get('/', [App\Http\Controllers\KeuanganController::class, 'index'])->name('keuangan.index');
+    });
 
     // Route::pref  ix('role')->group(function () {
     //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');

@@ -30,32 +30,46 @@ PPSDM Aparatur - Dashboard
 <div class="xp-contentbar">
 
     <div class="row">
-        <div class="col-md-6 col-lg-6 col-xl-6">
+        <div class="col-md-4 col-lg-4 col-xl-4">
             <div class="card bg-success-gradient m-b-30">
                 <div class="card-body">
                     <div class="xp-widget-box text-white text-center pt-3">
                         <p class="xp-icon-timer mb-4"><i class="icon-book-open"></i></p>
-                        <h4 class="mb-2 font-20">Dashboard Perjadin</h4>
-                        <p class="mb-3">Monitoring data Perjalanan Dinas PPSDMA</p>
+                        <h5 class="mb-2 font-20">Dashboard Perjadin</h5>
+                        <p class="mb-3">Monitoring data Perjalanan Dinas PPSDM Aparatur</p>
                         <a href="{{ route('sppd.index') }}" class="btn btn-white btn-rounded text-success">Lihat Dashboard</a>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin'))) --}}
-        <div class="col-md-6 col-lg-6 col-xl-6">
+        <div class="col-md-4 col-lg-4 col-xl-4">
             <div class="card bg-info-gradient m-b-30">
                 <div class="card-body">
                     <div class="xp-widget-box text-white text-center pt-3">
                         <p class="xp-icon-timer mb-4"><i class="icon-people"></i></p>
-                        <h4 class="mb-2 font-20">Profile Kepegawaian</h4>
-                        <p class="mb-3">Database Kepegawaian KESDM (TLCS, TUBEL, Penyertaan, dll). Diolah oleh PPSDMA.</p>
+                        <h5 class="mb-2 font-20">Profile Kepegawaian</h5>
+                        <p class="mb-3">Database Kepegawaian KESDM (TLCS, TUBEL, Penyertaan,dsb)</p>
                         <a href="{{ route('profile-kepeg.index') }}" class="btn btn-white btn-rounded text-info">Lihat Dashboard</a>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- @endif --}}
+
+        @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
+        <div class="col-md-4 col-lg-4 col-xl-4">
+            <div class="card bg-warning-gradient m-b-30">
+                <div class="card-body">
+                    <div class="xp-widget-box text-white text-center pt-3">
+                        <p class="xp-icon-timer mb-4"><i class="ti-money"></i></p>
+                        <h class="mb-2 font-20">Keuangan</h>
+                        <p class="mb-3">Monitoring Renkas dan Anggaran PPSDM Aparatur</p>
+                        <a href="{{ route('keuangan.index') }}" class="btn btn-white btn-rounded text-warning">Lihat Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
     </div>
 
 </div>

@@ -24,19 +24,25 @@
                     </li>
                 @endif
                 <li class="xp-vertical-header">Applications / Dashboard</li>
-                <li class="{{ (request()->is('profile-kepeg/')) ? 'active' : '' }}">
+                <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
                     <a href="{{ route('sppd.index') }}">
                         <i class="icon-book-open"></i><span>Perjadin</span>
                     </a>
                 </li>
-
-                {{-- @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin'))) --}}
-                <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
+                
+                <li class="{{ (request()->is('profile-kepeg/')) ? 'active' : '' }}">
                     <a href="{{ route('profile-kepeg.index') }}">
                         <i class="icon-people"></i><span>Profile Kepegawaian</span>
                     </a>
                 </li>
-                {{-- @endif --}}
+
+                @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
+                <li class="{{ (request()->is('keuangan/')) ? 'active' : '' }}">
+                    <a href="{{ route('keuangan.index') }}">
+                        <i class="ti-money"></i><span>Keuangan</span>
+                    </a>
+                </li>
+                @endif
 
 
             </ul>
