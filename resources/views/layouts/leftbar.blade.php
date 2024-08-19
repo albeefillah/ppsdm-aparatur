@@ -42,6 +42,11 @@
                         <i class="ti-money"></i><span>Keuangan</span>
                     </a>
                 </li>
+                <li class="{{ (request()->is('kurikulum/')) ? 'active' : '' }}">
+                    <a href="{{ route('kurikulum.index') }}">
+                        <i class="ti-money"></i><span>Kurikulum</span>
+                    </a>
+                </li>
                 @endif
 
 

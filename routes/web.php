@@ -36,6 +36,10 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/', [App\Http\Controllers\KeuanganController::class, 'index'])->name('keuangan.index');
     });
 
+    Route::prefix('kurikulum')->group(function () {
+        Route::get('/', [App\Http\Controllers\KurikulumController::class, 'index'])->name('kurikulum.index');
+    });
+
     // Route::pref  ix('role')->group(function () {
     //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');
     //     Route::get('/create', [App\Http\Controllers\RoleController::class, 'create'])->name('role.create');
