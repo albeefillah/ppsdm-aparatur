@@ -35,7 +35,7 @@ PPSDM Aparatur - Dashboard
                 <div class="card-body">
                     <div class="xp-widget-box text-white text-center pt-3">
                         <p class="xp-icon-timer mb-4"><i class="icon-book-open"></i></p>
-                        <h5 class="mb-2 font-20">Dashboard Perjadin</h5>
+                        <h5 class="mb-2 font-20">Perjadin</h5>
                         <p class="mb-3">Monitoring data Perjalanan Dinas PPSDM Aparatur</p>
                         <a href="{{ route('sppd.index') }}" class="btn btn-white btn-rounded text-success">Lihat Dashboard</a>
                     </div>
@@ -73,9 +73,9 @@ PPSDM Aparatur - Dashboard
             <div class="card bg-secondary-gradient m-b-30">
                 <div class="card-body">
                     <div class="xp-widget-box text-white text-center pt-3">
-                        <p class="xp-icon-timer mb-4"><i class="icon-people"></i></p>
+                        <p class="xp-icon-timer mb-4"><i class="ti-layout-media-left"></i></p>
                         <h5 class="mb-2 font-20">Kurikulum</h5>
-                        <p class="mb-3">Daftar Kurikulum Pelatihan di PPSDM Aparatur</p>
+                        <p class="mb-3">Daftar Kurikulum Pelatihan PPSDM Aparatur</p>
                         <a href="{{ route('kurikulum.index') }}" class="btn btn-white btn-rounded text-secondary">Lihat Dashboard</a>
                     </div>
                 </div>
