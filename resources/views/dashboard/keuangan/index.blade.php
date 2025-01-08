@@ -33,10 +33,10 @@ PPSDM Aparatur - Dashboard
         <div class="card-body">
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="pj2024-tab" data-toggle="pill" href="#pj2024" role="tab" aria-controls="pj2024" aria-selected="true">2024</a>
+                <a class="nav-link active" id="pj2024-tab" data-toggle="pill" href="#pj2024" role="tab" aria-controls="pj2024" aria-selected="true">2025</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="pj2023-tab" data-toggle="pill" href="#pj2023" role="tab" aria-controls="pj2023" aria-selected="false">2023</a>
+                <a class="nav-link" id="pj2023-tab" data-toggle="pill" href="#pj2023" role="tab" aria-controls="pj2023" aria-selected="false">2024</a>
               </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
