@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 /*
@@ -40,6 +41,15 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/', [App\Http\Controllers\KurikulumController::class, 'index'])->name('kurikulum.index');
     });
 
+    Route::prefix('os')->group(function () {
+        Route::get('/', [App\Http\Controllers\OutsourcingController::class, 'index'])->name('os.index');
+        Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('os.create');
+        Route::post('/store', [App\Http\Controllers\OutsourcingController::class, 'store'])->name('os.store');
+        Route::get('/edit/{id}', [App\Http\Controllers\OutsourcingController::class, 'edit'])->name('os.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('os.update');
+        Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('os.destroy');
+    });
+
     // Route::pref  ix('role')->group(function () {
     //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');
     //     Route::get('/create', [App\Http\Controllers\RoleController::class, 'create'])->name('role.create');
@@ -57,4 +67,3 @@ Route::prefix('sppd')->group(function () {
 Route::prefix('profile-kepeg')->group(function () {
     Route::get('/', [App\Http\Controllers\ProfileKepegController::class, 'index'])->name('profile-kepeg.index');
 });
-

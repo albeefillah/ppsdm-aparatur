@@ -1,6 +1,6 @@
 <div class="xp-leftbar">
     <!-- Start XP Sidebar -->
-    <div class="xp-sidebar">
+    <div class="xp-sidebar" style="width: 100%;">
         <!-- Start XP Logobar -->
         <div class="xp-logobar text-center">
             <a href="{{ route('home') }}" class="xp-logo"><img src="/assets/images/logo-ppsdm-tr.png" width="80%" class="img-fluid" alt="logo"></a>
@@ -23,7 +23,9 @@
                     </a>
                     </li>
                 @endif
+
                 <li class="xp-vertical-header">Applications / Dashboard</li>
+
                 <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
                     <a href="{{ route('sppd.index') }}">
                         <i class="icon-book-open"></i><span>Perjadin</span>
@@ -32,7 +34,7 @@
                 
                 <li class="{{ (request()->is('profile-kepeg/')) ? 'active' : '' }}">
                     <a href="{{ route('profile-kepeg.index') }}">
-                        <i class="icon-people"></i><span>Profile Kepegawaian</span>
+                        <i class="icon-people"></i><span>Kepegawaian ESDM</span>
                     </a>
                 </li>
 
@@ -47,7 +49,24 @@
                         <i class="ti-layout-media-left"></i><span>Kurikulum</span>
                     </a>
                 </li>
+{{-- 
+                <li dropdown">
+                    <a href="#"><i class="mdi mdi-account-group"></i><span>Mnj. Outsourcing</span></a>
+                    <ul class="dropdown-menu"> 
+                        <li><a href="{{ route('os.index') }}">Data Outsourcing</a></li>                                   
+                    </ul> 
+                </li> --}}
+
+                <li class="{{ (request()->is('os/')) ? 'active' : '' }}">
+                    <a href="javaScript:void();">
+                        <i class="mdi mdi-account-group"></i><span>Mnj. Outsourcing</span><i class="icon-arrow-right pull-right"></i>
+                    </a>
+                    <ul class="xp-vertical-submenu">                                
+                        <li><a href="{{ route('os.index') }}">Daftar Pegawai</a></li>         
+                    </ul>
+                </li>
                 @endif
+                
 
 
             </ul>
