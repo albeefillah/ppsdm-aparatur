@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Outsourcing;
 use Illuminate\Http\Request;
 
 class OutsourcingController extends Controller
@@ -11,7 +12,15 @@ class OutsourcingController extends Controller
      */
     public function index()
     {
-        //
+        $os = Outsourcing::all();
+        return view('manajemen-outsourcing.list-pegawai.index', compact('os'));
+    }
+
+    public function monitoring()
+    {
+        $os = Outsourcing::all();
+
+        return view('manajemen-outsourcing.monitoring-os.index', compact('os'));
     }
 
     /**
@@ -19,7 +28,7 @@ class OutsourcingController extends Controller
      */
     public function create()
     {
-        //
+        return view('manajemen-outsourcing.list-pegawai.create');
     }
 
     /**
