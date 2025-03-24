@@ -63,7 +63,7 @@
                     </a>
                     <ul class="xp-vertical-submenu">                                
                         <li><a href="{{ route('os.index') }}">List Pegawai</a></li>         
-                        <li><a href="{{ route('os.index') }}">Monitoring OS</a></li>         
+                        <li><a href="{{ route('monitoring.index') }}">Monitoring OS</a></li>         
                     </ul>
                 </li>
                 @endif

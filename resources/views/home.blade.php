@@ -81,6 +81,18 @@ PPSDM Aparatur - Dashboard
                 </div>
             </div>
         </div>
+        <div class="col-md-4 col-lg-4 col-xl-4">
+            <div class="card bg-danger-gradient m-b-30">
+                <div class="card-body">
+                    <div class="xp-widget-box text-white text-center pt-3">
+                        <p class="xp-icon-timer mb-4"><i class="mdi mdi-account-group"></i></p>
+                        <h5 class="mb-2 font-20">Outsourcing (OS)</h5>
+                        <p class="mb-3">Database monitoring pegawai OS  PPSDMA</p>
+                        <a href="{{ route('kurikulum.index') }}" class="btn btn-white btn-rounded text-secondary">Lihat Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         @endif
 
     </div>

@@ -50,6 +50,15 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('os.destroy');
     });
 
+    Route::prefix('monitoring-os')->group(function () {
+        Route::get('/', [App\Http\Controllers\OutsourcingController::class, 'monitoring'])->name('monitoring.index');
+        Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('os.create');
+        Route::post('/store', [App\Http\Controllers\OutsourcingController::class, 'store'])->name('os.store');
+        Route::get('/edit/{id}', [App\Http\Controllers\OutsourcingController::class, 'edit'])->name('os.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('os.update');
+        Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('os.destroy');
+    });
+
     // Route::pref  ix('role')->group(function () {
     //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');
     //     Route::get('/create', [App\Http\Controllers\RoleController::class, 'create'])->name('role.create');

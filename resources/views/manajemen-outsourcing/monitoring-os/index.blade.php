@@ -53,8 +53,13 @@ PPSDM Aparatur - User
             <div class="card-header bg-white">
                 <h5 class="card-title text-black">Monitoring OS</h5>
             </div>
-            <div class="pl-4">
-                <a href="{{ route('user.create') }}" class="btn btn-secondary">+ Tambah Data</a>
+            <div class="row">
+                <div class="pl-5">
+                    <a href="{{ route('user.create') }}" class="btn btn-secondary"> <i class="fa fa-plus-circle"></i> Tambah Data</a>
+                </div>
+                <div class="pl-4">
+                    <a href="{{ route('user.create') }}" class="btn btn-success"> <i class="fa fa-file"></i> Export File</a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -69,7 +74,7 @@ PPSDM Aparatur - User
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($user as $key => $item)
+                        {{-- @foreach ($os as $key => $item)
                             <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
@@ -81,7 +86,7 @@ PPSDM Aparatur - User
                                    
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
                         </tbody>
                     </table>
                 </div>
