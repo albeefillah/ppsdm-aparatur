@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Outsourcing;
 use Illuminate\Http\Request;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class OutsourcingController extends Controller
 {
@@ -29,6 +30,38 @@ class OutsourcingController extends Controller
     public function create()
     {
         return view('manajemen-outsourcing.list-pegawai.create');
+    }
+    /**
+     * 
+     * Show the form for creating a new resource.
+     */
+    public function import(Request $request)
+    {
+
+        $file = $request->file('file');
+        // return $file->getClientOriginalExtension();
+        $namaFile = $file->getClientOriginalName();
+        $file->move('DataOutsourcing', $namaFile);
+        $os = (new FastExcel)->import(public_path('/DataOutsourcing/' . $namaFile), function ($data) {
+            return Outsourcing::create([
+                'nama' => $data['nama'],
+                'role' => $data['role'],
+                'lokasi' => $data['lokasi'],
+                'tgl_piket' => $data['tgl_piket'],
+                'shift' => $data['shift'],
+                'kd_ket' => $data['kd_ket'],
+                'keterangan' => $data['keterangan'],
+                'jam_mulai' => $data['jam_mulai'],
+                'jam_selesai' => $data['jam_selesai'],
+            ]);
+        });
+
+        session()->flash('success', 'Data berhasil di import.');
+        return redirect()->back();
+    }
+    public function export()
+    {
+        return (new FastExcel(Outsourcing::all()))->download('file.xlsx');
     }
 
     /**

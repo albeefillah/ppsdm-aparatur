@@ -52,11 +52,13 @@ Route::middleware('Kapus')->group(function () {
 
     Route::prefix('monitoring-os')->group(function () {
         Route::get('/', [App\Http\Controllers\OutsourcingController::class, 'monitoring'])->name('monitoring.index');
-        Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('os.create');
-        Route::post('/store', [App\Http\Controllers\OutsourcingController::class, 'store'])->name('os.store');
-        Route::get('/edit/{id}', [App\Http\Controllers\OutsourcingController::class, 'edit'])->name('os.edit');
-        Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('os.update');
-        Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('os.destroy');
+        Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('monitoring.create');
+        Route::get('/export', [App\Http\Controllers\OutsourcingController::class, 'export'])->name('monitoring.export');
+        Route::post('/store', [App\Http\Controllers\OutsourcingController::class, 'store'])->name('monitoring.store');
+        Route::post('/import', [App\Http\Controllers\OutsourcingController::class, 'import'])->name('monitoring.import');
+        Route::get('/edit/{id}', [App\Http\Controllers\OutsourcingController::class, 'edit'])->name('monitoring.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('monitoring.update');
+        Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('monitoring.destroy');
     });
 
     // Route::pref  ix('role')->group(function () {

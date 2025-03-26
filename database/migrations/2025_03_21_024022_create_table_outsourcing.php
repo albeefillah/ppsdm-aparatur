@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('lokasi', 100);
             $table->date('tgl_piket');
             $table->string('shift');
-            $table->string('kd_ket');
-            $table->text('keterangan');
-            $table->time('jam_mulai');
-            $table->time('jam_selesai');
+            $table->string('kd_ket')->nullable();
+            $table->text('keterangan')->nullable();
+            $table->time('jam_mulai')->nullable();
+            $table->time('jam_selesai')->nullable();
             $table->timestamps();
         });
     }

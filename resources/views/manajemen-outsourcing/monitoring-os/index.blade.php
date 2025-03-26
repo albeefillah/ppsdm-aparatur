@@ -55,10 +55,40 @@ PPSDM Aparatur - User
             </div>
             <div class="row">
                 <div class="pl-5">
-                    <a href="{{ route('user.create') }}" class="btn btn-secondary"> <i class="fa fa-plus-circle"></i> Tambah Data</a>
+                    <a href="{{ route('monitoring.create') }}" class="btn btn-secondary"> <i class="fa fa-plus-circle"></i> Tambah Data</a>
                 </div>
-                <div class="pl-4">
-                    <a href="{{ route('user.create') }}" class="btn btn-success"> <i class="fa fa-file"></i> Export File</a>
+                <div class="pl-3">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleStandardModal">
+                        <i class="ti-import"> </i> Import Excel
+                    </button>
+                    <!-- Modal -->
+                    <form action="{{ route('monitoring.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal fade" id="exampleStandardModal" tabindex="-1" role="dialog" aria-labelledby="exampleStandardModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleStandardModalLabel">Upload File</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="file"  class="form-control" name="file" required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                                        <button type="submit" class="btn btn-info">Import</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="pl-3">
+                    <a href="{{ route('monitoring.export') }}" class="btn btn-success"> <i class="ti-export"> </i> Export Excel</a>
                 </div>
             </div>
             <div class="card-body">
@@ -70,23 +100,29 @@ PPSDM Aparatur - User
                             <th>Nama</th>
                             <th>Role</th>
                             <th>Lokasi</th>
+                            <th>Tgl Piket</th>
+                            <th>Shift</th>
+                            <th>Keterangan</th>
                             <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {{-- @foreach ($os as $key => $item)
+                        @foreach ($os as $key => $item)
                             <tr>
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->email }}</td>
-                                <td>{{ $item->role->role }}</td>
+                                <td>{{ $item->nama }}</td>
+                                <td>{{ $item->role }}</td>
+                                <td>{{ $item->lokasi }}</td>
+                                <td>{{ $item->tgl_piket }}</td>
+                                <td>{{ $item->shift }}</td>
+                                <td>{{ $item->keterangan }}</td>
                                 <td>
-                                    <a href="{{ route('user.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
-                                    <a href="{{ route('user.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
+                                    <a href="{{ route('monitoring.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
+                                    <a href="{{ route('monitoring.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
                                    
                                 </td>
                             </tr>
-                        @endforeach --}}
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
