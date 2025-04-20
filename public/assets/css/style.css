@@ -58,7 +58,7 @@ body {
     font-family: "Comfortaa", cursive;
     margin: 0;
     background: #f0f4f9;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 400;
     color: #8a98ac;
     line-height: 1.5;
@@ -80,7 +80,7 @@ h6 {
 }
 
 h1 {
-    font-size: 40px;
+    font-size: 35px;
 }
 
 h2 {
@@ -608,7 +608,7 @@ code {
 }
 
 .font-14 {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .font-15 {
@@ -712,7 +712,7 @@ code {
 }
 
 .font-40 {
-    font-size: 40px;
+    font-size: 35px;
 }
 
 /*  -----  Font Weight  ----  */
@@ -1117,7 +1117,7 @@ code {
 .xp-vertical-menu .xp-vertical-submenu > li > a {
     padding: 8px 20px 8px 45px;
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     color: #8a98ac;
 }
 .xp-vertical-menu .xp-vertical-submenu > li > a > .fa {
@@ -1202,7 +1202,7 @@ code {
 .xp-vertical-menu-rtl .xp-vertical-submenu > li > a {
     padding: 8px 45px 8px 20px;
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     color: #8a98ac;
 }
 .xp-vertical-menu-rtl .xp-vertical-submenu > li > a > .fa {
@@ -1452,7 +1452,7 @@ code {
 /* -----  Dropdown  ----- */
 .dropdown-menu {
     padding: 5px 0;
-    font-size: 15px;
+    font-size: 12px;
     border-color: #e1e4e9;
     box-shadow: 0 0 30px 0 rgba(200, 200, 200, 0.2);
 }
@@ -1908,7 +1908,7 @@ a.text-dark:hover {
 
 .btn {
     border-radius: 3px;
-    font-size: 14px;
+    font-size: 12px;
     padding: 7px 18px;
 }
 
@@ -2980,7 +2980,7 @@ a.text-dark:hover {
 .xp-chartist-widget-color .ct-label {
     fill: #ffffff;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 5px;
 }
 
@@ -2993,7 +2993,7 @@ a.text-dark:hover {
     border-radius: 50px;
     border: none;
     padding: 8px 18px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     text-transform: capitalize;
 }
@@ -3002,7 +3002,7 @@ a.text-dark:hover {
     border-radius: 50px;
     border: none;
     padding: 8px 18px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     text-transform: capitalize;
 }
@@ -3074,7 +3074,7 @@ a.text-dark:hover {
 }
 .swal2-modal .swal2-styled {
     border: inherit;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     margin: 0 5px;
     padding: 8px 18px;
@@ -3612,7 +3612,7 @@ a.text-dark:hover {
     background-color: #ffffff;
     margin: 2px;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 2;
     text-align: center;
@@ -3748,7 +3748,7 @@ a.text-dark:hover {
     float: left;
     background-color: #dbe5fd;
     margin: 1px;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 1.4;
     color: #f1e724;
@@ -4059,7 +4059,7 @@ label {
 
 .form-control {
     background-color: #f0f1f4;
-    font-size: 15px;
+    font-size: 12px;
     color: #8a98ac;
     border: none;
     border-radius: 5px;
@@ -4681,7 +4681,7 @@ a.editable-click:hover {
 }
 .select2-container--default .select2-selection--single {
     background-color: #f0f1f4;
-    font-size: 14px;
+    font-size: 12px;
     color: #8a98ac;
     border: none;
     border-radius: 5px;
@@ -5122,7 +5122,7 @@ a.editable-click:hover {
 
 .fc th.fc-widget-header {
     padding: 12px 0;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 20px;
     text-transform: uppercase;
 }
@@ -5158,7 +5158,7 @@ a.editable-click:hover {
     border: none;
     border-radius: 50px;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     margin: 5px 0;
     padding: 5px 5px;
     cursor: move;
@@ -5272,7 +5272,7 @@ a.editable-click:hover {
 .ct-label {
     fill: #8a98ac;
     color: #8a98ac;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .xp-chartist-simple-pie-chart .ct-label {
@@ -5692,7 +5692,7 @@ canvas {
 /* -----  C3 chart ----- */
 .c3 svg {
     font-family: "Comfortaa", cursive;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .c3 path {
@@ -5730,12 +5730,12 @@ canvas {
 }
 
 .c3-chart-arcs-title {
-    font-size: 14px;
+    font-size: 12px;
     color: #ffffff;
 }
 
 .c3-legend-item {
-    font-size: 14px;
+    font-size: 12px;
     padding-right: 10px;
 }
 
@@ -5755,7 +5755,7 @@ canvas {
 }
 .c3-tooltip th {
     background-color: #313131;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     padding: 2px 5px;
     text-align: left;
@@ -5789,12 +5789,12 @@ canvas {
     color: #ffffff;
     opacity: 0.8;
     filter: alpha(opacity=85);
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .legendLabel {
     color: #8a98ac;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 /* -----  Morris chart  ----- */
@@ -5804,7 +5804,7 @@ canvas {
 .morris-chart tspan {
     font-family: "Comfortaa", cursive;
     color: #8a98ac;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
 }
 
@@ -5815,7 +5815,7 @@ canvas {
     background: #313131;
     border: none;
     font-family: "Comfortaa", cursive;
-    font-size: 14px;
+    font-size: 12px;
     text-align: center;
 }
 .morris-hover.morris-default-style .morris-hover-point {
@@ -6237,7 +6237,7 @@ table.focus-on tfoot tr.focused td {
     }
 
     h6 {
-        font-size: 15px;
+        font-size: 12px;
     }
 
     .xp-leftbar {
