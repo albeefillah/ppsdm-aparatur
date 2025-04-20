@@ -20,9 +20,7 @@
             .table-font{
         font-family: 'Gill Sans', sans-serif;
     }
-            body{
-               font-size: 14px; 
-            }
+
         </style>
         <!-- End CSS -->
     </head>
