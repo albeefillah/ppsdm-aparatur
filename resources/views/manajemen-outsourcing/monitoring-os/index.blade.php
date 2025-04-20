@@ -10,14 +10,137 @@ PPSDM Aparatur - User
 
 <!-- Sweet Alert -->
 <link href="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+<style>
+    .cell {
+        padding: 2px;
+        text-align: center;
+        font-weight: bold;
+    }
 
+    .r1 {
+        background-color: #cce5ff; /* Primary - Biru */
+    }
+    .r2 {
+        background-color: #dd68ec; /* Primary - Biru */
+    } 
+    .r3 {
+        background-color: #5db4fc; /* Primary - Biru */
+    }
+    .r4 {
+        background-color: #c1c0fc; /* Primary - Biru */
+    }
+    .k1 {
+        background-color: #f9ccff; /* Primary - Biru */
+    } 
+    .k2 {
+        background-color: #f8b1c9; /* Primary - Biru */
+    } 
+    .k3 {
+        background-color: #fa6eb4; /* Primary - Biru */
+    } 
+    .k4 {
+        background-color: #c4fdc4; /* Primary - Biru */
+    }
+
+    .ldp{
+        background-color: #40f058; /* Primary - Biru */
+    }
+    .fom{
+        background-color: #f7cb3c; /* Primary - Biru */
+    } 
+    .obm {
+        background-color: #f0ed4d; /* Primary - Biru */
+    } 
+    .lds {
+        background-color: #b4b4b4; /* Secondary - Hijau */
+    } 
+    .fop {
+        background-color: #faa21f; /* Secondary - Hijau */
+    }
+
+    .gdb{
+        background-color: #6188c2; /* Secondary - Hijau */
+    }
+    .gd {
+        background-color: #ffeeba; /* Garden - Kuning */
+    }
+
+    .rrp {
+        background-color: #f5bcc1; /* Women - Pink */
+    }
+
+    .bq {
+        background-color: #f56666; /* Banquet - Abu */
+    }
+
+    .off {
+        background-color: #f5f5f5; /* Libur - Abu Muda */
+        color: #ee3434;
+    }
+    /* Wrapper scroll horizontal */
+    .scroll-table-wrapper {
+        overflow-x: auto;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+    th.month-end, td.month-end {
+        border-right: 2px solid #000 !important;
+    }
+
+    .drag-scroll {
+    overflow-x: auto;
+    cursor: grab;
+    }
+    .drag-scroll:active {
+    cursor: grabbing;
+    }
+
+
+
+    /* td.sticky-col {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 5;
+        border-right: 2px solid #ccc;
+    } 
+     */
+
+    /* Freeze kolom pertama (No) */
+    /* th.sticky-col,
+     td.sticky-col {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 5;
+        border-right: 2px solid #ccc;
+    } 
+
+    /* Freeze kolom kedua (Nama) */
+    /* th.sticky-col-2,
+    td.sticky-col-2 {
+        position: sticky;
+        left: 40px; 
+        background: white;
+        z-index: 5;
+        border-right: 2px solid #ccc;
+    } */
+
+    /* Freeze header (opsional) */
+    /* thead th {
+        position: sticky;
+        top: 0;
+        background: #e9ecef;
+        z-index: 3;
+    } */
+</style>
 @endsection 
 @section('content')
 <!-- Start XP Breadcrumbbar -->                    
 <div class="xp-breadcrumbbar">
     <div class="row">
         <div class="col-md-6 col-lg-6">
-            <h4 class="xp-page-title">Monitoring Outsourcing</h4>
+            {{-- <h4 class="xp-page-title">Monitoring Outsourcing</h4> --}}
         </div>
         <div class="col-md-6 col-lg-6">
             <div class="xp-breadcrumb">
@@ -48,85 +171,114 @@ PPSDM Aparatur - User
 
 
     <!-- Start XP Col -->
-      <div class="col-lg-12">
+    <div class="col-lg-12">
         <div class="card m-b-30">
             <div class="card-header bg-white">
-                <h5 class="card-title text-black">Monitoring OS</h5>
+                <h4 class=" text-center text-black">Jadwal Piket CS Tahun 2025</h4>
             </div>
-            <div class="row">
-                <div class="pl-5">
-                    <a href="{{ route('monitoring.create') }}" class="btn btn-secondary"> <i class="fa fa-plus-circle"></i> Tambah Data</a>
-                </div>
-                <div class="pl-3">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleStandardModal">
-                        <i class="ti-import"> </i> Import Excel
-                    </button>
-                    <!-- Modal -->
-                    <form action="{{ route('monitoring.import') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="modal fade" id="exampleStandardModal" tabindex="-1" role="dialog" aria-labelledby="exampleStandardModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleStandardModalLabel">Upload File</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <input type="file"  class="form-control" name="file" required>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                                        <button type="submit" class="btn btn-info">Import</button>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="pl-5">
+                <!-- Button trigger modal -->
+                <a href="{{ route('os.index') }}" class="btn btn-success">
+                    <i class="ti-calendar"> </i> Generate Jadwal
+                </a>
+            </div>
+                <div class="card-body" style="font-size: 10px">
+                    <div class="table-responsive">
+                        <div class="scroll-table-wrapper drag-scroll">
+                            <table class="table table-bordered table-sm table-striped" style="min-width: max-content;">
+                                <thead class="table-dark">
+                                    <!-- Baris 1: Bulan -->
+                                    <tr>
+                                        <th rowspan="3" style="min-width: 40px;" class="text-center align-middle sticky-col">No</th>
+                                        <th rowspan="3" style="min-width: 180px;" class="text-center align-middle sticky-col-2">Nama CS</th>
+                                        @php
+                                            $groupedDates = collect($dates)->groupBy(function ($date) {
+                                                return \Carbon\Carbon::parse($date)->format('F Y');
+                                            });
+                                            $monthEndDates = $groupedDates->map(function ($group) {
+                                                return \Carbon\Carbon::parse($group->last())->format('Y-m-d');
+                                            })->values()->toArray();
+                                        @endphp
+                                        @foreach ($groupedDates as $monthName => $datesInMonth)
+                                            @php
+                                                $lastDate = \Carbon\Carbon::parse($datesInMonth->last())->format('Y-m-d');
+                                                $monthClass = in_array($lastDate, $monthEndDates) ? 'month-end' : '';
+                                            @endphp
+                                            <th colspan="{{ $datesInMonth->count() }}" class="text-center text-black {{ $monthClass }}"
+                                                style="font-size: 15px; background:#c4fdc4;">
+                                                {{ $monthName }}
+                                            </th>
+                                        @endforeach
+                                    </tr>
+                                
+                                    <!-- Baris 2: Tanggal -->
+                                    <tr>
+                                        @foreach ($dates as $date)
+                                            @php
+                                                $carbonDate = \Carbon\Carbon::parse($date);
+                                                $isHoliday = in_array($date, $holidays ?? []);
+                                                $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon\Carbon::SATURDAY, Carbon\Carbon::SUNDAY]);
+                                                $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
+                                                $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                            @endphp
+                                            <th class="text-center {{ $holidayClass }} {{ $borderClass }}">
+                                                {{ $carbonDate->format('j') }}
+                                            </th>
+                                        @endforeach
+                                    </tr>
+                                
+                                    <!-- Baris 3: Hari -->
+                                    <tr>
+                                        @foreach ($dates as $date)
+                                            @php
+                                                $carbonDate = \Carbon\Carbon::parse($date);
+                                                $dayName = $carbonDate->translatedFormat('D'); // Atau 'l' untuk nama lengkap
+                                                $isHoliday = in_array($date, $holidays ?? []);
+                                                $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon\Carbon::SATURDAY, Carbon\Carbon::SUNDAY]);
+                                                $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
+                                                $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                            @endphp
+                                            <th class="text-center {{ $holidayClass }} {{ $borderClass }}">
+                                                {{ $dayName }}
+                                            </th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                
+                                
+                                <tbody>
+                                    @foreach ($employees as $index => $employee)
+                                        <tr>
+                                            <td class="sticky-col text-center">{{ $index + 1 }}</td>
+                                            <td class="sticky-col-2 text-start">{{ $employee->name }}</td>
+                                            @foreach ($dates as $date)
+                                            @php
+                                                $schedule = $employee->schedules->first(function ($item) use ($date) {
+                                                    return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
+                                                });
+                                            
+                                                $jobCode = $schedule?->job?->code ?? 'OFF';
+                                                
+                                                $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                            @endphp
+                                        
+                                        <td class="cell {{ strtolower($jobCode) }} {{ $borderClass }}">
+                                            {{ $jobCode }}
+                                        </td>
+                                            @endforeach
+    
+                                        
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </form>
-                </div>
 
-                <div class="pl-3">
-                    <a href="{{ route('monitoring.export') }}" class="btn btn-success"> <i class="ti-export"> </i> Export Excel</a>
+            
+
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="xp-default-datatable" class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Role</th>
-                            <th>Lokasi</th>
-                            <th>Tgl Piket</th>
-                            <th>Shift</th>
-                            <th>Keterangan</th>
-                            <th>Aksi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($os as $key => $item)
-                            <tr>
-                                <td>{{ $key+1 }}</td>
-                                <td>{{ $item->nama }}</td>
-                                <td>{{ $item->role }}</td>
-                                <td>{{ $item->lokasi }}</td>
-                                <td>{{ $item->tgl_piket }}</td>
-                                <td>{{ $item->shift }}</td>
-                                <td>{{ $item->keterangan }}</td>
-                                <td>
-                                    <a href="{{ route('monitoring.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
-                                    <a href="{{ route('monitoring.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
-                                   
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                
         </div>
     </div>
     <!-- End XP Col -->
@@ -153,4 +305,37 @@ PPSDM Aparatur - User
 <!-- Sweet-Alert JS -->
 <script src="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/js/init/sweet-alert-init.js') }}"></script>
+<script>
+    document.querySelectorAll('.drag-scroll').forEach(function (el) {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+    
+      el.addEventListener('mousedown', (e) => {
+        isDown = true;
+        el.classList.add('active');
+        startX = e.pageX - el.offsetLeft;
+        scrollLeft = el.scrollLeft;
+      });
+    
+      el.addEventListener('mouseleave', () => {
+        isDown = false;
+        el.classList.remove('active');
+      });
+    
+      el.addEventListener('mouseup', () => {
+        isDown = false;
+        el.classList.remove('active');
+      });
+    
+      el.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - el.offsetLeft;
+        const walk = (x - startX) * 2; // bisa diubah speed-nya
+        el.scrollLeft = scrollLeft - walk;
+      });
+    });
+</script>
+  
 @endsection 
