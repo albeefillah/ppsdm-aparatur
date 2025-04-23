@@ -76,7 +76,7 @@ class OutsourcingController extends Controller
         }
 
         // Data untuk select filter
-        $jobs = Job::select('id', 'code')->get();
+        $jobs = Job::select('id', 'code', 'name')->get();
 
         return view('manajemen-outsourcing.list-pegawai.index', compact('jobs'));
     }
@@ -185,12 +185,13 @@ class OutsourcingController extends Controller
 
     public function jobSummary(Request $request)
     {
-        $jobs = Job::select('id', 'code')->get();
+        $jobs = Job::select('id', 'code', 'name')->get();
 
         // Tambahkan manual "OFF" sebagai job dengan null job_id
         $jobs->push((object)[
             'id' => null,
-            'code' => 'OFF'
+            'code' => 'OFF',
+            'name' => null
         ]);
 
         $query = Schedule::query();
@@ -218,16 +219,57 @@ class OutsourcingController extends Controller
         }
 
         $summary = $jobs->map(function ($job) use ($query) {
-            $count = (clone $query)->where('job_id', $job->id)->count();
+            $count = (clone $query)->where('job_id', $job->id)->distinct('employee_id')->count('employee_id');
+
 
             return [
                 'kode_job' => $job->code,
-                'jumlah' => $count
+                'deskripsi' => $job->name ?? 'LIBUR',
+                'jumlah' => $count,
             ];
         });
 
-        return response()->json($summary);
+        // Filter hanya job yang jumlahnya > 0
+        $filteredSummary = $summary->filter(fn($item) => $item['jumlah'] > 0)->values();
+
+        return response()->json($filteredSummary);
     }
+
+
+
+    public function employeeList(Request $request)
+    {
+        $query = Employee::with(['schedules' => function ($q) use ($request) {
+            $q->when($request->filled('tanggal'), function ($q) use ($request) {
+                $q->where('work_date', $request->tanggal);
+            });
+            $q->when($request->filled('bulan'), function ($q) use ($request) {
+                $q->whereMonth('work_date', $request->bulan);
+            });
+            $q->when($request->filled('job'), function ($q) use ($request) {
+                if ($request->job === 'OFF') {
+                    $q->whereNull('job_id');
+                } else {
+                    $q->where('job_id', $request->job);
+                }
+            });
+        }]);
+
+        if ($request->filled('nama')) {
+            $query->where('name', 'like', '%' . $request->nama . '%');
+        }
+
+        $employees = $query->get();
+
+        $filtered = $employees->filter(function ($employee) {
+            return $employee->schedules->isNotEmpty();
+        })->values();
+
+        return response()->json($filtered);
+    }
+
+
+
 
 
 

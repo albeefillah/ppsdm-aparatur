@@ -16,7 +16,7 @@ PPSDM Aparatur - User
 <div class="xp-breadcrumbbar">
     <div class="row">
         <div class="col-md-6 col-lg-6">
-            <h4 class="xp-page-title">Jadwal Piket Outsourcing</h4>
+            <h4 class="xp-page-title ml-3">Jadwal Piket Outsourcing</h4>
         </div>
         <div class="col-md-6 col-lg-6">
             <div class="xp-breadcrumb">
@@ -46,54 +46,7 @@ PPSDM Aparatur - User
     @endif
 
 
-    <!-- Start XP Col -->
-      {{-- <div class="col-lg-12">
-        <div class="card m-b-30">
-            <div class="card-header bg-white">
-                <h5 class="card-title text-black">Data OS</h5>
-            </div>
-            <div class="pl-4">
-                <a href="{{ route('os.create') }}" class="btn btn-secondary">+ Tambah Data</a>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="xp-default-datatable" class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Role</th>
-                            <th>Lokasi</th>
-                            <th>Tgl Piket</th>
-                            <th>Shift</th>
-                            <th>Keterangan</th>
-                            <th>Aksi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($os as $key => $item)
-                            <tr>
-                                <td>{{ $key+1 }}</td>
-                                <td>{{ $item->nama }}</td>
-                                <td>{{ $item->role }}</td>
-                                <td>{{ $item->lokasi }}</td>
-                                <td>{{ $item->tgl_piket }}</td>
-                                <td>{{ $item->shift }}</td>
-                                <td>{{ $item->keterangan }}</td>
-                                <td>
-                                    <a href="{{ route('os.edit', $item->id) }}" class="btn btn-info"> <i class="fa fa-pencil"></i> </a>
-                                    <a href="{{ route('os.destroy', $item->id) }}" class="btn btn-danger" id="xp-sa-warning"> <i class="fa fa-trash"></i> </a>
-                                   
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!-- End XP Col -->
+
 
 
     <div class="col-lg-12">
@@ -119,7 +72,7 @@ PPSDM Aparatur - User
                         <select id="filter-job" class="form-control">
                             <option value="">-- Semua Job --</option>
                             @foreach($jobs as $job)
-                                <option value="{{ $job->id }}">{{ $job->code }}</option>
+                                <option value="{{ $job->id }}">{{ $job->code }} - {{ $job->name }}</option>
                             @endforeach
                             <option value="off">OFF</option> <!-- Tambahan untuk OFF -->
                         </select>
@@ -201,21 +154,32 @@ PPSDM Aparatur - User
                     <div class="pl-3 pt-3">
                         <button type="button" id="reset-filter" class="btn btn-warning mb-2">Reset Filter</button>
                     </div>
+                    <div class="pl-3 pt-3">
+                        <label for=""></label>
+                    </div>
                 </div>
                 
 
             </div>
         </div>
+        
+      
+        
         <div class="row">
             <div class="col-md-8">
                 <div class="card m-b-30">
                     <div class="card-header bg-white">
-                        <h5 class="card-title text-black">Data Piket</h5>
+                        <div class="row ml-2">
+                            <h5 class="card-title text-black">Data Piket</h5>
+                            <div class="xp-badge ml-2">
+                               {{-- <h6> <a href="#" id="job-count-badge-utama" class="badge badge-dark">0</a>     </h6>                                --}}
+                            </div>               
+                        </div>
                     </div>
                 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="xp-default-datatable" class="table table-striped table-bordered w-100">
+                            <table id="xp-default-datatable" class="table table-sm table-striped table-bordered w-100">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -233,25 +197,55 @@ PPSDM Aparatur - User
             <div class="col-md-4">
                 <div class="card m-b-30">
                     <div class="card-header bg-white">
-                        <h5 class="card-title text-black">Sebaran Job</h5>
+                        <div class="row ml-2">
+                            <h5 class="card-title text-black">Jenis Pekerjaan (Job)</h5>
+                            <div class="xp-badge ml-2">
+                               <h6> <a href="#" id="job-count-badge" class="badge badge-dark">0</a>     </h6>                               
+                            </div>               
+                        </div>
                     </div>
                 
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered mt-4" id="summary-table">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Kode Job</th>
-                                        <th>Jumlah</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Isi via JS -->
-                                </tbody>
-                            </table>
-                            
+                    <div class="card-body p-2">
+                            <!-- TABEL JOB SUMMARY -->
+                            <div class="table-responsive" style="overflow-x: auto; height:240px;">
+                                <table id="summary-table" class="table table-sm table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Kode Job</th>
+                                            <th>Deskripsi</th>
+                                            <th>Jml Pegawai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+        
+                    </div>
+                </div>
+                <div class="card m-b-30">
+                    <div class="card-header bg-white">
+                        <div class="row ml-2">
+                            <h5 class="card-title text-black">List Pegawai</h5>
+                            <div class="xp-badge ml-2">
+                               <h6> <a href="#" id="job-count-badge-employee" class="badge badge-dark">0</a>     </h6>                               
+                            </div>               
                         </div>
+                    </div>
+                
+                    <div class="card-body p-2">
+                            <!-- TABEL PEGAWAI TERLIBAT -->
+                            <div class="table-responsive" style="overflow-x: auto; height:240px;">
+                                <table id="employee-table" class="table table-sm table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Pegawai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -286,6 +280,8 @@ PPSDM Aparatur - User
 <script>
     $(document).ready(function() {
         loadSummary();
+        loadEmployees();
+         // 🟢 Update badge jumlah data
         let table = $('#xp-default-datatable').DataTable({
             processing: true,
             serverSide: true,
@@ -311,6 +307,7 @@ PPSDM Aparatur - User
         $('#filter-tanggal, #filter-bulan, #filter-job, #filter-nama').on('change keyup', function() {
             table.ajax.reload();
             loadSummary();
+            loadEmployees();
         });
 
 
@@ -321,6 +318,8 @@ PPSDM Aparatur - User
         $('#filter-bulan').val('');
         $('#filter-job').val('');
         table.ajax.reload();
+        loadSummary();
+        loadEmployees();
         });
     });
 
@@ -338,6 +337,9 @@ PPSDM Aparatur - User
         success: function (data) {
             let tbody = $('#summary-table tbody');
             tbody.empty();
+            // 🟢 Update badge jumlah data
+            $('#job-count-badge').text(data.length);
+
             if (data.length === 0) {
                 tbody.append('<tr><td colspan="3" class="text-center">Tidak ada data</td></tr>');
             } else {
@@ -346,6 +348,7 @@ PPSDM Aparatur - User
                         <tr>
                             <td>${index + 1}</td>
                             <td>${item.kode_job}</td>
+                            <td>${item.deskripsi}</td>
                             <td>${item.jumlah}</td>
                         </tr>
                     `);
@@ -354,6 +357,38 @@ PPSDM Aparatur - User
         }
     });
     }
+
+    function loadEmployees() {
+    $.ajax({
+        url: "{{ route('os.employee-list') }}", // Buat route baru ya
+        data: {
+            tanggal: $('#filter-tanggal').val(),
+            bulan: $('#filter-bulan').val(),
+            job: $('#filter-job').val(),
+            nama: $('#filter-nama').val()
+        },
+        success: function (data) {
+            let tbody = $('#employee-table tbody');
+            tbody.empty();
+
+              // 🟢 Update badge jumlah data
+            $('#job-count-badge-employee').text(data.length);
+             
+            if (data.length === 0) {
+                tbody.append('<tr><td colspan="2" class="text-center">Tidak ada pegawai</td></tr>');
+            } else {
+                data.forEach((item, index) => {
+                    tbody.append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.name}</td>
+                        </tr>
+                    `);
+                });
+            }
+        }
+    });
+}
 
 </script>
 

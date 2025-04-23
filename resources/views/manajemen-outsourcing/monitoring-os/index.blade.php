@@ -140,7 +140,7 @@ PPSDM Aparatur - User
 <div class="xp-breadcrumbbar">
     <div class="row">
         <div class="col-md-6 col-lg-6">
-            {{-- <h4 class="xp-page-title">Monitoring Outsourcing</h4> --}}
+            <h4 class="xp-page-title ml-3">Monitoring Jadwal Piket CS 2025</h4>
         </div>
         <div class="col-md-6 col-lg-6">
             <div class="xp-breadcrumb">
@@ -174,7 +174,7 @@ PPSDM Aparatur - User
     <div class="col-lg-12">
         <div class="card m-b-30">
             <div class="card-header bg-white">
-                <h4 class=" text-center text-black">Jadwal Piket CS Tahun 2025</h4>
+                {{-- <h4 class=" text-center text-black">Jadwal Piket CS Tahun 2025</h4> --}}
             </div>
             <div class="pl-5">
                 <!-- Button trigger modal -->
