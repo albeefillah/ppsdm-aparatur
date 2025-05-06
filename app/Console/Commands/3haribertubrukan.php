@@ -156,7 +156,7 @@ class GenerateMonthlySchedulerrrrr extends Command
         if ($dayType === 'off') return null;
 
         if ($employee->category === 'koor') {
-            return Job::where('code', 'FOP')->first()?->id;
+            return Job::where('code', 'BQ')->first()?->id;
         }
 
         // PRIMARY untuk CS dengan pola 3 hari berturut
