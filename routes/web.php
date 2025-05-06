@@ -46,6 +46,7 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('os.create');
         Route::get('/export', [App\Http\Controllers\OutsourcingController::class, 'export'])->name('os.export');
         Route::post('/import', [App\Http\Controllers\OutsourcingController::class, 'import'])->name('os.import');
+        Route::get('/formGenerate', [App\Http\Controllers\OutsourcingController::class, 'formGenerate'])->name('os.form-generate');
         Route::post('/generate', [App\Http\Controllers\OutsourcingController::class, 'scheduleGenerate'])->name('os.generate');
         Route::get('/edit/{id}', [App\Http\Controllers\OutsourcingController::class, 'edit'])->name('os.edit');
         Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('os.update');
@@ -61,6 +62,24 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/edit/{id}', [App\Http\Controllers\OutsourcingController::class, 'edit'])->name('monitoring.edit');
         Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('monitoring.update');
         Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('monitoring.destroy');
+    });
+
+    Route::prefix('employee')->group(function () {
+        Route::get('/', [App\Http\Controllers\EmployeeController::class, 'index'])->name('employee.index');
+        Route::get('/create', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employee.create');
+        Route::post('/store', [App\Http\Controllers\EmployeeController::class, 'store'])->name('employee.store');
+        Route::get('/edit/{id}', [App\Http\Controllers\EmployeeController::class, 'edit'])->name('employee.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\EmployeeController::class, 'update'])->name('employee.update');
+        Route::get('/destroy/{id}', [App\Http\Controllers\EmployeeController::class, 'destroy'])->name('employee.destroy');
+    });
+
+    Route::prefix('jobs')->group(function () {
+        Route::get('/', [App\Http\Controllers\JobsController::class, 'index'])->name('jobs.index');
+        Route::get('/create', [App\Http\Controllers\JobsController::class, 'create'])->name('jobs.create');
+        Route::post('/store', [App\Http\Controllers\JobsController::class, 'store'])->name('jobs.store');
+        Route::get('/edit/{id}', [App\Http\Controllers\JobsController::class, 'edit'])->name('jobs.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\JobsController::class, 'update'])->name('jobs.update');
+        Route::get('/destroy/{id}', [App\Http\Controllers\JobsController::class, 'destroy'])->name('jobs.destroy');
     });
 
     // Route::pref  ix('role')->group(function () {

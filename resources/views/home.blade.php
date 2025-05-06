@@ -88,7 +88,7 @@ PPSDM Aparatur - Dashboard
                         <p class="xp-icon-timer mb-4"><i class="mdi mdi-account-group"></i></p>
                         <h5 class="mb-2 font-20">Outsourcing (OS)</h5>
                         <p class="mb-3">Database monitoring pegawai OS  PPSDMA</p>
-                        <a href="{{ route('monitoring.index') }}" class="btn btn-white btn-rounded text-secondary">Lihat Dashboard</a>
+                        <a href="{{ route('os.index') }}" class="btn btn-white btn-rounded text-secondary">Lihat Dashboard</a>
                     </div>
                 </div>
             </div>
