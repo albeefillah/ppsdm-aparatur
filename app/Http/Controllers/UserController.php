@@ -34,11 +34,12 @@ class UserController extends Controller
         $user = User::create([
             'id_role' => $request->id_role,
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' =>  bcrypt($request->password),
         ]);
 
-        session()->flash('success','Data berhasil ditambahkan.');
+        session()->flash('success', 'Data berhasil ditambahkan.');
         return redirect()->route('user.index');
     }
 
@@ -58,7 +59,7 @@ class UserController extends Controller
         $role = Role::all();
         $user = User::find($id);
 
-        return view('user/edit', compact('role','user'));
+        return view('user/edit', compact('role', 'user'));
     }
 
     /**
@@ -70,13 +71,13 @@ class UserController extends Controller
         $user->update([
             'id_role' => $request->id_role,
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' =>  bcrypt($request->password),
         ]);
 
-        session()->flash('success','Data berhasil diubah.');
+        session()->flash('success', 'Data berhasil diubah.');
         return redirect()->route('user.index');
-
     }
 
     /**
@@ -87,7 +88,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
 
-        session()->flash('success','Data berhasil dihapus.');
+        session()->flash('success', 'Data berhasil dihapus.');
         return redirect()->back();
     }
 }
