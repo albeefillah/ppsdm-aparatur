@@ -27,17 +27,26 @@ class EmployeeSeeder extends Seeder
             ['name' => 'DEDE RAHMAT', 'category' => 'cs', 'team' => 1],
             ['name' => 'ANDI YAWAN', 'category' => 'cs', 'team' => 1],
             ['name' => 'SUNARDI MUHAMAD', 'category' => 'garden', 'team' => 2],
-            ['name' => 'ADE RONI DARUSMAN', 'category' => 'marbot', 'team' => 2],
-            ['name' => 'IWAN WIRATMAJA', 'category' => 'cs', 'team' => 2],
             ['name' => 'GANDI SUMARNA', 'category' => 'garden', 'team' => 2],
+            ['name' => 'ADE RONI DARUSMAN', 'category' => 'marbot', 'team' => 2],
             ['name' => 'SAEFUL ULUM', 'category' => 'marbot', 'team' => 2],
-            ['name' => 'ERY JUMAERY LUTHER', 'category' => 'cs', 'team' => 2],
             ['name' => 'HARDIYANA', 'category' => 'cs', 'team' => 3],
-            ['name' => 'WIWIN WINARSIH', 'category' => 'women', 'team' => 3],
             ['name' => 'DIANA', 'category' => 'cs', 'team' => 3],
             ['name' => 'INDRA SAPUTRA', 'category' => 'cs', 'team' => 3],
-            ['name' => 'MARSYA NUR HERLIANA PUTRI', 'category' => 'women', 'team' => 3],
+            ['name' => 'WIWIN WINARSIH', 'category' => 'cs', 'team' => 3],
+            ['name' => 'MARSYA NUR HERLIANA PUTRI', 'category' => 'cs', 'team' => 3],
             ['name' => 'HARDIAN LESMANA', 'category' => 'cs', 'team' => 3],
+            ['name' => 'ERY JUMAERY LUTHER', 'category' => 'cs', 'team' => 2],
+
+            // ['name' => 'SUNARDI MUHAMAD', 'category' => 'cs', 'team' => 2],
+
+            // ['name' => 'ADE RONI DARUSMAN', 'category' => 'cs', 'team' => 2],
+
+            ['name' => 'IWAN WIRATMAJA', 'category' => 'cs', 'team' => 2],
+            // ['name' => 'GANDI SUMARNA', 'category' => 'cs', 'team' => 2],
+            // ['name' => 'SAEFUL ULUM', 'category' => 'cs', 'team' => 2],
+
+
             ['name' => 'TATAG FADJARYUDHI', 'category' => 'koor', 'team' => 4],
         ];
         // $employees = [
