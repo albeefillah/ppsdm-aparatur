@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('employee_job', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('category', ['cs', 'marbot', 'garden', 'banquet', 'women', 'koor']);
-            $table->unsignedTinyInteger('team')->nullable(); // 1-4
+            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
+            $table->foreignId('job_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['employee_id', 'job_id']); // Hindari duplikat
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('employee_job');
     }
 };

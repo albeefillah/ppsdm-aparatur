@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique(); // contoh: R1, K1, OBM, FOP
             $table->string('name');
-            $table->enum('category', ['cs', 'marbot', 'garden', 'banquet', 'women', 'koor']);
-            $table->enum('type', ['primary', 'secondary', 'special']); // jenis pekerjaan
-            $table->enum('shift', ['pagi', 'malam']);
+            $table->enum('category', ['cs', 'marbot', 'garden', 'banquet', 'women', 'koor'])->nullable();
+            $table->enum('type', ['primary', 'secondary', 'special'])->nullable(); // jenis pekerjaan
+            $table->string('shift', 150);
+            $table->text('jobdesc')->nullable();
             $table->time('start');
             $table->time('end');
             $table->timestamps();
