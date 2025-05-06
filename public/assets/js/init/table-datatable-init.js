@@ -1,24 +1,24 @@
-// "use strict";
-// $(document).ready(function () {
-//     /* -----  Table - Datatable  ----- */
-//     $("#datatable").DataTable();
+"use strict";
+$(document).ready(function () {
+    /* -----  Table - Datatable  ----- */
+    $("#datatable").DataTable();
 
-// $("#xp-default-datatable").DataTable({
-//     // "order": [[ 3, "desc" ]]
-// });
+    $("#new-xp-default-datatable").DataTable({
+        // "order": [[ 3, "desc" ]]
+    });
 
-// var table = $("#datatable-buttons").DataTable({
-//     lengthChange: false,
-//     buttons: ["copy", "csv", "excel", "pdf", "print"],
-// });
+    var table = $("#datatable-buttons").DataTable({
+        lengthChange: false,
+        buttons: ["copy", "csv", "excel", "pdf", "print"],
+    });
 
-// table
-//     .buttons()
-//     .container()
-//     .appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)");
-// });
+    table
+        .buttons()
+        .container()
+        .appendTo("#datatable-buttons_wrapper .col-md-6:eq(0)");
+});
 
-// "use strict";
+// ("use strict");
 // $(document).ready(function () {
 //     // Matikan dulu inisialisasi default yang tidak perlu
 //     if ($.fn.DataTable.isDataTable("#xp-default-datatable")) {
