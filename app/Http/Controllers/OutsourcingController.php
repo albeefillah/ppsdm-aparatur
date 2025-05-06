@@ -11,6 +11,7 @@ use Rap2hpoutre\FastExcel\FastExcel;
 use App\Models\Holiday;
 use App\Models\Job;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\DataTables;
 
 
@@ -61,7 +62,7 @@ class OutsourcingController extends Controller
                     return $row->employee->name;
                 })
                 ->addColumn('pekerjaan', function ($row) {
-                    return $row->job->code ?? 'OFF';
+                    return $row->job->code ?? 'off';
                 })
                 ->addColumn('aksi', function ($row) {
                     $edit = route('os.edit', $row->id);
@@ -78,7 +79,31 @@ class OutsourcingController extends Controller
         // Data untuk select filter
         $jobs = Job::select('id', 'code', 'name')->get();
 
-        return view('manajemen-outsourcing.list-pegawai.index', compact('jobs'));
+        $os = Schedule::with(['employee', 'job'])
+            ->orderBy('work_date')
+            ->get();
+
+        $employees = Employee::with(['schedules.job'])->get();
+
+
+        // Ambil rentang tanggal dari schedule yang ada
+        $minDate = Schedule::min('work_date');
+        $maxDate = Schedule::max('work_date');
+
+        // Generate array tanggal dari rentang tersebut
+        $dates = [];
+        if ($minDate && $maxDate) {
+            $start = Carbon::parse($minDate);
+            $end = Carbon::parse($maxDate);
+
+            while ($start->lte($end)) {
+                $dates[] = $start->format('Y-m-d');
+                $start->addDay();
+            }
+        }
+        $holidays = Holiday::pluck('date')->map(fn($d) => Carbon::parse($d)->format('Y-m-d'))->toArray();
+
+        return view('manajemen-outsourcing.list-pegawai.index', compact('jobs', 'os', 'dates', 'employees', 'holidays'));
     }
 
 
@@ -160,11 +185,23 @@ class OutsourcingController extends Controller
      */
     public function scheduleGenerate(Request $request)
     {
-
         $request->validate([
             'month' => 'required|integer|min:1|max:12',
             'year' => 'required|integer|min:2020',
+            'job_eligibility' => 'required|array',
         ]);
+
+        // Simpan ke pivot table employee_job
+        foreach ($request->job_eligibility as $employeeId => $jobIds) {
+            $employee = Employee::find($employeeId);
+            if ($employee) {
+                $employee->jobEligibilities()->sync($jobIds); // Update relasi
+            }
+        }
+
+        // Simpan ke cache sementara untuk schedule generate
+        $key = 'job_eligibility_' . now()->timestamp;
+        Cache::put($key, $request->input('job_eligibility'), now()->addMinutes(10));
 
         $month = $request->input('month');
         $year = $request->input('year');
@@ -172,11 +209,31 @@ class OutsourcingController extends Controller
         Artisan::call('schedule:generate', [
             'month' => $month,
             'year' => $year,
+            '--eligibility' => $key,
         ]);
 
-        session()->flash('success', "Jadwal untuk {$month}/{$year} berhasil di generate.");
-        return redirect()->route('monitoring.index');
+        session()->flash('success', "Jadwal untuk {$month}/{$year} berhasil di-generate.");
+        return redirect()->route('os.index');
     }
+
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function formGenerate()
+    {
+        $employee = Employee::with('jobEligibilities')->get();
+
+        $jobs = Job::all();
+
+        $pagiJobs = $jobs->where('shift', 'pagi');
+        $siangJobs = $jobs->where('shift', 'siang');
+        $soreJobs = $jobs->where('shift', 'sore');
+        $malamJobs = $jobs->where('shift', 'malam');
+
+        return view('manajemen-outsourcing.list-pegawai.form-generate', compact('employee', 'jobs', 'pagiJobs', 'siangJobs', 'soreJobs', 'malamJobs'));
+    }
+
 
     /**
      * Display the specified resource.
@@ -190,7 +247,7 @@ class OutsourcingController extends Controller
         // Tambahkan manual "OFF" sebagai job dengan null job_id
         $jobs->push((object)[
             'id' => null,
-            'code' => 'OFF',
+            'code' => 'off',
             'name' => null
         ]);
 
@@ -247,7 +304,7 @@ class OutsourcingController extends Controller
                 $q->whereMonth('work_date', $request->bulan);
             });
             $q->when($request->filled('job'), function ($q) use ($request) {
-                if ($request->job === 'OFF') {
+                if ($request->job === 'off') {
                     $q->whereNull('job_id');
                 } else {
                     $q->where('job_id', $request->job);
@@ -267,11 +324,6 @@ class OutsourcingController extends Controller
 
         return response()->json($filtered);
     }
-
-
-
-
-
 
 
 

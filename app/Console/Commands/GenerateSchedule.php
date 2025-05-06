@@ -1,28 +1,33 @@
 <?php
 
-// hanya garden dan Koor
 namespace App\Console\Commands;
-
+// pola 3 kerja 1 libur
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\Job;
 use App\Models\Schedule;
 use App\Models\Holiday;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Cache;
 
 class GenerateMonthlySchedule extends Command
 {
-    protected $signature = 'schedule:generate {month} {year}';
+    protected $signature = 'schedule:generate {month} {year} {--eligibility=}';
     protected $description = 'Generate monthly work schedule for all employees';
+
+    protected $employeeAssignments = [];
+    protected $employeeLastJob = [];
     protected $jobAssignments = [];
-    protected $csMainJobHistory = [];
-    protected $csSecondaryJobHistory = [];
+    protected $eligibilityMap = [];
 
     public function handle()
     {
         $month = (int) $this->argument('month');
         $year = (int) $this->argument('year');
+        $eligibilityKey = $this->option('eligibility');
+        $this->eligibilityMap = Cache::get($eligibilityKey, []);
 
         if (!checkdate($month, 1, $year)) {
             $this->error("Bulan/tahun tidak valid.");
@@ -36,183 +41,127 @@ class GenerateMonthlySchedule extends Command
         $this->info("Menghapus jadwal lama untuk {$month}/{$year}...");
         Schedule::whereMonth('work_date', $month)->whereYear('work_date', $year)->delete();
 
-        $employees = Employee::all();
         $holidays = Holiday::whereBetween('date', [$startDate, $endDate])->pluck('date')->toArray();
+        $employees = Employee::with('jobEligibilities')->get();
+        $jobs = Job::all();
 
-        // 1. Generate untuk pegawai KOOR terlebih dahulu
-        $koor = Employee::where('category', 'koor')->first();
-        $bqJob = Job::where('code', 'BQ')->first();
+        // POLA: 3 kerja 1 libur
+        $workCycle = ['Kerja', 'Kerja', 'Kerja', 'Libur'];
+        $cycleLength = count($workCycle);
+        $employeeCycles = [];
+        $datesArray = iterator_to_array($dates);
 
-        if ($koor && $bqJob) {
-            foreach ($dates as $date) {
-                $isHoliday = in_array($date->format('Y-m-d'), $holidays) || in_array($date->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY]);
+        foreach ($employees as $index => $employee) {
+            $defaultOffset = $index % $cycleLength; // penting!
+            $offset = $this->getLastCycleOffset($employee->id, $startDate, $defaultOffset);
 
-                if ($isHoliday) continue;
 
-                Schedule::updateOrCreate([
-                    'employee_id' => $koor->id,
-                    'work_date' => $date->format('Y-m-d'),
-                ], [
-                    'job_id' => $bqJob->id,
+            foreach ($datesArray as $i => $date) {
+                $dateStr = $date->toDateString();
+                $cyclePos = ($i + $offset) % $cycleLength;
+                $employeeCycles[$employee->id][$dateStr] = $workCycle[$cyclePos];
+            }
+        }
+
+        foreach ($datesArray as $date) {
+            $dateStr = $date->toDateString();
+            $isHoliday = in_array($dateStr, $holidays);
+            $this->jobAssignments[$dateStr] = [];
+
+            $workingEmployees = $employees->filter(function ($employee) use ($employeeCycles, $dateStr, $isHoliday, $date) {
+                if ($employee->category === 'koor') {
+                    return !$isHoliday && !$date->isWeekend();
+                }
+                return ($employeeCycles[$employee->id][$dateStr] ?? 'Libur') === 'Kerja';
+            })->shuffle()->values();
+
+            // Prioritaskan job dengan kandidat paling sedikit lebih dulu
+            $jobEligibilityCounts = [];
+            foreach ($jobs as $job) {
+                $eligibleCount = $workingEmployees->filter(fn($e) => $e->jobEligibilities->contains('id', $job->id))->count();
+                $jobEligibilityCounts[] = ['job' => $job, 'count' => $eligibleCount];
+            }
+
+            $sortedJobs = collect($jobEligibilityCounts)->sortBy('count')->pluck('job');
+
+            foreach ($sortedJobs as $job) {
+                $eligibleEmployees = $workingEmployees->filter(function ($employee) use ($job, $dateStr) {
+                    return !$this->hasJobAssigned($employee->id, $dateStr)
+                        && $employee->jobEligibilities->contains('id', $job->id);
+                })->shuffle();
+
+                if ($eligibleEmployees->isEmpty()) continue;
+
+                $selectedEmployee = $eligibleEmployees->firstWhere(function ($emp) use ($job) {
+                    return ($this->employeeLastJob[$emp->id] ?? null) !== $job->id;
+                }) ?? $eligibleEmployees->first();
+
+                Schedule::create([
+                    'employee_id' => $selectedEmployee->id,
+                    'job_id' => $job->id,
+                    'work_date' => $dateStr,
                     'job_role' => 'primary',
                     'week_number' => $date->weekOfMonth,
                 ]);
 
-                $this->jobAssignments[$date->format('Y-m-d')][$bqJob->id] = $koor->id;
+                $this->employeeAssignments[$selectedEmployee->id][$dateStr] = 'kerja';
+                $this->employeeLastJob[$selectedEmployee->id] = $job->id;
+                $this->jobAssignments[$dateStr][$job->id] = $selectedEmployee->id;
             }
 
-            $employees = $employees->filter(fn($e) => $e->id !== $koor->id);
+            foreach ($employees as $employee) {
+                if (!isset($this->employeeAssignments[$employee->id][$dateStr])) {
+                    Schedule::create([
+                        'employee_id' => $employee->id,
+                        'job_id' => null,
+                        'work_date' => $dateStr,
+                        'job_role' => 'libur',
+                        'week_number' => $date->weekOfMonth,
+                    ]);
+                    $this->employeeAssignments[$employee->id][$dateStr] = 'libur';
+                }
+            }
         }
 
-        // 2. Generate jadwal untuk pegawai lainnya
-        foreach ($employees as $employee) {
-            $this->generateScheduleForEmployee($employee, $dates, $holidays);
-        }
-
-        $this->info("\u2705 Selesai generate jadwal untuk {$month}/{$year}.");
+        $this->info("✅ Jadwal {$month}/{$year} berhasil dibuat dengan prioritas job krusial terlebih dulu.");
     }
 
-    protected function generateScheduleForEmployee($employee, $dates, $holidays)
+    protected function hasJobAssigned($employeeId, $dateStr)
     {
-        $pattern = ['primary', 'primary', 'primary', 'secondary', 'off', 'off'];
-        $patternLength = count($pattern);
-        $dayIndex = 0;
+        return isset($this->employeeAssignments[$employeeId][$dateStr]);
+    }
 
-        $startDate = $dates->getStartDate()->format('Y-m-d');
+    protected function getLastCycleOffset($employeeId, $startDate, $defaultOffset)
+    {
+        $cycle = ['Kerja', 'Kerja', 'Kerja', 'Libur'];
 
-        $previousRoles = Schedule::where('employee_id', $employee->id)
-            ->where('work_date', '<', $startDate)
+        $last4 = Schedule::where('employee_id', $employeeId)
+            ->whereDate('work_date', '<', $startDate)
             ->orderByDesc('work_date')
-            ->limit(6)
+            ->limit(4)
             ->pluck('job_role')
             ->reverse()
-            ->map(fn($role) => $role === 'libur' ? 'off' : $role)
+            ->map(fn($r) => $r === 'libur' ? 'Libur' : 'Kerja')
             ->values()
             ->toArray();
 
-        $offset = 0;
-        if (!empty($previousRoles)) {
-            $patternString = implode(',', array_merge($pattern, $pattern));
-            $joinedPrev = implode(',', $previousRoles);
-            $foundAt = strpos($patternString, $joinedPrev);
-            if ($foundAt !== false) {
-                $offset = (substr_count(substr($patternString, 0, $foundAt), ',') + count($previousRoles)) % $patternLength;
+        if (count($last4) === 0) {
+            return $defaultOffset; // <- PASTIKAN INI ADA
+        }
+
+        foreach ($cycle as $i => $value) {
+            $match = true;
+            foreach ($last4 as $j => $item) {
+                if ($cycle[($i + $j) % 4] !== $item) {
+                    $match = false;
+                    break;
+                }
             }
-        } else {
-            $offset = $employee->id % 6;
-        }
-
-        foreach ($dates as $date) {
-            if ($employee->category === 'koor') {
-                if (in_array($date->format('Y-m-d'), $holidays)) continue;
+            if ($match) {
+                return ($i + count($last4)) % 4;
             }
-
-            $adjustedIndex = ($dayIndex + $offset) % $patternLength;
-            $dayType = $pattern[$adjustedIndex];
-            $dayIndex++;
-
-            $jobId = $this->assignJob($employee, $dayType, $date);
-            if ($dayType !== 'off' && !$jobId) continue;
-
-            $role = $dayType === 'off' ? 'libur' : $dayType;
-
-            Schedule::create([
-                'employee_id' => $employee->id,
-                'job_id' => $jobId,
-                'work_date' => $date->toDateString(),
-                'job_role' => $role,
-                'week_number' => $date->weekOfMonth,
-            ]);
-        }
-    }
-
-    protected function assignJob($employee, $dayType, $date)
-    {
-        $dateStr = $date->toDateString();
-        $weekNumber = $date->weekOfMonth;
-
-        if ($dayType === 'off') return null;
-
-        // Cek bentrok di level global jobAssignments
-        $isJobTaken = fn($jobId) => isset($this->jobAssignments[$dateStr][$jobId]);
-
-        // KOOR hanya ambil BQ, skip jika bentrok
-        if ($employee->category === 'koor') {
-            $bqJob = Job::where('code', 'BQ')->first();
-            if (!$bqJob || $isJobTaken($bqJob->id)) return null;
-
-            $this->jobAssignments[$dateStr][$bqJob->id] = $employee->id;
-            return $bqJob->id;
         }
 
-        // === PRIMARY JOB ===
-        if ($dayType === 'primary') {
-            if ($employee->category === 'cs') {
-                $availableJobIds = Job::where('category', 'cs')
-                    ->where('type', 'primary')
-                    ->pluck('id')
-                    ->toArray();
-
-                $availableJobIds = array_filter($availableJobIds, fn($id) => !$isJobTaken($id));
-                if (empty($availableJobIds)) return null;
-
-                $lastWeek = $weekNumber - 1;
-                $lastJobId = $this->csMainJobHistory[$employee->id][$lastWeek] ?? null;
-
-                $filtered = array_filter($availableJobIds, fn($id) => $id !== $lastJobId);
-                $candidates = !empty($filtered) ? $filtered : $availableJobIds;
-
-                // Ambil job yang belum diambil orang lain hari itu
-                $selectedJobId = collect($candidates)->random();
-
-                // Simpan untuk minggu ini
-                $this->csMainJobHistory[$employee->id][$weekNumber] = $selectedJobId;
-                $this->jobAssignments[$dateStr][$selectedJobId] = $employee->id;
-
-                return $selectedJobId;
-            }
-
-            // SPECIAL JOB untuk marbot, garden, dll
-            $job = Job::where('category', $employee->category)
-                ->where('type', 'special')
-                ->get()
-                ->reject(fn($job) => $isJobTaken($job->id))
-                ->first();
-
-            if (!$job) return null;
-
-            $this->jobAssignments[$dateStr][$job->id] = $employee->id;
-            return $job->id;
-        }
-
-        // === SECONDARY JOB ===
-        if ($dayType === 'secondary') {
-            $query = Job::where('type', 'secondary');
-
-            // Pegawai kategori garden tidak boleh FOM & FOP
-            if ($employee->category === 'garden') {
-                $query->whereNotIn('code', ['FOM', 'FOP']);
-            }
-
-            $jobs = $query->get();
-            if ($jobs->isEmpty()) return null;
-
-            // Ambil yang belum diambil orang lain hari itu
-            $jobs = $jobs->reject(fn($job) => $isJobTaken($job->id));
-
-            if ($jobs->isEmpty()) return null;
-
-            // Rolling agar tidak sama dengan minggu lalu
-            $lastCode = $this->csSecondaryJobHistory[$employee->id] ?? null;
-            $filtered = $jobs->filter(fn($job) => $job->code !== $lastCode);
-            $selected = $filtered->isNotEmpty() ? $filtered->random() : $jobs->random();
-
-            $this->csSecondaryJobHistory[$employee->id] = $selected->code;
-            $this->jobAssignments[$dateStr][$selected->id] = $employee->id;
-
-            return $selected->id;
-        }
-
-        return null;
+        return $defaultOffset;
     }
 }
