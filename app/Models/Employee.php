@@ -19,4 +19,12 @@ class Employee extends Model
     {
         return $this->hasMany(Schedule::class, 'employee_id');
     }
+    public function jobEligibilities()
+    {
+        return $this->belongsToMany(Job::class, 'employee_job');
+    }
+    public function getAllowedJobsAttribute()
+    {
+        return $this->jobEligibilities->pluck('id')->toArray();
+    }
 }

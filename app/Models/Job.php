@@ -15,6 +15,7 @@ class Job extends Model
         'category',
         'type',
         'shift',
+        'jobdesc',
         'start',
         'end',
     ];
@@ -22,5 +23,9 @@ class Job extends Model
     public function schedules()
     {
         return $this->hasMany(Schedule::class, 'job_id');
+    }
+    public function eligibleEmployees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_job');
     }
 }
