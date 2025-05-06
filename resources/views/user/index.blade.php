@@ -58,11 +58,12 @@ PPSDM Aparatur - User
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="xp-default-datatable" class="table table-striped table-bordered">
+                    <table id="new-xp-default-datatable" class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
+                            <th>Username</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Aksi</th>
@@ -73,6 +74,7 @@ PPSDM Aparatur - User
                             <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
+                                <td>{{ $item->username }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>{{ $item->role->role }}</td>
                                 <td>

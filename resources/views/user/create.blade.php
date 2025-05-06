@@ -39,6 +39,10 @@ PPSDM Aparatur - Tambah User
                         <input type="text" required name="name" class="form-control" id="name" placeholder="Masukan Nama">
                     </div>
                     <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" required name="username" class="form-control" id="username" placeholder="Masukan Username">
+                    </div>
+                    <div class="form-group">
                         <label for="role">Role</label>
                         <select name="id_role" required id="role" class="form-control">
                             <option value="">Pilih Role</option>
