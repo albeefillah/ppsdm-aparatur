@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
-// pola 3 kerja 1 libur
+// pola 3 kerja 1 libur  + kondis malam -> off
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
 
-class GenerateMonthlyScheduleasd extends Command
+class GenerateMonthlySchedulesaa extends Command
 {
     protected $signature = 'schedule:generate {month} {year} {--eligibility=}';
     protected $description = 'Generate monthly work schedule for all employees';
@@ -21,6 +21,10 @@ class GenerateMonthlyScheduleasd extends Command
     protected $employeeLastJob = [];
     protected $jobAssignments = [];
     protected $eligibilityMap = [];
+    protected $nightShiftAssignments = [];
+    protected $employeeCyclePosition = [];
+
+
 
     public function handle()
     {
@@ -52,13 +56,18 @@ class GenerateMonthlyScheduleasd extends Command
         $datesArray = iterator_to_array($dates);
 
         foreach ($employees as $index => $employee) {
-            $offset = $index % $cycleLength;
+            $defaultOffset = $index % $cycleLength;
+            $offset = $this->getLastCycleOffset($employee->id, $startDate, $defaultOffset);
+
             foreach ($datesArray as $i => $date) {
                 $dateStr = $date->toDateString();
                 $cyclePos = ($i + $offset) % $cycleLength;
+
                 $employeeCycles[$employee->id][$dateStr] = $workCycle[$cyclePos];
+                $this->employeeCyclePosition[$employee->id][$dateStr] = $cyclePos; // Tambahkan ini
             }
         }
+
 
         foreach ($datesArray as $date) {
             $dateStr = $date->toDateString();
@@ -69,8 +78,14 @@ class GenerateMonthlyScheduleasd extends Command
                 if ($employee->category === 'koor') {
                     return !$isHoliday && !$date->isWeekend();
                 }
-                return ($employeeCycles[$employee->id][$dateStr] ?? 'Libur') === 'Kerja';
+
+                $isScheduledToWork = ($employeeCycles[$employee->id][$dateStr] ?? 'Libur') === 'Kerja';
+                $yesterday = Carbon::parse($dateStr)->subDay()->toDateString();
+                $wasNightShiftYesterday = $this->nightShiftAssignments[$employee->id][$yesterday] ?? false;
+
+                return $isScheduledToWork && !$wasNightShiftYesterday;
             })->shuffle()->values();
+
 
             // Prioritaskan job dengan kandidat paling sedikit lebih dulu
             $jobEligibilityCounts = [];
@@ -87,6 +102,14 @@ class GenerateMonthlyScheduleasd extends Command
                         && $employee->jobEligibilities->contains('id', $job->id);
                 })->shuffle();
 
+                // Jika ini shift malam, hanya izinkan pegawai yang sedang di hari ke-3 kerja
+                if ($this->isNightShift($job)) {
+                    $eligibleEmployees = $eligibleEmployees->filter(function ($employee) use ($dateStr) {
+                        return ($this->employeeCyclePosition[$employee->id][$dateStr] ?? null) === 2;
+                    });
+                }
+
+
                 if ($eligibleEmployees->isEmpty()) continue;
 
                 $selectedEmployee = $eligibleEmployees->firstWhere(function ($emp) use ($job) {
@@ -100,6 +123,10 @@ class GenerateMonthlyScheduleasd extends Command
                     'job_role' => 'primary',
                     'week_number' => $date->weekOfMonth,
                 ]);
+
+                if ($this->isNightShift($job)) {
+                    $this->nightShiftAssignments[$selectedEmployee->id][$dateStr] = true;
+                }
 
                 $this->employeeAssignments[$selectedEmployee->id][$dateStr] = 'kerja';
                 $this->employeeLastJob[$selectedEmployee->id] = $job->id;
@@ -126,5 +153,45 @@ class GenerateMonthlyScheduleasd extends Command
     protected function hasJobAssigned($employeeId, $dateStr)
     {
         return isset($this->employeeAssignments[$employeeId][$dateStr]);
+    }
+
+    protected function isNightShift($job)
+    {
+        return $job->shift === 'malam'; // Pastikan kolom 'shift' benar-benar ada di tabel jobs
+    }
+
+
+    protected function getLastCycleOffset($employeeId, $startDate, $defaultOffset)
+    {
+        $cycle = ['Kerja', 'Kerja', 'Kerja', 'Libur'];
+
+        $last4 = Schedule::where('employee_id', $employeeId)
+            ->whereDate('work_date', '<', $startDate)
+            ->orderByDesc('work_date')
+            ->limit(4)
+            ->pluck('job_role')
+            ->reverse()
+            ->map(fn($r) => $r === 'libur' ? 'Libur' : 'Kerja')
+            ->values()
+            ->toArray();
+
+        if (count($last4) === 0) {
+            return $defaultOffset; // <- PASTIKAN INI ADA
+        }
+
+        foreach ($cycle as $i => $value) {
+            $match = true;
+            foreach ($last4 as $j => $item) {
+                if ($cycle[($i + $j) % 4] !== $item) {
+                    $match = false;
+                    break;
+                }
+            }
+            if ($match) {
+                return ($i + count($last4)) % 4;
+            }
+        }
+
+        return $defaultOffset;
     }
 }
