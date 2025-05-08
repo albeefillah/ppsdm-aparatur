@@ -10,183 +10,8 @@ PPSDM Aparatur - User
 
 <!-- Sweet Alert -->
 <link href="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
-<style>
-    .cell {
-        padding: 2px;
-        text-align: center;
-        font-weight: bold;
-    }
+<link href="{{ asset('assets/css/list-pegawai-index.css') }}" rel="stylesheet" type="text/css" />
 
-    .r1p
-    {
-    background-color: #cce5ff;
-    /* Primary - Biru */
-    }
-
-    .r2p {
-        background-color: #dd68ec;
-        /* Primary - Biru */
-    }
-
-    .r3p {
-        background-color: #5db4fc;
-        /* Primary - Biru */
-    }
-
-    .r4p {
-        background-color: #c1c0fc;
-        /* Primary - Biru */
-    }
-
-    .k1p, .k1s {
-        background-color: #f9ccff;
-        /* Primary - Biru */
-    }
-
-    .k2p, .k2s {
-        background-color: #f8b1c9;
-        /* Primary - Biru */
-    }
-
-    .k3p, .k3s {
-        background-color: #fa6eb4;
-        /* Primary - Biru */
-    }
-
-    .k4p, .k4s {
-        background-color: #c4fdc4;
-        /* Primary - Biru */
-    }
-
-    .ld {
-        background-color: #40f058;
-        /* Primary - Biru */
-    }
-
-    .sd {
-        background-color: #f7cb3c;
-        /* Primary - Biru */
-    }
-
-    .obm, .obsr, .obs {
-        background-color: #f0ed4d;
-        /* Primary - Biru */
-    }
-
-    .lds {
-        background-color: #b4b4b4;
-        /* Secondary - Hijau */
-    }
-
-    .fop, .fom, .fosr {
-        background-color: #faa21f;
-        /* Secondary - Hijau */
-    }
-
-    .mbs {
-        background-color: #6188c2;
-        /* Secondary - Hijau */
-    }
-
-    .gd {
-        background-color: #ffeeba;
-        /* Garden - Kuning */
-    }
-
-    .rrp {
-        background-color: #f5bcc1;
-        /* Women - Pink */
-    }
-
-    .bq {
-        background-color: #f56666;
-        /* Banquet - Abu */
-    }
-
-    .off {
-        background-color: #f5f5f5;
-        /* Libur - Abu Muda */
-        color: #ee3434;
-    }
-
-    .scroll-table-wrapper {
-        overflow-x: auto;
-        /* white-space: nowrap; */
-        border: 1px solid #ddd;
-        max-width: 100%;
-    }
-
-    table {
-        border-collapse: collapse;
-        width: max-content;
-        box-sizing: border-box;
-    }
-
-    th, td {
-        border: 1px solid #ccc;
-        padding: 4px 8px;
-        white-space: nowrap;
-        background-color: white;
-    }
-
-    /* Header freeze */
-    thead th {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background-color: #3674B5 !important;
-        color: white;
-    }
-
-    /* Kolom Freeze: NO */
-    .sticky-col.no-col {
-        position: sticky;
-        left: 0;
-        z-index: 20;
-        background-color: white;
-        width: 40px;
-        min-width: 40px;
-        max-width: 40px;
-    }
-
-    /* Kolom Freeze: Nama CS */
-    .sticky-col-2.name-col {
-        position: sticky;
-        left: 40px; /* harus sesuai total kolom sebelumnya */
-        z-index: 20;
-        background-color: white;
-        width: 180px;
-        min-width: 180px;
-        max-width: 180px;
-    }
-
-
-
-     /* Tambahan opsional agar scroll lebih smooth */
-     .scroll-table-wrapper::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .scroll-table-wrapper::-webkit-scrollbar-thumb {
-        background-color: #aaa;
-        border-radius: 10px;
-    }
-
-    th.month-end,
-    td.month-end {
-        border-right: 2px solid #000 !important;
-    }
-    .drag-scroll {
-        overflow-x: auto;
-        cursor: grab;
-    }
-
-    .drag-scroll:active {
-        cursor: grabbing;
-    }
-
-  
-</style>
 @endsection 
 @section('content')
 <!-- Start XP Breadcrumbbar -->                    
@@ -219,96 +44,126 @@ PPSDM Aparatur - User
           
               <div class="card-body" style="font-size: 10px">
                   <div class="table-responsive">
-                      <div class="scroll-table-wrapper drag-scroll">
-                          <table class="table table-bordered table-sm table-striped" style="min-width: max-content;">
-                              <thead class="table-dark">
-                                  <!-- Baris 1: Bulan -->
-                                  <tr>
-                                      <th rowspan="3" class="sticky-col no-col text-center align-middle">No</th>
-                                      <th rowspan="3" class="sticky-col-2 name-col text-center align-middle">Nama CS</th>
-                                      @php
-                                      $groupedDates = collect($dates)->groupBy(function ($date) {
-                                      return \Carbon\Carbon::parse($date)->translatedFormat('F Y');
-                                      });
-                                      $monthEndDates = $groupedDates->map(function ($group) {
-                                      return \Carbon\Carbon::parse($group->last())->format('Y-m-d');
-                                      })->values()->toArray();
-                                      @endphp
-                                      @foreach ($groupedDates as $monthName => $datesInMonth)
-                                      @php
-                                      $lastDate = \Carbon\Carbon::parse($datesInMonth->last())->format('Y-m-d');
-                                      $monthClass = in_array($lastDate, $monthEndDates) ? 'month-end' : '';
-                                      @endphp
-                                      <th colspan="{{ $datesInMonth->count() }}" class="text-center text-black {{ $monthClass }}"
-                                          style="font-size: 15px; background:#c4fdc4;">
-                                          <font color="white">{{ $monthName }}</font>
-                                      </th>
-                                      @endforeach
-                                  </tr>
-      
-                                  <!-- Baris 2: Tanggal -->
-                                  <tr>
-                                      @foreach ($dates as $date)
-                                      @php
-                                      $carbonDate = \Carbon\Carbon::parse($date);
-                                      $isHoliday = in_array($date, $holidays ?? []);
-                                      $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon\Carbon::SATURDAY, Carbon\Carbon::SUNDAY]);
-                                      $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
-                                      $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
-                                      @endphp
-                                      <th class="text-center {{ $holidayClass }} {{ $borderClass }}">
-                                          {{ $carbonDate->format('j') }}
-                                      </th>
-                                      @endforeach
-                                  </tr>
-      
-                                  <!-- Baris 3: Hari -->
-                                  <tr>
-                                      @foreach ($dates as $date)
-                                      @php
-                                      $carbonDate = \Carbon\Carbon::parse($date);
-                                      $dayName = $carbonDate->translatedFormat('D'); // Atau 'l' untuk nama lengkap
-                                      $isHoliday = in_array($date, $holidays ?? []);
-                                      $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon\Carbon::SATURDAY, Carbon\Carbon::SUNDAY]);
-                                      $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
-                                      $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
-                                      @endphp
-                                      <th class="text-center {{ $holidayClass }} {{ $borderClass }}">
-                                          {{ $dayName }}
-                                      </th>
-                                      @endforeach
-                                  </tr>
-                              </thead>
-      
-      
-                              <tbody>
+                    <button onclick="toggleFullscreen()" class="btn btn-secondary mb-2">🔍 Fullscreen</button>
+                    <div id="fullscreen-container">
+                        <div id="tabel-container" class="scroll-table-wrapper drag-scroll">
+                            <table class="table table-bordered table-sm table-striped" style="min-width: max-content;">
+                                <thead class="table-dark">
+                                    <!-- Baris 1: Bulan -->
+                                    <tr>
+                                        <th rowspan="3" class="sticky-col no-col text-center align-middle" style="top: 0; z-index: 30;">No</th>
+                                        <th rowspan="3" class="sticky-col-2 name-col text-center align-middle" style="top: 0; z-index: 30;">Nama CS</th>
+                                        @php
+                                        $groupedDates = collect($dates)->groupBy(function ($date) {
+                                        return \Carbon\Carbon::parse($date)->translatedFormat('F Y');
+                                        });
+                                        $monthEndDates = $groupedDates->map(function ($group) {
+                                        return \Carbon\Carbon::parse($group->last())->format('Y-m-d');
+                                        })->values()->toArray();
+                                        @endphp
+                                        @foreach ($groupedDates as $monthName => $datesInMonth)
+                                        @php
+                                        $lastDate = \Carbon\Carbon::parse($datesInMonth->last())->format('Y-m-d');
+                                        $monthClass = in_array($lastDate, $monthEndDates) ? 'month-end' : '';
+                                        @endphp
+                                        <th colspan="{{ $datesInMonth->count() }}" class="text-center text-black {{ $monthClass }}"
+                                            style="font-size: 15px; background:#c4fdc4; position: sticky; top: 0; z-index: 10;">
+                                            <font color="white">{{ $monthName }}</font>
+                                        </th>
+                                        @endforeach
+                                    </tr>
+        
+                                    <!-- Baris 2: Tanggal -->
+                                    <tr>
+                                        @foreach ($dates as $date)
+                                        @php
+                                        $carbonDate = \Carbon\Carbon::parse($date);
+                                        $isHoliday = in_array($date, $holidays ?? []);
+                                        $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon\Carbon::SATURDAY, Carbon\Carbon::SUNDAY]);
+                                        $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
+                                        $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                        @endphp
+                                        <th class="text-center {{ $holidayClass }} {{ $borderClass }}" style="position: sticky; top: 30px; z-index: 19;">
+                                            {{ $carbonDate->format('j') }}
+                                        </th>
+                                        @endforeach
+                                    </tr>
+        
+                                    <!-- Baris 3: Hari -->
+                                    <tr>
+                                        @foreach ($dates as $date)
+                                        @php
+                                        $carbonDate = \Carbon\Carbon::parse($date);
+                                        $dayName = $carbonDate->translatedFormat('D'); // Atau 'l' untuk nama lengkap
+                                        $isHoliday = in_array($date, $holidays ?? []);
+                                        $isWeekend = in_array($carbonDate->dayOfWeek, [Carbon\Carbon::SATURDAY, Carbon\Carbon::SUNDAY]);
+                                        $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
+                                        $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                        @endphp
+                                        <th class="text-center {{ $holidayClass }} {{ $borderClass }}" style="position: sticky; top: 50px; z-index: 18;">
+                                            {{ $dayName }}
+                                        </th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+        
+        
+                                <tbody>
                                   @foreach ($employees as $index => $employee)
+                                  <!-- Baris shift singkat -->
                                   <tr>
-                                    <td class="sticky-col no-col text-center">{{ $index + 1 }}</td>
-                                    <td class="sticky-col-2 name-col text-start">{{ $employee->name }}</td>
-                                    
+                                      <td rowspan="2" style="background-color: #fafafa;top: auto;" class="sticky-col no-col text-center">{{ $index + 1 }}</td>
+                                      <td rowspan="2" style="background-color: #fafafa;top: auto;" class="sticky-col-2 name-col text-start">{{ $employee->name }}</td>
                                       @foreach ($dates as $date)
-                                      @php
-                                      $schedule = $employee->schedules->first(function ($item) use ($date) {
-                                      return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
-                                      });
-      
-                                      $jobCode = $schedule?->job?->code ?? 'OFF';
-      
-                                      $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
-                                      @endphp
-      
-                                      <td class="cell {{ strtolower($jobCode) }} {{ $borderClass }}">
-                                          {{ $jobCode }}
-                                      </td>
+                                          @php
+                                              $schedule = $employee->schedules->first(function ($item) use ($date) {
+                                                  return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
+                                              });
+                              
+                                              $job = $schedule?->job;
+                                              $shift = $job?->shift;
+                                              
+                                              $shiftMap = ['pagi' => 'P', 'siang' => 'S', 'sore' => 'Sr', 'malam' => 'M'];
+                                              $shiftLabel = $job ? ($shiftMap[$job->shift] ?? '-') : 'OFF';
+                                              $shiftClass = match($shift) {
+                                                  'pagi' => 'shift-pagi',
+                                                  'siang' => 'shift-siang',
+                                                  'sore' => 'shift-sore',
+                                                  'malam' => 'shift-malam',
+                                                  default => 'shift-off',
+                                              };
+                                              $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                          @endphp
+                                          <td class="text-center {{ $shiftClass }} {{ $borderClass }}">
+                                              {{ $shiftLabel }}
+                                          </td>
                                       @endforeach
-      
-      
                                   </tr>
-                                  @endforeach
-                              </tbody>
-                          </table>
-                      </div>
+                              
+                                  <!-- Baris kode job -->
+                                  <tr>
+                                      
+                                      @foreach ($dates as $date)
+                                          @php
+                                              $schedule = $employee->schedules->first(function ($item) use ($date) {
+                                                  return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
+                                              });
+                              
+                                              $jobCode = $schedule?->job?->code ?? 'OFF';
+                                              $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                          @endphp
+                              
+                                          <td class="cell text-center {{ strtolower($jobCode) }} {{ $borderClass }}">
+                                              {{ $jobCode }}
+                                          </td>
+                                      @endforeach
+                                  </tr>
+                              @endforeach
+                              
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
       
                   </div>
               </div>
@@ -707,6 +562,20 @@ PPSDM Aparatur - User
             el.scrollLeft = scrollLeft - walk;
         });
     });
+</script>
+
+{{-- Fullscreen --}}
+<script>
+    function toggleFullscreen() {
+    const elem = document.getElementById("fullscreen-container");
+
+    if (!document.fullscreenElement) {
+        elem.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+}
+
 </script>
 
 @endsection 
