@@ -15,34 +15,34 @@ class JobSeeder extends Seeder
     {
         $jobs = [
             // Shift Pagi
-            ['code' => 'R1p', 'name' => 'ROOM SERVICE LT. 1 Pagi (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'R2p', 'name' => 'ROOM SERVICE LT. 2 Pagi (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            // ['code' => 'R3p', 'name' => 'ROOM SERVICE LT. 3 Pagi (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'R4p', 'name' => 'ROOM SERVICE LT. 4 Pagi (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'K1p', 'name' => 'KANTOR LT. 1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'K2p', 'name' => 'KANTOR LT. 2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'K4p', 'name' => 'KANTOR LT. 4 dan LT. 3 Kantor', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'LD', 'name' => 'LAUNDRY', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'GD', 'name' => 'GARDEN', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'MBS', 'name' => 'MARBOT DAN BASEMENT', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
-            ['code' => 'FOp', 'name' => 'FRONT OFFICE PAGI', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '08:00', 'end' => '16:00'],
+            ['code' => 'R1', 'name' => 'Room Service Lt. 1 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'R2', 'name' => 'Room Service Lt. 2 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            // ['code' => 'R3p', 'name' => 'Room Service Lt. 3 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'R3-4', 'name' => 'Room Service Lt.3 dan Lt.4 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'K1p', 'name' => 'Kantor Lt. 1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'K2p', 'name' => 'Kantor Lt. 2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'K3-4p', 'name' => 'Kantor Lt. 3 dan Lt. 4', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'LD', 'name' => 'Laundry', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'GD', 'name' => 'Garden', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'MBS', 'name' => 'Marbot dan Basement', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'FOp', 'name' => 'Front Office', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '08:00', 'end' => '16:00'],
 
 
             // Shift Siang
-            ['code' => 'K1s', 'name' => 'KANTOR LT. 1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '15:00'],
-            ['code' => 'K2s', 'name' => 'KANTOR LT. 2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '15:00'],
-            ['code' => 'K4s', 'name' => 'KANTOR LT. 4 dan LT. 3 Kantor', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '15:00'],
-            ['code' => 'OBs', 'name' => 'OFFICE BOY - Siang (Lt 1-4 Wisma)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '19:00'],
+            ['code' => 'K1s', 'name' => 'Kantor Lt. 1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '15:00'],
+            ['code' => 'K2s', 'name' => 'Kantor Lt. 2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '15:00'],
+            ['code' => 'K3-4s', 'name' => 'Kantor Lt. 3 dan Lt. 4', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '15:00'],
+            ['code' => 'OBs', 'name' => 'Office Boy (Lt 1-4 Wisma)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '19:00'],
 
             // Shift Sore
-            ['code' => 'FOsr', 'name' => 'FRONT OFFICE - Sore', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'sore', 'start' => '18:00', 'end' => '02:00'],
-            ['code' => 'OBsr', 'name' => 'OFFICE BOY - Sore (Lt 1-4 Wisma)', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'sore', 'start' => '18:00', 'end' => '02:00'],
+            ['code' => 'FOsr', 'name' => 'Front Office', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'sore', 'start' => '18:00', 'end' => '02:00'],
+            ['code' => 'OBsr', 'name' => 'Office Boy (Lt 1-4 Wisma)', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'sore', 'start' => '18:00', 'end' => '02:00'],
 
             // Shift Malam
-            ['code' => 'FOm', 'name' => 'FRONT OFFICE - Malam', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'malam', 'start' => '00:00', 'end' => '08:00'],
-            ['code' => 'OBm', 'name' => 'OFFICE BOY - Malam', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'malam', 'start' => '00:00', 'end' => '08:00'],
+            ['code' => 'FOm', 'name' => 'Front Office', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'malam', 'start' => '00:00', 'end' => '08:00'],
+            ['code' => 'OBm', 'name' => 'Office Boy (Lt 1-4 Wisma)', 'category' => 'cs', 'type' => 'secondary', 'shift' => 'malam', 'start' => '00:00', 'end' => '08:00'],
 
-            ['code' => 'BQ', 'name' => 'BANQUET', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
+            ['code' => 'BQ', 'name' => 'Banquet', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '15:00'],
 
 
         ];
