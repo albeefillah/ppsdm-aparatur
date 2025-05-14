@@ -64,8 +64,8 @@
                     <ul class="xp-vertical-submenu">                                
                         <li><a href="{{ route('employee.index') }}">List Pegawai</a></li>         
                         <li><a href="{{ route('jobs.index') }}">List Job</a></li>         
-                        <li><a href="{{ route('os.index') }}">Data Piket</a></li>         
-                        <li><a href="{{ route('monitoring.index') }}">Monitoring Jadwal</a></li>         
+                        <li><a href="{{ route('os.index') }}">Monitoring Jadwal</a></li>         
+                        {{-- <li><a href="{{ route('monitoring.index') }}">Monitoring Jadwal</a></li>          --}}
                     </ul>
                 </li>
                 @endif

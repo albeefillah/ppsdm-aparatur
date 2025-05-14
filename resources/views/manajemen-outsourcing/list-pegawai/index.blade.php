@@ -44,15 +44,22 @@ PPSDM Aparatur - User
           
               <div class="card-body" style="font-size: 10px">
                   <div class="table-responsive">
-                    <button onclick="toggleFullscreen()" class="btn btn-secondary mb-2">🔍 Fullscreen</button>
+                    <div class="d-flex justify-content mb-2">
+                        <button class="btn btn-sm btn-info mr-2" onclick="showModal('{{ \Carbon\Carbon::today()->format('Y-m-d') }}')" title="Lihat siapa yang bekerja hari ini">
+                            📅 Bertugas Hari Ini
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="toggleFullscreen()"> <i class="mdi mdi-arrow-expand"> </i> Fullscreen</button>
+                        
+                    </div>
+                    
                     <div id="fullscreen-container">
                         <div id="tabel-container" class="scroll-table-wrapper drag-scroll">
                             <table class="table table-bordered table-sm table-striped" style="min-width: max-content;">
                                 <thead class="table-dark">
                                     <!-- Baris 1: Bulan -->
                                     <tr>
-                                        <th rowspan="3" class="sticky-col no-col text-center align-middle" style="top: 0; z-index: 30;">No</th>
-                                        <th rowspan="3" class="sticky-col-2 name-col text-center align-middle" style="top: 0; z-index: 30;">Nama CS</th>
+                                        <th rowspan="3" class="sticky-col no-col text-center align-middle" style="top: 0; z-index: 30; background:#3674b5; ">No</th>
+                                        <th rowspan="3" class="sticky-col-2 name-col text-center align-middle" style="top: 0; z-index: 30; background:#3674b5; ">Nama CS</th>
                                         @php
                                         $groupedDates = collect($dates)->groupBy(function ($date) {
                                         return \Carbon\Carbon::parse($date)->translatedFormat('F Y');
@@ -67,7 +74,7 @@ PPSDM Aparatur - User
                                         $monthClass = in_array($lastDate, $monthEndDates) ? 'month-end' : '';
                                         @endphp
                                         <th colspan="{{ $datesInMonth->count() }}" class="text-center text-black {{ $monthClass }}"
-                                            style="font-size: 15px; background:#c4fdc4; position: sticky; top: 0; z-index: 10;">
+                                            style="font-size: 15px; background:#3674b5; position: sticky; top: 0; z-index: 10;">
                                             <font color="white">{{ $monthName }}</font>
                                         </th>
                                         @endforeach
@@ -83,9 +90,9 @@ PPSDM Aparatur - User
                                         $holidayClass = ($isHoliday || $isWeekend) ? 'bg-danger text-white' : '';
                                         $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
                                         @endphp
-                                        <th class="text-center {{ $holidayClass }} {{ $borderClass }}" style="position: sticky; top: 30px; z-index: 19;">
+                                        <th class="text-center date-hover {{ $holidayClass }} {{ $borderClass }}" style="position: sticky; top: 30px; z-index: 19;" onclick="showModal('{{ $date }}')" title="Lihat detail pegawai tanggal {{ $carbonDate->translatedFormat('d F Y') }}">
                                             {{ $carbonDate->format('j') }}
-                                        </th>
+                                        </th>   
                                         @endforeach
                                     </tr>
         
@@ -394,6 +401,27 @@ PPSDM Aparatur - User
    
 </div>
 
+{{-- Modal Rincian Pekerjaan --}}
+  <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modalLabel" id="detailModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLabel">Detail Pegawai</h5>
+         
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modal-body-content"> 
+          Memuat data...
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-secondary btn-rounded" onclick="copyModalText()">📋 Copy Text</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 
 <!-- End XP Contentbar -->
@@ -578,4 +606,55 @@ PPSDM Aparatur - User
 
 </script>
 
+{{-- Script Modal Rincian Pekerjaan --}}
+<script>
+    function showModal(date) {
+    fetch(`/os/detailDate?date=${date}`)
+        .then(res => res.json())
+        .then(data => {
+            const shiftOrder = ['pagi', 'siang', 'sore', 'malam'];
+            const shiftLabel = {
+                pagi: 'Pagi',
+                siang: 'Siang',
+                sore: 'Sore',
+                malam: 'Malam'
+            };
+
+            let text = `${data.date}\n\n`;
+
+            shiftOrder.forEach(shift => {
+                const entries = data.shifts[shift];
+                if (entries && entries.length) {
+                    text += `${shiftLabel[shift]}:\n`;
+                    entries.forEach(e => {
+                        text += `${e.namejob.padEnd(5)} - ${e.name}\n`;
+                    });
+                    text += '\n';
+                }
+            });
+
+            document.getElementById('modal-body-content').innerHTML =
+                `<pre style="white-space: pre-wrap; font-family: monospace;">${text}</pre>`;
+
+            new bootstrap.Modal(document.getElementById('detailModal')).show();
+        });
+    }
+
+</script>    
+
+{{-- Copy Text --}}
+<script>
+    function copyModalText() {
+        const pre = document.querySelector('#modal-body-content pre');
+        if (!pre) return;
+    
+        const text = pre.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('✅ Teks berhasil disalin ke clipboard!');
+        }).catch(() => {
+            alert('❌ Gagal menyalin teks.');
+        });
+    }
+</script>
+    
 @endsection 

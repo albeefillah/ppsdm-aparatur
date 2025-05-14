@@ -326,6 +326,29 @@ class OutsourcingController extends Controller
     }
 
 
+    public function detailDate(Request $request)
+    {
+        $date = $request->input('date');
+
+        $schedules = Schedule::with(['employee', 'job'])
+            ->whereDate('work_date', $date)
+            ->get();
+
+        $grouped = $schedules->groupBy(fn($s) => strtolower($s->job?->shift ?? 'off'));
+
+        return response()->json([
+            'date' => Carbon::parse($date)->translatedFormat('l, d F Y'),
+            'shifts' => $grouped->map(function ($items) {
+                return $items->map(fn($s) => [
+                    'namejob' => $s->job?->name ?? '-',
+                    'name' => $s->employee->name
+                ])->values();
+            })
+        ]);
+    }
+
+
+
 
     /**
      * Show the form for editing the specified resource.

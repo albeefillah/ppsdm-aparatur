@@ -52,6 +52,7 @@ Route::middleware('Kapus')->group(function () {
         Route::post('/update/{id}', [App\Http\Controllers\OutsourcingController::class, 'update'])->name('os.update');
         Route::get('/destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'destroy'])->name('os.destroy');
         Route::get('/summary', [App\Http\Controllers\OutsourcingController::class, 'jobSummary'])->name('os.summary');
+        Route::get('/detailDate', [App\Http\Controllers\OutsourcingController::class, 'detailDate'])->name('os.detail-date');
         Route::get('/employee-list', [App\Http\Controllers\OutsourcingController::class, 'employeeList'])->name('os.employee-list');
     });
 

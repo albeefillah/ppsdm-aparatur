@@ -4,19 +4,19 @@
     font-weight: bold;
 }
 
-.r1p {
+.r1 {
     background-color: #cce5ff;
 }
 
-.r2p {
+.r2 {
     background-color: #dd68ec;
 }
 
-.r3p {
+/* .r3p {
     background-color: #5db4fc;
-}
+} */
 
-.r4p {
+.r3-4 {
     background-color: #c1c0fc;
 }
 
@@ -30,13 +30,13 @@
     background-color: #f8b1c9;
 }
 
-.k3p,
+/* .k3p,
 .k3s {
     background-color: #fa6eb4;
-}
+} */
 
-.k4p,
-.k4s {
+.k3-4p,
+.k3-4s {
     background-color: #c4fdc4;
 }
 
@@ -112,7 +112,7 @@ thead th {
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: #3674b5 !important;
+    background-color: #3674b5;
     color: white;
 }
 
@@ -164,8 +164,15 @@ td.month-end {
 .drag-scroll:active {
     cursor: grabbing;
 }
+
+th.date-hover:hover {
+    background-color: #565658 !important;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
 .shift-pagi {
-    color: #a0c3d2 !important;
+    color: #92915f !important;
 }
 
 .shift-siang {
