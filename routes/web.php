@@ -83,6 +83,15 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/destroy/{id}', [App\Http\Controllers\JobsController::class, 'destroy'])->name('jobs.destroy');
     });
 
+    Route::prefix('holiday')->group(function () {
+        Route::get('/', [App\Http\Controllers\HolidayController::class, 'index'])->name('holiday.index');
+        Route::get('/create', [App\Http\Controllers\HolidayController::class, 'create'])->name('holiday.create');
+        Route::post('/store', [App\Http\Controllers\HolidayController::class, 'store'])->name('holiday.store');
+        Route::get('/edit/{id}', [App\Http\Controllers\HolidayController::class, 'edit'])->name('holiday.edit');
+        Route::post('/update/{id}', [App\Http\Controllers\HolidayController::class, 'update'])->name('holiday.update');
+        Route::get('/destroy/{id}', [App\Http\Controllers\HolidayController::class, 'destroy'])->name('holiday.destroy');
+    });
+
     // Route::pref  ix('role')->group(function () {
     //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');
     //     Route::get('/create', [App\Http\Controllers\RoleController::class, 'create'])->name('role.create');
