@@ -299,7 +299,7 @@ PPSDM Aparatur - User
                         <a href="{{ route('os.export') }}" class="btn btn-success"> <i class="ti-export"> </i> Export Excel</a>
                     </div>
                     <div class="pl-3 pt-3">
-                        <button type="button" id="reset-filter" class="btn btn-warning mb-2">Reset Filter</button>
+                        <button type="button" id="reset-filter" class="btn btn-danger mb-2"> <i class="ion ion-ios-refresh"></i> Reset Filter</button>
                     </div>
                     <div class="pl-3 pt-3">
                         <label for=""></label>
