@@ -12,9 +12,9 @@
     background-color: #dd68ec;
 }
 
-/* .r3p {
+.r3p {
     background-color: #5db4fc;
-} */
+}
 
 .r3-4 {
     background-color: #c1c0fc;
@@ -30,10 +30,10 @@
     background-color: #f8b1c9;
 }
 
-/* .k3p,
+.k3p,
 .k3s {
     background-color: #fa6eb4;
-} */
+}
 
 .k3-4p,
 .k3-4s {
@@ -81,7 +81,7 @@
 }
 
 .off {
-    background-color: #ffffff;
+    background-color: #f3eded;
     color: #e63f3f;
 }
 

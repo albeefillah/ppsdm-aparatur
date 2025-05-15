@@ -141,9 +141,9 @@ PPSDM Aparatur - User
                                               };
                                               $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
                                           @endphp
-                                          <td class="text-center {{ $shiftClass }} {{ $borderClass }}">
+                                          {{-- <td class="text-center {{ $shiftClass }} {{ $borderClass }}">
                                               {{ $shiftLabel }}
-                                          </td>
+                                          </td> --}}
                                       @endforeach
                                   </tr>
                               
