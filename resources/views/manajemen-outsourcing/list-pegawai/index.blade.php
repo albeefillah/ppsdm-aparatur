@@ -634,7 +634,7 @@ PPSDM Aparatur - User
             });
 
             document.getElementById('modal-body-content').innerHTML =
-                `<pre style="white-space: pre-wrap; font-family: monospace;">${text}</pre>`;
+                `<pre style="white-space: pre-wrap; font-family: monospace; font-size:14px;">${text}</pre>`;
 
             new bootstrap.Modal(document.getElementById('detailModal')).show();
         });
