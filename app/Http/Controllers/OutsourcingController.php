@@ -189,15 +189,21 @@ class OutsourcingController extends Controller
             'month' => 'required|integer|min:1|max:12',
             'year' => 'required|integer|min:2020',
             'job_eligibility' => 'required|array',
+            'rotatable_jobs' => 'nullable|array|max:6',
         ]);
 
-        // Simpan ke pivot table employee_job
+        // Simpan ke pivot table employee_job.
         foreach ($request->job_eligibility as $employeeId => $jobIds) {
             $employee = Employee::find($employeeId);
             if ($employee) {
                 $employee->jobEligibilities()->sync($jobIds); // Update relasi
             }
         }
+
+        // Simpan status rotatable
+        $rotatableIds = $request->input('rotatable_jobs', []);
+        Job::query()->update(['rotatable' => false]);
+        Job::whereIn('id', $rotatableIds)->update(['rotatable' => true]);
 
         // Simpan ke cache sementara untuk schedule generate
         $key = 'job_eligibility_' . now()->timestamp;

@@ -1,5 +1,5 @@
 <?php
-// 3 kerja 1 libur + kondisi malam
+// 4 kerja 2 libur 16 job
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -46,7 +46,7 @@ class GenerateMonthlySchedule extends Command
         $employees = Employee::with('jobEligibilities')->get();
         $jobs = Job::all();
 
-        $workCycle = ['Kerja', 'Kerja', 'Kerja', 'Libur'];
+        $workCycle = ['Kerja', 'Kerja', 'Kerja', 'Kerja', 'Libur', 'Libur'];
         $cycleLength = count($workCycle);
         $employeeCycles = [];
         $datesArray = iterator_to_array($dates);
@@ -89,7 +89,7 @@ class GenerateMonthlySchedule extends Command
                 $eligibleEmployees = $workingEmployees->filter(function ($employee) use ($job, $dateStr) {
                     return !$this->hasJobAssigned($employee->id, $dateStr)
                         && $employee->jobEligibilities->contains('id', $job->id)
-                        && ($this->employeeCyclePosition[$employee->id][$dateStr] ?? null) === 2;
+                        && ($this->employeeCyclePosition[$employee->id][$dateStr] ?? null) === 3;
                 })->shuffle();
 
                 if ($eligibleEmployees->isEmpty()) continue;
@@ -160,7 +160,7 @@ class GenerateMonthlySchedule extends Command
             }
         }
 
-        $this->info("\u2705 Jadwal {$month}/{$year} berhasil dibuat dengan prioritas job krusial terlebih dulu.");
+        $this->info("\u2705 Jadwal {$month}/{$year} berhasil dibuat dengan pola 4 kerja 2 libur dan shift malam pada hari ke-4.");
     }
 
     protected function hasJobAssigned($employeeId, $dateStr)
@@ -170,32 +170,32 @@ class GenerateMonthlySchedule extends Command
 
     protected function getLastCycleOffset($employeeId, $startDate, $defaultOffset)
     {
-        $cycle = ['Kerja', 'Kerja', 'Kerja', 'Libur'];
+        $cycle = ['Kerja', 'Kerja', 'Kerja', 'Kerja', 'Libur', 'Libur'];
 
-        $last4 = Schedule::where('employee_id', $employeeId)
+        $last6 = Schedule::where('employee_id', $employeeId)
             ->whereDate('work_date', '<', $startDate)
             ->orderByDesc('work_date')
-            ->limit(4)
+            ->limit(6)
             ->pluck('job_role')
             ->reverse()
             ->map(fn($r) => $r === 'libur' ? 'Libur' : 'Kerja')
             ->values()
             ->toArray();
 
-        if (count($last4) === 0) {
+        if (count($last6) === 0) {
             return $defaultOffset;
         }
 
         foreach ($cycle as $i => $value) {
             $match = true;
-            foreach ($last4 as $j => $item) {
-                if ($cycle[($i + $j) % 4] !== $item) {
+            foreach ($last6 as $j => $item) {
+                if ($cycle[($i + $j) % 6] !== $item) {
                     $match = false;
                     break;
                 }
             }
             if ($match) {
-                return ($i + count($last4)) % 4;
+                return ($i + count($last6)) % 6;
             }
         }
 
