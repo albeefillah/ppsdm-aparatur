@@ -16,7 +16,13 @@ PPSDM Aparatur - Generate Jadwal Otomatis
     .malamClass{
         background-color: #B7B7B7;
     }
+    
 </style>
+ <!-- Select2 CSS -->
+ <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css">
+ <!-- Tagsinput CSS -->
+ <link href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet" type="text/css">
+ <link href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css') }}" rel="stylesheet" type="text/css">
 @endsection 
 @section('content')
 <!-- Start XP Breadcrumbbar -->                    
@@ -79,22 +85,43 @@ PPSDM Aparatur - Generate Jadwal Otomatis
                                 <input type="number" class="form-control" min="2020" name="year" placeholder="Tahun" required>
                             </div>
                         </div>
+                        {{-- <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="rotatable_jobs" class="form-label">Pilih 6 Job yang Rotatable (2 Hari Sekali)</label>
+                                <select
+                                    class="xp-select2-multi-select form-control"
+                                    id="rotatable_jobs"
+                                    name="rotatable_jobs[]"
+                                    multiple
+                                    size="8"
+                                    
+                                >
+                                    @foreach ($jobs as $job)
+                                        <option value="{{ $job->id }}" {{ $job->rotatable ? 'selected' : '' }}>
+                                            {{ $job->code }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div> --}}
                     </div>
                     <div style="font-size: 15px;">
                         <p>Tentukan Job untuk Pegawai :</p>
                     </div>
                     <div class="table-responsive m-b-30">
+                        
                         <table class="table table-sm table-striped table-bordered" style="border: 1px solid black">
                             <thead>
                                 <tr style="background-color: #DBDBDB">
                                     <th rowspan="2" class="text-center align-middle">No</th>
                                     <th rowspan="2" class="text-center align-middle">Nama</th>
                                     <th colspan="{{ $pagiJobs->count() }}" class="text-center pagiClass">Pagi</th>
-                                    <th colspan="{{ $siangJobs->count() }}" class="text-center siangClass">Siang</th>
+                                    {{-- <th colspan="{{ $siangJobs->count() }}" class="text-center siangClass">Siang</th> --}}
                                     <th colspan="{{ $soreJobs->count() }}" class="text-center soreClass">Sore</th>
                                     <th colspan="{{ $malamJobs->count() }}" class="text-center malamClass">Malam</th>
                                     <th rowspan="2" class="text-center align-middle"> <center>Jml</center></th>
                                 </tr>
+                                
                                 <tr class="text-center">
                                     @foreach ($pagiJobs as $job)
                                         <th class="pagiClass">{{ $job->code }}</th>
@@ -117,7 +144,7 @@ PPSDM Aparatur - Generate Jadwal Otomatis
                                         <td>{{ $emp->name }}</td>
                                         {{-- Loop Pagi --}}
                                         @foreach ($pagiJobs  as $job)
-                                            <td>
+                                            <td onclick="toggleCheckbox(this, event)">
                                                 <center>
                                                     <input 
                                                         style="width:15px; height:15px;"
@@ -135,7 +162,7 @@ PPSDM Aparatur - Generate Jadwal Otomatis
 
                                         {{-- Loop Siang --}}
                                         @foreach ($siangJobs  as $job)
-                                            <td>
+                                            <td onclick="toggleCheckbox(this, event)">
                                                 <center>
                                                     <input 
                                                         style="width:15px; height:15px;"
@@ -153,7 +180,7 @@ PPSDM Aparatur - Generate Jadwal Otomatis
 
                                         {{-- Loop Sore --}}
                                         @foreach ($soreJobs  as $job)
-                                            <td>
+                                            <td onclick="toggleCheckbox(this, event)">
                                                 <center>
                                                     <input 
                                                         style="width:15px; height:15px;"
@@ -171,7 +198,7 @@ PPSDM Aparatur - Generate Jadwal Otomatis
 
                                         {{-- Loop Malam --}}
                                         @foreach ($malamJobs  as $job)
-                                            <td>
+                                            <td onclick="toggleCheckbox(this, event)">
                                                 <center>
                                                     <input 
                                                         style="width:15px; height:15px;"
@@ -210,9 +237,16 @@ PPSDM Aparatur - Generate Jadwal Otomatis
                             </tfoot>
                             
                         </table>
+                        {{-- @foreach ($jobs as $job)
+                            <label>
+                                <input type="checkbox" name="rotatable_jobs[]" value="{{ $job->id }}" {{ $job->rotatable ? 'checked' : '' }}>
+                                {{ $job->code }}
+                            </label>
+                        @endforeach --}}
                     </div>
 
-                   
+                    
+                    
                   <a href="{{ route('os.index') }}" class="btn btn-secondary">Kembali</a>
                   <button type="submit" class="btn btn-warning"> <i class="fa fa-gear"></i> Generate Jadwal</button>
                 </form>
@@ -298,8 +332,37 @@ PPSDM Aparatur - Generate Jadwal Otomatis
 
         updateCounts();
     }
+    
+    function toggleCheckbox(td, event) {
+        // Jika yang diklik adalah input checkbox, biarkan default browser
+        if (event.target.tagName.toLowerCase() === 'input') {
+            return;
+        }
+
+        const checkbox = td.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event('change'));
+        }
+    }
 </script>
 
+  <!-- Select2 JS -->
+  <script src="{{ asset('assets/plugins/select2/select2.min.js') }}"></script>
+  <script src="{{ asset('assets/js/init/form-select-init.js') }}"></script>
 
+  <script>
+    $(document).ready(function() {
+        $('#rotatable_jobs').select2({
+            placeholder: " Pilih maksimal 6 job",
+            maximumSelectionLength: 6,
+            width: '100%' // opsional
+        });
+    });
+</script>
+
+   <!-- Tagsinput JS -->
+   <script src="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
+   <script src="{{ asset('assets/plugins/bootstrap-tagsinput/typeahead.bundle.js') }}"></script>
 
 @endsection 

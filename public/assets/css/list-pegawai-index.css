@@ -4,40 +4,36 @@
     font-weight: bold;
 }
 
-.r1 {
+/* .r1 {
     background-color: #cce5ff;
 }
 
 .r2 {
-    background-color: #dd68ec;
+    background-color: #a8cbec;
 }
 
-.r3p {
-    background-color: #5db4fc;
+.r3 {
+    background-color: #67b8fa;
 }
 
-.r3-4 {
-    background-color: #c1c0fc;
+.r4 {
+    background-color: #7396e0;
 }
 
-.k1p,
-.k1s {
-    background-color: #f9ccff;
+.k1 {
+    background-color: hsl(303, 70%, 75%);
 }
 
-.k2p,
-.k2s {
+.k2 {
     background-color: #f8b1c9;
 }
 
-.k3p,
-.k3s {
+.k3 {
     background-color: #fa6eb4;
 }
 
-.k3-4p,
-.k3-4s {
-    background-color: #c4fdc4;
+.k4 {
+    background-color: #b968c0;
 }
 
 .ld {
@@ -48,14 +44,8 @@
     background-color: #f7cb3c;
 }
 
-.obm,
-.obsr,
-.obs {
+.obm {
     background-color: #f0ed4d;
-}
-
-.lds {
-    background-color: #b4b4b4;
 }
 
 .fop,
@@ -72,17 +62,13 @@
     background-color: #ffeeba;
 }
 
-.rrp {
-    background-color: #f5bcc1;
-}
-
 .bq {
     background-color: #f56666;
-}
+} */
 
 .off {
-    background-color: #f3eded;
-    color: #e63f3f;
+    background-color: #f8a1a1;
+    color: #e02424;
 }
 
 .scroll-table-wrapper {

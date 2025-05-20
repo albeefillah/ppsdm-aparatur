@@ -353,21 +353,21 @@ PPSDM Aparatur - User
                     </div>
                 
                     <div class="card-body p-2">
-                            <!-- TABEL JOB SUMMARY -->
-                            <div class="table-responsive" style="overflow-x: auto; height:240px;">
-                                <table id="summary-table" class="table table-sm table-striped">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Kode Job</th>
-                                            <th>Deskripsi</th>
-                                            <th>Jml Pegawai</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-        
+                        <!-- TABEL JOB SUMMARY -->
+                        <div class="table-responsive" style="overflow-x: auto; height:240px;">
+                            <div id="missing-jobs" class="mb-2 fw-bold text-danger"></div>
+                            <table id="summary-table" class="table table-sm table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode Job</th>
+                                        <th>Deskripsi</th>
+                                        <th>Jml Pegawai</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="card m-b-30">
@@ -492,7 +492,7 @@ PPSDM Aparatur - User
     });
 
 
-
+    const allJobs = @json($jobs->pluck('code'));
     function loadSummary() {
     $.ajax({
         url: "{{ route('os.summary') }}",
@@ -505,6 +505,18 @@ PPSDM Aparatur - User
         success: function (data) {
             let tbody = $('#summary-table tbody');
             tbody.empty();
+
+             // 🟢 Ambil semua kode job dari Laravel (dimasukkan ke JS di bawah)
+            
+            const activeJobs = data.map(item => item.kode_job);
+            const missingJobs = allJobs.filter(job => !activeJobs.includes(job));
+
+            // Tampilkan daftar job yang tidak muncul
+            if (missingJobs.length > 0) {
+                $('#missing-jobs').html(`Job yang tidak ada: <span class="text-dark">${missingJobs.join(', ')}</span>`);
+            } else {
+                $('#missing-jobs').html('');
+            }
             // 🟢 Update badge jumlah data
             $('#job-count-badge').text(data.length);
 
