@@ -18,7 +18,7 @@ PPSDM Aparatur - User
 <div class="xp-breadcrumbbar">
     <div class="row">
         <div class="col-md-6 col-lg-6">
-            <h4 class="xp-page-title ml-3 mb">Jadwal Piket Outsourcing</h4>
+            <h6 class="ml-3 mb">Jadwal Piket Outsourcing PPSDM Aparatur</h6>
         </div>
         <div class="col-md-6 col-lg-6">
             <div class="xp-breadcrumb">
@@ -40,18 +40,20 @@ PPSDM Aparatur - User
           <div class="card m-b-30">
               <div class="card-header bg-white">
                   {{-- <h4 class=" text-center text-black">Jadwal Piket CS Tahun 2025</h4> --}}
+                  <div class="d-flex justify-content">
+                    <button class="btn btn-sm btn-outline-info mr-2" onclick="showModal('{{ \Carbon\Carbon::today()->format('Y-m-d') }}')" title="Lihat siapa yang bekerja hari ini">
+                        <i class="icon-calendar mr-2"></i>Bertugas Hari Ini
+                    </button>
+                    <a href="{{ route('os.export.pdf') }}" class="btn btn-outline-success btn-sm mr-2"> <i class="ti-export mr-2"></i>Export PDF</a>
+                    <button class="btn btn-outline-secondary btn-sm mr-2" onclick="toggleFullscreen()"> <i class="icon-size-fullscreen mr-2"> </i>Fullscreen</button>
+                    {{-- <button class="btn btn-success btn-sm" onclick="exportToExcel()">📥 Export Excel</button> --}}
+                </div>
               </div>
           
               <div class="card-body" style="font-size: 10px">
                   <div class="table-responsive">
-                    <div class="d-flex justify-content mb-2">
-                        <button class="btn btn-sm btn-info mr-2" onclick="showModal('{{ \Carbon\Carbon::today()->format('Y-m-d') }}')" title="Lihat siapa yang bekerja hari ini">
-                            📅 Bertugas Hari Ini
-                        </button>
-                        <button class="btn btn-sm btn-secondary" onclick="toggleFullscreen()"> <i class="mdi mdi-arrow-expand"> </i> Fullscreen</button>
-                        
-                    </div>
-                    
+                  
+
                     <div id="fullscreen-container">
                         <div id="tabel-container" class="scroll-table-wrapper drag-scroll">
                             <table class="table table-bordered table-sm table-striped" style="min-width: max-content;">
@@ -234,38 +236,11 @@ PPSDM Aparatur - User
                     <div class="pl-3 pt-3">
                         <!-- Button trigger modal -->
                         <a href="{{ route('os.form-generate') }}" class="btn btn-secondary">
-                            <i class="fa fa-gear"> </i> Generate Jadwal
+                            <i class="fa fa-gear mr-2"> </i>Generate Jadwal
                         </a>
-                        <!-- Modal -->
-                        {{-- <form action="{{ route('os.generate') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="modal fade" id="generateJadwal" tabindex="-1" role="dialog" aria-labelledby="generateJadwalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="generateJadwalLabel">Isi Bulan dan Tahun </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <input type="number" class="form-control" min="1" max="12" name="month" placeholder="Bulan" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="number" class="form-control" min="2020" name="year" placeholder="Tahun" required>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Kembali</button>
-                                            <button type="submit" class="btn btn-secondary">Generate Jadwal</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form> --}}
+                        
                     </div>
-                    <div class="pl-3 pt-3">
+                    {{-- <div class="pl-3 pt-3">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleStandardModal">
                             <i class="ti-import"> </i> Import Excel
@@ -293,13 +268,13 @@ PPSDM Aparatur - User
                                 </div>
                             </div>
                         </form>
-                    </div>
+                    </div> --}}
     
-                    <div class="pl-3 pt-3">
+                    {{-- <div class="pl-3 pt-3">
                         <a href="{{ route('os.export') }}" class="btn btn-success"> <i class="ti-export"> </i> Export Excel</a>
-                    </div>
-                    <div class="pl-3 pt-3">
-                        <button type="button" id="reset-filter" class="btn btn-danger mb-2"> <i class="ion ion-ios-refresh"></i> Reset Filter</button>
+                    </div> --}}
+                    <div class="pl-2 pt-3">
+                        <button type="button" id="reset-filter" class="btn btn-danger mb-2"> <i class="ion ion-ios-refresh mr-2"></i>Reset Filter</button>
                     </div>
                     <div class="pl-3 pt-3">
                         <label for=""></label>
@@ -445,6 +420,22 @@ PPSDM Aparatur - User
 <!-- Sweet-Alert JS -->
 <script src="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/js/init/sweet-alert-init.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+    function exportToExcel() {
+        // Ambil tabel
+        const table = document.querySelector('table');
+    
+        // Convert ke worksheet
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Jadwal Pegawai" });
+    
+        // Download file
+        XLSX.writeFile(wb, "jadwal_pegawai.xlsx");
+    }
+</script>
+    
+
 <script>
     $(document).ready(function() {
         loadSummary();

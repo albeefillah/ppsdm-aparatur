@@ -44,7 +44,7 @@ Route::middleware('Kapus')->group(function () {
     Route::prefix('os')->group(function () {
         Route::get('/', [App\Http\Controllers\OutsourcingController::class, 'index'])->name('os.index');
         Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('os.create');
-        Route::get('/export', [App\Http\Controllers\OutsourcingController::class, 'export'])->name('os.export');
+        Route::get('/export-jadwal', [App\Http\Controllers\OutsourcingController::class, 'exportPdf'])->name('os.export.pdf');
         Route::post('/import', [App\Http\Controllers\OutsourcingController::class, 'import'])->name('os.import');
         Route::get('/formGenerate', [App\Http\Controllers\OutsourcingController::class, 'formGenerate'])->name('os.form-generate');
         Route::post('/generate', [App\Http\Controllers\OutsourcingController::class, 'scheduleGenerate'])->name('os.generate');

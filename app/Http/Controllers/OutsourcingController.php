@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\Models\Holiday;
 use App\Models\Job;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\DataTables;
@@ -175,9 +176,25 @@ class OutsourcingController extends Controller
         session()->flash('success', 'Data berhasil di import.');
         return redirect()->back();
     }
-    public function export()
+    public function exportPdf()
     {
-        return (new FastExcel(Schedule::all()))->download('file.xlsx');
+        $employees = Employee::with(['schedules.job'])->get();
+
+        $dates = Schedule::orderBy('work_date')
+            ->pluck('work_date')
+            ->unique()
+            ->map(fn($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))
+            ->values()
+            ->toArray();
+
+        $groupedDates = collect($dates)->groupBy(function ($date) {
+            return \Carbon\Carbon::parse($date)->format('F Y');
+        });
+
+        $pdf = Pdf::loadView('manajemen-outsourcing.list-pegawai.export-pdf', compact('employees', 'dates', 'groupedDates'))
+            // set kertas F4
+            ->setPaper([0, 0, 595.28, 935.43], 'landscape');
+        return $pdf->download('Jadwal Piket OS PPSDMA.pdf');
     }
 
     /**
