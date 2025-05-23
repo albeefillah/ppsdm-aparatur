@@ -1,5 +1,5 @@
 <?php
-// 4 kerja 2 libur 16 job
+// 4 kerja 2 libur 16 job (Kasus FOP dan MBS)
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
 
-class GenerateMonthlyScheduleerew extends Command
+class GenerateMonthlySchedulesda extends Command
 {
     protected $signature = 'schedule:generate {month} {year} {--eligibility=}';
     protected $description = 'Generate monthly work schedule for all employees';
