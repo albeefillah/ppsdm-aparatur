@@ -15,14 +15,14 @@ class JobSeeder extends Seeder
     {
         $jobs = [
             // Shift Pagi
-            ['code' => 'R1', 'name' => 'Room Service Lt. 1 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'R2', 'name' => 'Room Service Lt. 2 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'R3', 'name' => 'Room Service Lt. 3 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'R4', 'name' => 'Room Service Lt. 4 (Kamar dan kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'K1', 'name' => 'Kantor Lt. 1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'K2', 'name' => 'Kantor Lt. 2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'K3', 'name' => 'Kantor Lt. 3', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
-            ['code' => 'K4', 'name' => 'Kantor Lt. 4', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'R1', 'name' => 'Room Service Lt.1 (Kamar dan Kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'R2', 'name' => 'Room Service Lt.2 (Kamar dan Kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'R3', 'name' => 'Room Service Lt.3 (Kamar dan Kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'R4', 'name' => 'Room Service Lt.4 (Kamar dan Kelas)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'K1', 'name' => 'Kantor Lt.1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'K2', 'name' => 'Kantor Lt.2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'K3', 'name' => 'Kantor Lt.3', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
+            ['code' => 'K4', 'name' => 'Kantor Lt.4', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
             ['code' => 'LD', 'name' => 'Laundry', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
             ['code' => 'GD', 'name' => 'Garden', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
             ['code' => 'MBS', 'name' => 'Marbot dan Basement', 'category' => 'cs', 'type' => 'primary', 'shift' => 'pagi', 'start' => '07:00', 'end' => '17:00'],
@@ -30,9 +30,9 @@ class JobSeeder extends Seeder
 
 
             // Shift Siang
-            // ['code' => 'K1s', 'name' => 'Kantor Lt. 1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '17:00'],
-            // ['code' => 'K2s', 'name' => 'Kantor Lt. 2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '17:00'],
-            // ['code' => 'K3s', 'name' => 'Kantor Lt. 3 dan Lt. 4', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '17:00'],
+            // ['code' => 'K1s', 'name' => 'Kantor Lt.1', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '17:00'],
+            // ['code' => 'K2s', 'name' => 'Kantor Lt.2', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '17:00'],
+            // ['code' => 'K3s', 'name' => 'Kantor Lt.3 dan Lt.4', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '17:00'],
             // ['code' => 'OBs', 'name' => 'Office Boy (Lt 1-4 Wisma)', 'category' => 'cs', 'type' => 'primary', 'shift' => 'siang', 'start' => '11:00', 'end' => '19:00'],
 
             // Shift Sore
