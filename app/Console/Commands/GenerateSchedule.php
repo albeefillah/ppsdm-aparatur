@@ -90,35 +90,34 @@ class GenerateMonthlySchedule extends Command
                     return !$this->hasJobAssigned($employee->id, $dateStr)
                         && $employee->jobEligibilities->contains('id', $job->id)
                         && ($this->employeeCyclePosition[$employee->id][$dateStr] ?? null) === 3;
-                })->shuffle();
+                });
 
-                if ($eligibleEmployees->isEmpty()) continue;
+                $safeEmployee = $eligibleEmployees
+                    ->filter(fn($emp) => $this->isNotCrucialElsewhere($emp, $job, $workingEmployees, $jobs, $dateStr))
+                    ->first();
 
-                $selectedEmployee = $eligibleEmployees->firstWhere(function ($emp) use ($job, $workingEmployees, $jobs, $dateStr) {
-                    $otherJobs = $jobs->filter(fn($j) => $j->id !== $job->id);
-                    foreach ($otherJobs as $otherJob) {
-                        $otherEligible = $workingEmployees->filter(function ($e) use ($otherJob, $dateStr) {
-                            return !$this->hasJobAssigned($e->id, $dateStr)
-                                && $e->jobEligibilities->contains('id', $otherJob->id);
-                        });
-                        if ($otherEligible->count() === 1 && $otherEligible->first()->id === $emp->id) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }) ?? $eligibleEmployees->first();
+                if (!$safeEmployee) {
+                    $fallback = $workingEmployees->filter(function ($employee) use ($job, $dateStr) {
+                        return !$this->hasJobAssigned($employee->id, $dateStr)
+                            && $employee->jobEligibilities->contains('id', $job->id)
+                            && ($this->employeeCyclePosition[$employee->id][$dateStr] ?? null) === 3;
+                    })->first();
+                    $safeEmployee = $fallback;
+                }
+
+                if (!$safeEmployee) continue;
 
                 Schedule::create([
-                    'employee_id' => $selectedEmployee->id,
+                    'employee_id' => $safeEmployee->id,
                     'job_id' => $job->id,
                     'work_date' => $dateStr,
                     'job_role' => 'primary',
                     'week_number' => $date->weekOfMonth,
                 ]);
 
-                $this->employeeAssignments[$selectedEmployee->id][$dateStr] = 'kerja';
-                $this->employeeLastJob[$selectedEmployee->id] = $job->id;
-                $this->jobAssignments[$dateStr][$job->id] = $selectedEmployee->id;
+                $this->employeeAssignments[$safeEmployee->id][$dateStr] = 'kerja';
+                $this->employeeLastJob[$safeEmployee->id] = $job->id;
+                $this->jobAssignments[$dateStr][$job->id] = $safeEmployee->id;
             }
 
             foreach ($dayJobs as $job) {
@@ -127,10 +126,15 @@ class GenerateMonthlySchedule extends Command
                         && $employee->jobEligibilities->contains('id', $job->id);
                 })->shuffle();
 
-                if ($eligibleEmployees->isEmpty()) continue;
+                if ($eligibleEmployees->isEmpty()) {
+                    // Fallback attempt: try reallocation if job is critical (like FOP)
+                    $reallocated = $this->attemptReallocation($job, $workingEmployees, $jobs, $dateStr);
+                    if ($reallocated) continue;
+                    else continue;
+                }
 
-                $selectedEmployee = $eligibleEmployees->firstWhere(function ($emp) use ($job) {
-                    return ($this->employeeLastJob[$emp->id] ?? null) !== $job->id;
+                $selectedEmployee = $eligibleEmployees->firstWhere(function ($emp) use ($job, $workingEmployees, $jobs, $dateStr) {
+                    return $this->isSafeToAssign($emp, $job, $workingEmployees, $jobs, $dateStr);
                 }) ?? $eligibleEmployees->first();
 
                 Schedule::create([
@@ -166,6 +170,95 @@ class GenerateMonthlySchedule extends Command
     protected function hasJobAssigned($employeeId, $dateStr)
     {
         return isset($this->employeeAssignments[$employeeId][$dateStr]);
+    }
+
+    protected function isSafeToAssign($emp, $job, $workingEmployees, $allJobs, $dateStr)
+    {
+        foreach ($allJobs as $otherJob) {
+            if ($otherJob->id === $job->id) continue;
+
+            $otherEligible = $workingEmployees->filter(function ($e) use ($otherJob, $dateStr, $emp) {
+                return !$this->hasJobAssigned($e->id, $dateStr)
+                    && $e->jobEligibilities->contains('id', $otherJob->id);
+            });
+
+            if ($otherEligible->count() === 1 && $otherEligible->first()->id === $emp->id) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function isNotCrucialElsewhere($emp, $job, $workingEmployees, $allJobs, $dateStr)
+    {
+        foreach ($allJobs as $otherJob) {
+            if ($otherJob->id === $job->id) continue;
+
+            $otherEligible = $workingEmployees->filter(function ($e) use ($otherJob, $dateStr) {
+                return !$this->hasJobAssigned($e->id, $dateStr)
+                    && $e->jobEligibilities->contains('id', $otherJob->id);
+            });
+
+            if ($otherEligible->count() === 1 && $otherEligible->first()->id === $emp->id) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function attemptReallocation($job, $workingEmployees, $jobs, $dateStr)
+    {
+        foreach ($this->employeeAssignments as $empId => $assignments) {
+            if (($assignments[$dateStr] ?? null) !== 'kerja') continue;
+
+            $assignedJobId = Schedule::where('employee_id', $empId)
+                ->whereDate('work_date', $dateStr)
+                ->value('job_id');
+
+            if (!$assignedJobId) continue;
+
+            $employee = $workingEmployees->firstWhere('id', $empId);
+            if (!$employee) continue;
+
+            $jobNow = $jobs->firstWhere('id', $assignedJobId);
+            if (!$jobNow) continue;
+
+            $replacementCandidates = $workingEmployees->filter(function ($e) use ($jobNow, $dateStr, $empId) {
+                return $e->id !== $empId
+                    && !$this->hasJobAssigned($e->id, $dateStr)
+                    && $e->jobEligibilities->contains('id', $jobNow->id);
+            });
+
+            if ($replacementCandidates->isNotEmpty()) {
+                $replacement = $replacementCandidates->first();
+
+                // Ganti penugasan lama
+                Schedule::where('employee_id', $empId)->whereDate('work_date', $dateStr)->delete();
+
+                Schedule::create([
+                    'employee_id' => $replacement->id,
+                    'job_id' => $jobNow->id,
+                    'work_date' => $dateStr,
+                    'job_role' => 'primary',
+                    'week_number' => Carbon::parse($dateStr)->weekOfMonth,
+                ]);
+                $this->employeeAssignments[$replacement->id][$dateStr] = 'kerja';
+
+                // Assign pegawai utama ke job yang awalnya kosong
+                Schedule::create([
+                    'employee_id' => $employee->id,
+                    'job_id' => $job->id,
+                    'work_date' => $dateStr,
+                    'job_role' => 'primary',
+                    'week_number' => Carbon::parse($dateStr)->weekOfMonth,
+                ]);
+                $this->employeeAssignments[$employee->id][$dateStr] = 'kerja';
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function getLastCycleOffset($employeeId, $startDate, $defaultOffset)
