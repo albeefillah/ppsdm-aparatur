@@ -41,18 +41,21 @@ PPSDM Aparatur - User
               <div class="card-header bg-white">
                   {{-- <h4 class=" text-center text-black">Jadwal Piket CS Tahun 2025</h4> --}}
                   <div class="d-flex justify-content">
+                    <a href="{{ route('os.form-generate') }}" class="btn btn-warning btn-sm mr-2">
+                        <i class="fa fa-gear mr-2"> </i>Generate Jadwal
+                    </a>
                     <button class="btn btn-sm btn-outline-info mr-2" onclick="showModal('{{ \Carbon\Carbon::today()->format('Y-m-d') }}')" title="Lihat siapa yang bekerja hari ini">
                         <i class="icon-calendar mr-2"></i>Bertugas Hari Ini
                     </button>
                     <a href="{{ route('os.export.pdf') }}" class="btn btn-outline-success btn-sm mr-2"> <i class="ti-export mr-2"></i>Export PDF</a>
-                    <button class="btn btn-outline-secondary btn-sm mr-2" onclick="toggleFullscreen()"> <i class="icon-size-fullscreen mr-2"> </i>Fullscreen</button>
+                    <a href="{{ route('os.special-plot') }}" class="btn btn-outline-purple btn-sm mr-2" > <i class="icon-organization mr-2"></i>Ploting Spesial Pegawai</a>
+                    
                     {{-- <button class="btn btn-success btn-sm" onclick="exportToExcel()">📥 Export Excel</button> --}}
                 </div>
               </div>
           
               <div class="card-body" style="font-size: 10px">
                   <div class="table-responsive">
-                  
 
                     <div id="fullscreen-container">
                         <div id="tabel-container" class="scroll-table-wrapper drag-scroll">
@@ -175,6 +178,8 @@ PPSDM Aparatur - User
                     </div>
       
                   </div>
+
+                  <button class="btn btn-secondary btn-sm mr-2 mt-2" onclick="toggleFullscreen()"> <i class="icon-size-fullscreen mr-2"> </i>Fullscreen</button>
               </div>
       
           </div>
@@ -235,9 +240,7 @@ PPSDM Aparatur - User
                 <div class="row">
                     <div class="pl-3 pt-3">
                         <!-- Button trigger modal -->
-                        <a href="{{ route('os.form-generate') }}" class="btn btn-secondary">
-                            <i class="fa fa-gear mr-2"> </i>Generate Jadwal
-                        </a>
+                        
                         
                     </div>
                     {{-- <div class="pl-3 pt-3">

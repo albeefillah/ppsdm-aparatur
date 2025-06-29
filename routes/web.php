@@ -54,6 +54,11 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/summary', [App\Http\Controllers\OutsourcingController::class, 'jobSummary'])->name('os.summary');
         Route::get('/detailDate', [App\Http\Controllers\OutsourcingController::class, 'detailDate'])->name('os.detail-date');
         Route::get('/employee-list', [App\Http\Controllers\OutsourcingController::class, 'employeeList'])->name('os.employee-list');
+
+
+        Route::get('/special-plot', [App\Http\Controllers\OutsourcingController::class, 'specialPlot'])->name('os.special-plot');
+        Route::post('/special-plot-store', [App\Http\Controllers\OutsourcingController::class, 'specialPlotStore'])->name('os.special-plot-store');
+        Route::get('/special-plot-destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'specialPlotDestroy'])->name('os.special-plot-destroy');
     });
 
     Route::prefix('monitoring-os')->group(function () {

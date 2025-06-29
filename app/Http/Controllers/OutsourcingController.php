@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\Models\Holiday;
 use App\Models\Job;
+use App\Models\SpecialPlot;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
 
@@ -70,7 +72,7 @@ class OutsourcingController extends Controller
                     $delete = route('os.destroy', $row->id);
                     return '
                     <a href="' . $edit . '" class="btn btn-info"><i class="fa fa-pencil"></i></a>
-                    <a href="' . $delete . '" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                    <a href="' . $delete . '" class="btn btn-danger" id="xp-sa-warning"><i class="fa fa-trash"></i></a>
                 ';
                 })
                 ->rawColumns(['aksi'])
@@ -405,6 +407,225 @@ class OutsourcingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $schedule = Schedule::find($id);
+        $schedule->delete();
+
+        session()->flash('success', 'Data berhasil dihapus.');
+        return redirect()->back();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Ploting Spesial
+    public function specialPlot()
+    {
+        $employees = Employee::all();
+        $jobs = Job::all();
+        $plots = SpecialPlot::with('employee', 'job')->orderByDesc('target_date')->get();
+
+
+        return view('manajemen-outsourcing.special-plot.index', compact('employees', 'jobs', 'plots'));
+    }
+
+    public function specialPlotStore(Request $request)
+    {
+        $validated = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'job_id' => 'required|exists:jobs,id',
+            'target_date' => 'required|date',
+            'reason' => 'nullable|string',
+        ]);
+
+        $targetDate = Carbon::parse($validated['target_date']);
+        $dateStr = $targetDate->toDateString();
+        $week = $targetDate->weekOfMonth;
+
+
+        $existing = Schedule::where('work_date', $dateStr)
+            ->where('job_id', $validated['job_id'])
+            ->first();
+
+        $existingSchedule = Schedule::where('employee_id', $validated['employee_id'])
+            ->where('work_date', $dateStr)
+            ->first();
+
+        $previousJobId = ($existingSchedule && $existingSchedule->job_id !== $validated['job_id'])
+            ? $existingSchedule->job_id
+            : null;
+
+        $replacedEmployeeId = $existing?->employee_id;
+
+        $plot = SpecialPlot::updateOrCreate(
+            [
+                'employee_id' => $validated['employee_id'],
+                'job_id' => $validated['job_id'],
+                'target_date' => $validated['target_date'],
+            ],
+            [
+                'reason' => $validated['reason'] ?? null,
+                'previous_job_id' => $previousJobId,
+                'replaced_employee_id' => $replacedEmployeeId,
+            ]
+        );
+
+        // Tukar jadwal
+        if (!$existingSchedule || $existingSchedule->job_role === 'libur') {
+            if ($existing) {
+                Schedule::updateOrCreate(
+                    [
+                        'employee_id' => $validated['employee_id'],
+                        'work_date' => $dateStr,
+                    ],
+                    [
+                        'job_id' => $validated['job_id'],
+                        'job_role' => 'primary',
+                        'week_number' => $week,
+                    ]
+                );
+
+                $existing->update([
+                    'job_id' => null,
+                    'job_role' => 'libur',
+                ]);
+            } else {
+                Schedule::updateOrCreate(
+                    ['employee_id' => $validated['employee_id'], 'work_date' => $dateStr],
+                    [
+                        'job_id' => $validated['job_id'],
+                        'job_role' => 'primary',
+                        'week_number' => $week,
+                    ]
+                );
+            }
+        } else {
+            if ($existing) {
+                $tempJob = $existingSchedule->job_id;
+                $existingSchedule->update(['job_id' => $validated['job_id']]);
+                $existing->update(['job_id' => $tempJob]);
+            }
+        }
+
+        $lastWeekStart = Carbon::parse($dateStr)->subWeek()->startOfWeek();
+        $weekDates = collect(range(0, 6))->map(fn($i) => $lastWeekStart->copy()->addDays($i)->toDateString());
+
+        // 🔁 Koreksi minggu berikutnya
+        if ($replacedEmployeeId && $previousJobId) {
+            $nextWeekStart = Carbon::parse($dateStr)->addWeek()->startOfWeek();
+
+            $nextWeekDates = collect(range(0, 6))->map(fn($i) => $nextWeekStart->copy()->addDays($i));
+
+            $replacedSchedule = Schedule::where('employee_id', $replacedEmployeeId)
+                ->whereIn('work_date', $weekDates)
+                ->whereNotNull('job_id')
+                ->orderBy('work_date')
+                ->get();
+
+            // dd([
+            //     'target_date' => $dateStr,
+            //     'weekDates' => $weekDates,
+            //     'replacedSchedule' => $replacedSchedule->pluck('work_date'),
+            // ]);
+
+            // ⏺ Cari urutan hari kerja di minggu sebelumnya
+            $targetIndex = $replacedSchedule->search(fn($item) => $item->work_date === $dateStr);
+
+            if ($targetIndex !== false && isset($nextWeekDates[$targetIndex])) {
+                $correctionDate = $nextWeekDates[$targetIndex];
+                $correctionDateStr = $correctionDate->toDateString();
+
+                Log::info("⏪ Koreksi minggu depan: {$correctionDateStr} pegawai {$replacedEmployeeId} isi job {$previousJobId}");
+
+                // Pegawai pengganti ambil alih job pegawai spesial
+                Schedule::updateOrCreate(
+                    [
+                        'employee_id' => $replacedEmployeeId,
+                        'work_date' => $correctionDateStr,
+                    ],
+                    [
+                        'job_id' => $previousJobId,
+                        'job_role' => 'primary',
+                        'week_number' => $correctionDate->weekOfMonth,
+                    ]
+                );
+
+                // Pegawai spesial libur di hari itu
+                Schedule::updateOrCreate(
+                    [
+                        'employee_id' => $validated['employee_id'],
+                        'work_date' => $correctionDateStr,
+                    ],
+                    [
+                        'job_id' => null,
+                        'job_role' => 'libur',
+                        'week_number' => $correctionDate->weekOfMonth,
+                    ]
+                );
+            } else {
+                Log::warning("⚠️ Tidak ditemukan indeks koreksi minggu depan.");
+            }
+        }
+
+        return redirect()->route('os.special-plot')->with('success', 'Plotting spesial ditambahkan dan jadwal diperbarui.');
+    }
+
+
+    public function specialPlotDestroy($id)
+    {
+        $plot = SpecialPlot::findOrFail($id);
+        $dateStr = $plot->target_date->toDateString();
+
+        $current = Schedule::where('employee_id', $plot->employee_id)
+            ->whereDate('work_date', $dateStr)
+            ->first();
+
+        // Cari pegawai lain yang terlibat pertukaran di job ini
+        $partnerId = $plot->replaced_employee_id;
+
+        $pegawaiSpesial = Schedule::where('employee_id', $plot->employee_id)
+            ->where('work_date', $dateStr)
+            ->first();
+
+        $pegawaiPartner = $partnerId
+            ? Schedule::where('employee_id', $partnerId)
+            ->where('work_date', $dateStr)
+            ->first()
+            : null;
+
+        if ($pegawaiSpesial && $pegawaiPartner) {
+            // Kembalikan job mereka seperti sebelum override
+            $temp = $pegawaiSpesial->job_id;
+            $pegawaiSpesial->update(['job_id' => $pegawaiPartner->job_id]);
+            $pegawaiPartner->update(['job_id' => $temp]);
+        } elseif ($pegawaiSpesial && !$pegawaiPartner) {
+            // Kalau partner libur → hapus jadwal override & buat partner jadi kerja
+            $pegawaiSpesial->delete();
+
+            if ($partnerId) {
+                Schedule::updateOrCreate(
+                    ['employee_id' => $partnerId, 'work_date' => $dateStr],
+                    [
+                        'job_id' => $plot->job_id,
+                        'job_role' => 'primary',
+                        'week_number' => Carbon::parse($dateStr)->weekOfMonth,
+                    ]
+                );
+            }
+        }
+
+
+        $plot->delete();
+
+        return redirect()->route('os.special-plot')->with('success', 'Plotting spesial dihapus dan jadwal dikembalikan.');
     }
 }

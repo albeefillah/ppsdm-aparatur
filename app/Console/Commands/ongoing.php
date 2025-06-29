@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
 
-class GenerateMonthlyScheduleerew extends Command
+class GenerateMonthlyScheduleerewdas extends Command
 {
     protected $signature = 'schedule:generate {month} {year} {--eligibility=}';
     protected $description = 'Generate monthly work schedule for all employees';

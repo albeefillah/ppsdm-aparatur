@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Job;
 use App\Models\Schedule;
 use App\Models\Holiday;
+use App\Models\SpecialPlot;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
@@ -166,6 +167,7 @@ class GenerateMonthlySchedule extends Command
 
         $this->info("\u2705 Jadwal {$month}/{$year} berhasil dibuat dengan pola 4 kerja 2 libur dan shift malam pada hari ke-4.");
     }
+
 
     protected function hasJobAssigned($employeeId, $dateStr)
     {

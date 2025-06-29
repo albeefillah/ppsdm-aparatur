@@ -195,3 +195,13 @@ th.date-hover:hover {
     display: flex;
     flex-direction: column;
 }
+
+.btn-outline-purple {
+    color: #4c7cf3;
+    border-color: #4c7cf3 !important;
+}
+
+.btn-outline-purple:hover {
+    background-color: #4c7cf3;
+    color: #fff !important;
+}
