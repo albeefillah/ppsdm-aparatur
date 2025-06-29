@@ -24,19 +24,21 @@
                     </li>
                 @endif
 
-                <li class="xp-vertical-header">Applications / Dashboard</li>
+                @if (auth()->check() && auth()->user()->role->role !== 'CS')
+                    <li class="xp-vertical-header">Applications / Dashboard</li>
 
-                <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
-                    <a href="{{ route('sppd.index') }}">
-                        <i class="icon-book-open"></i><span>Perjadin</span>
-                    </a>
-                </li>
-                
-                <li class="{{ (request()->is('profile-kepeg/')) ? 'active' : '' }}">
-                    <a href="{{ route('profile-kepeg.index') }}">
-                        <i class="icon-people"></i><span>Kepegawaian ESDM</span>
-                    </a>
-                </li>
+                    <li class="{{ (request()->is('sppd/')) ? 'active' : '' }}">
+                        <a href="{{ route('sppd.index') }}">
+                            <i class="icon-book-open"></i><span>Perjadin</span>
+                        </a>
+                    </li>
+                    
+                    <li class="{{ (request()->is('profile-kepeg/')) ? 'active' : '' }}">
+                        <a href="{{ route('profile-kepeg.index') }}">
+                            <i class="icon-people"></i><span>Kepegawaian ESDM</span>
+                        </a>
+                    </li>
+                @endif
 
                 @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
                 <li class="{{ (request()->is('keuangan/')) ? 'active' : '' }}">
@@ -49,28 +51,24 @@
                         <i class="ti-layout-media-left"></i><span>Kurikulum</span>
                     </a>
                 </li>
-{{-- 
-                <li dropdown">
-                    <a href="#"><i class="mdi mdi-account-group"></i><span>Mnj. Outsourcing</span></a>
-                    <ul class="dropdown-menu"> 
-                        <li><a href="{{ route('os.index') }}">Data Outsourcing</a></li>                                   
-                    </ul> 
-                </li> --}}
 
-                <li class="{{ (request()->is('os/')) ? 'active' : '' }}">
-                    <a href="javaScript:void();">
-                        <i class="mdi mdi-account-group"></i><span>Mnj. Outsourcing</span><i class="icon-arrow-right pull-right"></i>
-                    </a>
-                    <ul class="xp-vertical-submenu">                                
-                        <li><a href="{{ route('employee.index') }}">List Pegawai</a></li>         
-                        <li><a href="{{ route('jobs.index') }}">List Job</a></li>         
-                        <li><a href="{{ route('holiday.index') }}">List Holiday</a></li>         
-                        <li><a href="{{ route('os.index') }}">Monitoring Jadwal</a></li>         
-                        {{-- <li><a href="{{ route('monitoring.index') }}">Monitoring Jadwal</a></li>          --}}
-                    </ul>
-                </li>
+
                 @endif
                 
+                @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin') || auth()->user()->can('isCS')))
+                    <li class="{{ (request()->is('os/')) ? 'active' : '' }}">
+                        <a href="javaScript:void();">
+                            <i class="mdi mdi-account-group"></i><span>Mnj. Outsourcing</span><i class="icon-arrow-right pull-right"></i>
+                        </a>
+                        <ul class="xp-vertical-submenu">                                
+                            <li><a href="{{ route('employee.index') }}">List Pegawai</a></li>         
+                            <li><a href="{{ route('jobs.index') }}">List Job</a></li>         
+                            <li><a href="{{ route('holiday.index') }}">List Holiday</a></li>         
+                            <li><a href="{{ route('os.index') }}">Monitoring Jadwal</a></li>         
+                            {{-- <li><a href="{{ route('monitoring.index') }}">Monitoring Jadwal</a></li>          --}}
+                        </ul>
+                    </li>
+                @endif
 
 
             </ul>

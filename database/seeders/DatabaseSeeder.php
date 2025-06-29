@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     {
 
         // $this->call(PokjaSeeder::class);
-        // $this->call(RoleSeeder::class);
+        $this->call(RoleSeeder::class);
         // $this->call(UserSeeder::class);
         // $this->call(EmployeeSeeder::class);
-        $this->call(JobSeeder::class);
+        // $this->call(JobSeeder::class);
         // $this->call(HolidaySeeder::class);
     }
 }

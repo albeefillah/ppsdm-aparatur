@@ -44,5 +44,10 @@ class RoleSeeder extends Seeder
             'deskripsi' => 'Perencanaan & Standardisasi'
         ]);
 
+        \App\Models\Role::create([
+            'id_pokja' => 1,
+            'role' => 'CS',
+            'deskripsi' => 'Koordinator CS'
+        ]);
     }
 }

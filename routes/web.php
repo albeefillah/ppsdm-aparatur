@@ -41,6 +41,19 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/', [App\Http\Controllers\KurikulumController::class, 'index'])->name('kurikulum.index');
     });
 
+    // Route::prefix('role')->group(function () {
+    //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');
+    //     Route::get('/create', [App\Http\Controllers\RoleController::class, 'create'])->name('role.create');
+    //     Route::post('/store', [App\Http\Controllers\RoleController::class, 'store'])->name('role.store');
+    //     Route::get('/edit/{id}', [App\Http\Controllers\RoleController::class, 'edit'])->name('role.edit');
+    //     Route::post('/update/{id}', [App\Http\Controllers\RoleController::class, 'update'])->name('role.update');
+    //     Route::get('/destroy/{id}', [App\Http\Controllers\RoleController::class, 'destroy'])->name('role.destroy');
+    // });
+});
+
+
+// Route hanya bisa di akses oleh Kapus dan Koordinator CS
+Route::middleware('KapusOrCS')->group(function () {
     Route::prefix('os')->group(function () {
         Route::get('/', [App\Http\Controllers\OutsourcingController::class, 'index'])->name('os.index');
         Route::get('/create', [App\Http\Controllers\OutsourcingController::class, 'create'])->name('os.create');
@@ -54,8 +67,6 @@ Route::middleware('Kapus')->group(function () {
         Route::get('/summary', [App\Http\Controllers\OutsourcingController::class, 'jobSummary'])->name('os.summary');
         Route::get('/detailDate', [App\Http\Controllers\OutsourcingController::class, 'detailDate'])->name('os.detail-date');
         Route::get('/employee-list', [App\Http\Controllers\OutsourcingController::class, 'employeeList'])->name('os.employee-list');
-
-
         Route::get('/special-plot', [App\Http\Controllers\OutsourcingController::class, 'specialPlot'])->name('os.special-plot');
         Route::post('/special-plot-store', [App\Http\Controllers\OutsourcingController::class, 'specialPlotStore'])->name('os.special-plot-store');
         Route::get('/special-plot-destroy/{id}', [App\Http\Controllers\OutsourcingController::class, 'specialPlotDestroy'])->name('os.special-plot-destroy');
@@ -96,15 +107,6 @@ Route::middleware('Kapus')->group(function () {
         Route::post('/update/{id}', [App\Http\Controllers\HolidayController::class, 'update'])->name('holiday.update');
         Route::get('/destroy/{id}', [App\Http\Controllers\HolidayController::class, 'destroy'])->name('holiday.destroy');
     });
-
-    // Route::pref  ix('role')->group(function () {
-    //     Route::get('/', [App\Http\Controllers\RoleController::class, 'index'])->name('role.index');
-    //     Route::get('/create', [App\Http\Controllers\RoleController::class, 'create'])->name('role.create');
-    //     Route::post('/store', [App\Http\Controllers\RoleController::class, 'store'])->name('role.store');
-    //     Route::get('/edit/{id}', [App\Http\Controllers\RoleController::class, 'edit'])->name('role.edit');
-    //     Route::post('/update/{id}', [App\Http\Controllers\RoleController::class, 'update'])->name('role.update');
-    //     Route::get('/destroy/{id}', [App\Http\Controllers\RoleController::class, 'destroy'])->name('role.destroy');
-    // });
 });
 
 Route::prefix('sppd')->group(function () {

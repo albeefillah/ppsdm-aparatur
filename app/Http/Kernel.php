@@ -40,43 +40,52 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
         'CheckRole' => [
             \App\Http\Middleware\checkRole::class,
-            
+
         ],
-        
+
         'SuperAdmin' => [
             \App\Http\Middleware\checkAccessSuperadmin::class,
-            
+
         ],
 
         'Kapus' => [
             \App\Http\Middleware\checkAccessKapus::class,
-            
+
         ],
-        
+
         'BPAU' => [
             \App\Http\Middleware\checkAccessBPAU::class,
-            
+
         ],
 
         'BPAS' => [
             \App\Http\Middleware\checkAccessBPAS::class,
-            
+
         ],
 
         'BPAP' => [
             \App\Http\Middleware\checkAccessBPAP::class,
-            
+
         ],
 
         'BPAK' => [
             \App\Http\Middleware\checkAccessBPAK::class,
-            
+
+        ],
+
+        'CS' => [
+            \App\Http\Middleware\checkAccessCS::class,
+
+        ],
+        'KapusOrCS' => [
+            \App\Http\Middleware\checkAccessKapusOrCS::class,
+
         ]
     ];
 

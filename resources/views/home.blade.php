@@ -30,30 +30,32 @@ PPSDM Aparatur - Dashboard
 <div class="xp-contentbar">
 
     <div class="row">
-        <div class="col-md-4 col-lg-4 col-xl-4">
-            <div class="card bg-success-gradient m-b-30">
-                <div class="card-body">
-                    <div class="xp-widget-box text-white text-center pt-3">
-                        <p class="xp-icon-timer mb-4"><i class="icon-book-open"></i></p>
-                        <h5 class="mb-2 font-20">Perjadin</h5>
-                        <p class="mb-3">Monitoring data Perjalanan Dinas PPSDM Aparatur</p>
-                        <a href="{{ route('sppd.index') }}" class="btn btn-white btn-rounded text-success">Lihat Dashboard</a>
+        @if (auth()->check() && (auth()->user()->role->role !== 'CS'))
+            <div class="col-md-4 col-lg-4 col-xl-4">
+                <div class="card bg-success-gradient m-b-30">
+                    <div class="card-body">
+                        <div class="xp-widget-box text-white text-center pt-3">
+                            <p class="xp-icon-timer mb-4"><i class="icon-book-open"></i></p>
+                            <h5 class="mb-2 font-20">Perjadin</h5>
+                            <p class="mb-3">Monitoring data Perjalanan Dinas PPSDM Aparatur</p>
+                            <a href="{{ route('sppd.index') }}" class="btn btn-white btn-rounded text-success">Lihat Dashboard</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 col-lg-4 col-xl-4">
-            <div class="card bg-info-gradient m-b-30">
-                <div class="card-body">
-                    <div class="xp-widget-box text-white text-center pt-3">
-                        <p class="xp-icon-timer mb-4"><i class="icon-people"></i></p>
-                        <h5 class="mb-2 font-20">Profile Kepegawaian</h5>
-                        <p class="mb-3">Db Kepegawaian KESDM (TLCS, TUBEL, Penyertaan,dsb)</p>
-                        <a href="{{ route('profile-kepeg.index') }}" class="btn btn-white btn-rounded text-info">Lihat Dashboard</a>
+            <div class="col-md-4 col-lg-4 col-xl-4">
+                <div class="card bg-info-gradient m-b-30">
+                    <div class="card-body">
+                        <div class="xp-widget-box text-white text-center pt-3">
+                            <p class="xp-icon-timer mb-4"><i class="icon-people"></i></p>
+                            <h5 class="mb-2 font-20">Profile Kepegawaian</h5>
+                            <p class="mb-3">Db Kepegawaian KESDM (TLCS, TUBEL, Penyertaan,dsb)</p>
+                            <a href="{{ route('profile-kepeg.index') }}" class="btn btn-white btn-rounded text-info">Lihat Dashboard</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
        
 
         @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin')))
@@ -81,18 +83,21 @@ PPSDM Aparatur - Dashboard
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-lg-4 col-xl-4">
-            <div class="card bg-danger-gradient m-b-30">
-                <div class="card-body">
-                    <div class="xp-widget-box text-white text-center pt-3">
-                        <p class="xp-icon-timer mb-4"><i class="mdi mdi-account-group"></i></p>
-                        <h5 class="mb-2 font-20">Outsourcing (OS)</h5>
-                        <p class="mb-3">Database monitoring pegawai OS  PPSDMA</p>
-                        <a href="{{ route('os.index') }}" class="btn btn-white btn-rounded text-secondary">Lihat Dashboard</a>
+        @endif
+        
+        @if (auth()->check() && (auth()->user()->can('isKapus') || auth()->user()->can('isSuperadmin') || auth()->user()->can('isCS')))
+            <div class="col-md-4 col-lg-4 col-xl-4">
+                <div class="card bg-danger-gradient m-b-30">
+                    <div class="card-body">
+                        <div class="xp-widget-box text-white text-center pt-3">
+                            <p class="xp-icon-timer mb-4"><i class="mdi mdi-account-group"></i></p>
+                            <h5 class="mb-2 font-20">Outsourcing (OS)</h5>
+                            <p class="mb-3">Database monitoring pegawai OS  PPSDMA</p>
+                            <a href="{{ route('os.index') }}" class="btn btn-white btn-rounded text-secondary">Lihat Dashboard</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         @endif
 
     </div>
