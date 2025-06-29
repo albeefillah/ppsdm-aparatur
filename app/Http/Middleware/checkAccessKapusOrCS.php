@@ -19,6 +19,6 @@ class checkAccessKapusOrCS
             return $next($request);
         }
 
-        abort(403, 'Alamat ini hanya bisa di akses oleh Kapus & Koordinator CS');
+        abort(403, 'Alamat ini hanya bisa di akses oleh Super Admin, Kapus & Koordinator CS');
     }
 }
