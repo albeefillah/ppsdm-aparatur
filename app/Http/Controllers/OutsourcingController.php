@@ -181,7 +181,8 @@ class OutsourcingController extends Controller
     public function exportPdf()
     {
         $employees = Employee::with(['schedules.job'])->get();
-
+        $holidays = Holiday::pluck('date');
+        $jobs =  Job::all();
         $dates = Schedule::orderBy('work_date')
             ->pluck('work_date')
             ->unique()
@@ -193,9 +194,9 @@ class OutsourcingController extends Controller
             return \Carbon\Carbon::parse($date)->format('F Y');
         });
 
-        $pdf = Pdf::loadView('manajemen-outsourcing.list-pegawai.export-pdf', compact('employees', 'dates', 'groupedDates'))
+        $pdf = Pdf::loadView('manajemen-outsourcing.list-pegawai.export-pdf', compact('holidays', 'employees', 'dates', 'groupedDates', 'jobs'))
             // set kertas F4
-            ->setPaper([0, 0, 595.28, 935.43], 'landscape');
+            ->setPaper('legal', 'landscape');
         return $pdf->download('Jadwal Piket OS PPSDMA.pdf');
     }
 

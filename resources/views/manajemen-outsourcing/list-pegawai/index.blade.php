@@ -48,7 +48,7 @@ PPSDM Aparatur - User
                         <i class="icon-calendar mr-2"></i>Bertugas Hari Ini
                     </button>
                     <a href="{{ route('os.export.pdf') }}" class="btn btn-outline-success btn-sm mr-2"> <i class="ti-export mr-2"></i>Export PDF</a>
-                    <a href="{{ route('os.special-plot') }}" class="btn btn-outline-purple btn-sm mr-2" > <i class="icon-organization mr-2"></i>Ploting Spesial Pegawai</a>
+                    <a href="{{ route('os.special-plot') }}" class="btn btn-outline-dark btn-sm mr-2" > <i class="icon-organization mr-2"></i>Ploting Spesial Pegawai</a>
                     
                     {{-- <button class="btn btn-success btn-sm" onclick="exportToExcel()">📥 Export Excel</button> --}}
                 </div>
@@ -615,37 +615,38 @@ PPSDM Aparatur - User
 {{-- Script Modal Rincian Pekerjaan --}}
 <script>
     function showModal(date) {
-    fetch(`/os/detailDate?date=${date}`)
-        .then(res => res.json())
-        .then(data => {
-            const shiftOrder = ['pagi', 'siang', 'sore', 'malam'];
-            const shiftLabel = {
-                pagi: 'Pagi',
-                siang: 'Siang',
-                sore: 'Sore',
-                malam: 'Malam'
-            };
+        fetch(`/os/detailDate?date=${date}`)
+            .then(res => res.json())
+            .then(data => {
+                const shiftOrder = ['pagi', 'siang', 'sore', 'malam'];
+                const shiftLabel = {
+                    pagi: 'Pagi',
+                    siang: 'Siang',
+                    sore: 'Sore',
+                    malam: 'Malam'
+                };
 
-            let text = `${data.date}\n\n`;
+                let text = `*Assalamualaikum wr.wb*\n\n`;
+                text += `Izin menyampaikan jadwal piket CS PPSDM Aparatur.\n`;
+                text += `Hari *${data.date}*\n\n`;
 
-            shiftOrder.forEach(shift => {
-                const entries = data.shifts[shift];
-                if (entries && entries.length) {
-                    text += `${shiftLabel[shift]}:\n`;
-                    entries.forEach(e => {
-                        text += `${e.namejob.padEnd(5)} - ${e.name}\n`;
-                    });
-                    text += '\n';
-                }
+                shiftOrder.forEach(shift => {
+                    const entries = data.shifts[shift];
+                    if (entries && entries.length) {
+                        text += `*${shiftLabel[shift]}:*\n`;
+                        entries.forEach(e => {
+                            text += `${e.namejob} - ${e.name}\n`;
+                        });
+                        text += '\n';
+                    }
+                });
+
+                document.getElementById('modal-body-content').innerHTML =
+                    `<pre style="white-space: pre-wrap; font-family: consolas ; font-size:14px;">${text}</pre>`;
+
+                new bootstrap.Modal(document.getElementById('detailModal')).show();
             });
-
-            document.getElementById('modal-body-content').innerHTML =
-                `<pre style="white-space: pre-wrap; font-family: monospace; font-size:14px;">${text}</pre>`;
-
-            new bootstrap.Modal(document.getElementById('detailModal')).show();
-        });
     }
-
 </script>    
 
 {{-- Copy Text --}}
