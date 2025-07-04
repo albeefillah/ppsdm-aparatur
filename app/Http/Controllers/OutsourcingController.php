@@ -80,7 +80,7 @@ class OutsourcingController extends Controller
         }
 
         // Data untuk select filter
-        $jobs = Job::select('id', 'code', 'name')->get();
+        $jobs = Job::get();
 
         $os = Schedule::with(['employee', 'job'])
             ->orderBy('work_date')

@@ -56,7 +56,7 @@ PPSDM Aparatur - User
           
               <div class="card-body" style="font-size: 10px">
                   <div class="table-responsive">
-
+                               
                     <div id="fullscreen-container">
                         <div id="tabel-container" class="scroll-table-wrapper drag-scroll">
                             <table class="table table-bordered table-sm table-striped" style="min-width: max-content;">
@@ -121,57 +121,57 @@ PPSDM Aparatur - User
         
         
                                 <tbody>
-                                  @foreach ($employees as $index => $employee)
-                                  <!-- Baris shift singkat -->
-                                  <tr>
-                                      <td rowspan="2" style="background-color: #fafafa;top: auto;" class="sticky-col no-col text-center">{{ $index + 1 }}</td>
-                                      <td rowspan="2" style="background-color: #fafafa;top: auto;" class="sticky-col-2 name-col text-start">{{ $employee->name }}</td>
-                                      @foreach ($dates as $date)
-                                          @php
-                                              $schedule = $employee->schedules->first(function ($item) use ($date) {
-                                                  return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
-                                              });
-                              
-                                              $job = $schedule?->job;
-                                              $shift = $job?->shift;
-                                              
-                                              $shiftMap = ['pagi' => 'P', 'siang' => 'S', 'sore' => 'Sr', 'malam' => 'M'];
-                                              $shiftLabel = $job ? ($shiftMap[$job->shift] ?? '-') : 'OFF';
-                                              $shiftClass = match($shift) {
-                                                  'pagi' => 'shift-pagi',
-                                                  'siang' => 'shift-siang',
-                                                  'sore' => 'shift-sore',
-                                                  'malam' => 'shift-malam',
-                                                  default => 'shift-off',
-                                              };
-                                              $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
-                                          @endphp
-                                          {{-- <td class="text-center {{ $shiftClass }} {{ $borderClass }}">
-                                              {{ $shiftLabel }}
-                                          </td> --}}
-                                      @endforeach
-                                  </tr>
-                              
-                                  <!-- Baris kode job -->
-                                  <tr>
-                                      
-                                      @foreach ($dates as $date)
-                                          @php
-                                              $schedule = $employee->schedules->first(function ($item) use ($date) {
-                                                  return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
-                                              });
-                              
-                                              $jobCode = $schedule?->job?->code ?? 'OFF';
-                                              $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
-                                          @endphp
-                              
-                                          <td class="cell text-center {{ strtolower($jobCode) }} {{ $borderClass }}">
-                                              {{ $jobCode }}
-                                          </td>
-                                      @endforeach
-                                  </tr>
-                              @endforeach
-                              
+                                @foreach ($employees as $index => $employee)
+                                <!-- Baris shift singkat -->
+                                <tr>
+                                    <td rowspan="2" style="background-color: #fafafa;top: auto;" class="sticky-col no-col text-center">{{ $index + 1 }}</td>
+                                    <td rowspan="2" style="background-color: #fafafa;top: auto;" class="sticky-col-2 name-col text-start">{{ $employee->name }}</td>
+                                    @foreach ($dates as $date)
+                                        @php
+                                            $schedule = $employee->schedules->first(function ($item) use ($date) {
+                                                return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
+                                            });
+                            
+                                            $job = $schedule?->job;
+                                            $shift = $job?->shift;
+                                            
+                                            $shiftMap = ['pagi' => 'P', 'siang' => 'S', 'sore' => 'Sr', 'malam' => 'M'];
+                                            $shiftLabel = $job ? ($shiftMap[$job->shift] ?? '-') : 'OFF';
+                                            $shiftClass = match($shift) {
+                                                'pagi' => 'shift-pagi',
+                                                'siang' => 'shift-siang',
+                                                'sore' => 'shift-sore',
+                                                'malam' => 'shift-malam',
+                                                default => 'shift-off',
+                                            };
+                                            $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                        @endphp
+                                        {{-- <td class="text-center {{ $shiftClass }} {{ $borderClass }}">
+                                            {{ $shiftLabel }}
+                                        </td> --}}
+                                    @endforeach
+                                </tr>
+                            
+                                <!-- Baris kode job -->
+                                <tr>
+                                    
+                                    @foreach ($dates as $date)
+                                        @php
+                                            $schedule = $employee->schedules->first(function ($item) use ($date) {
+                                                return \Carbon\Carbon::parse($item->work_date)->format('Y-m-d') === $date;
+                                            });
+                            
+                                            $jobCode = $schedule?->job?->code ?? 'OFF';
+                                            $borderClass = in_array($date, $monthEndDates) ? 'month-end' : '';
+                                        @endphp
+                            
+                                        <td class="cell text-center {{ strtolower($jobCode) }} {{ $borderClass }}">
+                                            {{ $jobCode }}
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                            
                                 </tbody>
                             </table>
                         </div>
@@ -180,6 +180,35 @@ PPSDM Aparatur - User
                   </div>
 
                   <button class="btn btn-secondary btn-sm mr-2 mt-2" onclick="toggleFullscreen()"> <i class="icon-size-fullscreen mr-2"> </i>Fullscreen</button>
+
+                  <a class="btn btn-info btn-sm mr-2 mt-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" id="toggleJobBtn">
+                  Keterangan Job (Area) <i class="ti-angle-double-down ml-2 transition" id="jobArrowIcon"></i>
+                  </a>
+                  <div class="collapse" id="collapseExample">
+                    <div class="card-body">
+                        @php
+                            $jobChunks = $jobs->chunk(ceil($jobs->count() / 3));
+                        @endphp
+                    
+                    <div class="table-responsive">
+                        <table class="table table-sm table-borderless" style="font-size: 13px;">
+                            <tr>
+                                @foreach ($jobChunks as $chunk)
+                                    <td style="vertical-align: top; width: 33%;">
+                                        @foreach ($chunk as $job)
+                                            <div class="mb-1">
+                                                <strong>{{ $job->code }}</strong> = {{ $job->name }}
+                                                <span class="text-muted">({{ \Carbon\Carbon::parse($job->start)->format('H:i') }} - {{ \Carbon\Carbon::parse($job->end)->format('H:i') }})</span>
+                                            </div>
+                                        @endforeach
+                                    </td>
+                                @endforeach
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    </div>
+                  </div>
               </div>
       
           </div>
@@ -663,5 +692,21 @@ PPSDM Aparatur - User
         });
     }
 </script>
-    
+
+{{-- Change Arrow Button Collapse --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const arrowIcon = document.getElementById('jobArrowIcon');
+
+        $('#collapseExample').on('show.bs.collapse', function () {
+            arrowIcon.classList.add('rotate-180');
+        });
+
+        $('#collapseExample').on('hide.bs.collapse', function () {
+            arrowIcon.classList.remove('rotate-180');
+        });
+    });
+</script>
+
+
 @endsection 

@@ -74,6 +74,13 @@
     color: #e02424;
 }
 
+.fosr {
+    background-color: #faa21f;
+}
+.obm,
+.fom {
+    background-color: #797fd3;
+}
 .scroll-table-wrapper {
     flex: 1;
     overflow: auto;
@@ -204,4 +211,12 @@ th.date-hover:hover {
 .btn-outline-purple:hover {
     background-color: #4c7cf3;
     color: #fff !important;
+}
+.transition {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
 }
