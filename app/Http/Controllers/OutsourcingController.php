@@ -365,10 +365,13 @@ class OutsourcingController extends Controller
         return response()->json([
             'date' => Carbon::parse($date)->translatedFormat('l, d F Y'),
             'shifts' => $grouped->map(function ($items) {
-                return $items->map(fn($s) => [
-                    'namejob' => $s->job?->name ?? '-',
-                    'name' => $s->employee->name
-                ])->values();
+                return $items
+                    ->sortBy(fn($s) => $s->job?->name)
+                    ->map(fn($s) => [
+                        'namejob' => $s->job?->name ?? '-',
+                        'name' => $s->employee->name
+                    ])
+                    ->values();
             })
         ]);
     }
