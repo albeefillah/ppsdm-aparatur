@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Jadwal Pegawai</title>
+    <title>Jadwal Piket OS PPSDMA</title>
     <style>
         @page {
             size: Legal landscape;

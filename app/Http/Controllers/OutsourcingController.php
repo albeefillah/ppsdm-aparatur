@@ -106,7 +106,12 @@ class OutsourcingController extends Controller
         }
         $holidays = Holiday::pluck('date')->map(fn($d) => Carbon::parse($d)->format('Y-m-d'))->toArray();
 
-        return view('manajemen-outsourcing.list-pegawai.index', compact('jobs', 'os', 'dates', 'employees', 'holidays'));
+        $availableMonths = Schedule::selectRaw('DATE_FORMAT(work_date, "%Y-%m") as month')
+            ->distinct()
+            ->orderBy('month', 'desc')
+            ->pluck('month');
+
+        return view('manajemen-outsourcing.list-pegawai.index', compact('jobs', 'os', 'dates', 'employees', 'holidays', 'availableMonths'));
     }
 
 
@@ -178,27 +183,64 @@ class OutsourcingController extends Controller
         session()->flash('success', 'Data berhasil di import.');
         return redirect()->back();
     }
-    public function exportPdf()
+
+    public function exportPdf(Request $request)
     {
-        $employees = Employee::with(['schedules.job'])->get();
+        $monthInput = $request->get('month'); // format: 2025-07
         $holidays = Holiday::pluck('date');
-        $jobs =  Job::all();
-        $dates = Schedule::orderBy('work_date')
-            ->pluck('work_date')
-            ->unique()
-            ->map(fn($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))
-            ->values()
-            ->toArray();
+        $jobs = Job::all();
 
-        $groupedDates = collect($dates)->groupBy(function ($date) {
-            return \Carbon\Carbon::parse($date)->format('F Y');
-        });
+        // Ambil semua jadwal sesuai bulan yang dipilih atau semua jika null
+        if ($monthInput) {
+            $startDate = Carbon::parse($monthInput . '-01')->startOfMonth();
+            $endDate = Carbon::parse($monthInput . '-01')->endOfMonth();
 
-        $pdf = Pdf::loadView('manajemen-outsourcing.list-pegawai.export-pdf', compact('holidays', 'employees', 'dates', 'groupedDates', 'jobs'))
-            // set kertas F4
-            ->setPaper('legal', 'landscape');
-        return $pdf->download('Jadwal Piket OS PPSDMA.pdf');
+            $employees = Employee::with(['schedules' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('work_date', [$startDate, $endDate])->with('job');
+            }])->get();
+
+            $dates = Schedule::whereBetween('work_date', [$startDate, $endDate])
+                ->orderBy('work_date')
+                ->pluck('work_date')
+                ->unique()
+                ->map(fn($d) => Carbon::parse($d)->format('Y-m-d'))
+                ->values()
+                ->toArray();
+
+            $groupedDates = [
+                $monthInput => $dates
+            ];
+        } else {
+            // fallback jika tidak ada input bulan
+            $employees = Employee::with(['schedules.job'])->get();
+
+            $dates = Schedule::orderBy('work_date')
+                ->pluck('work_date')
+                ->unique()
+                ->map(fn($d) => Carbon::parse($d)->format('Y-m-d'))
+                ->values()
+                ->toArray();
+
+            $groupedDates = collect($dates)->groupBy(function ($date) {
+                return Carbon::parse($date)->format('F Y');
+            });
+        }
+
+        $pdf = Pdf::loadView('manajemen-outsourcing.list-pegawai.export-pdf', compact(
+            'holidays',
+            'employees',
+            'dates',
+            'groupedDates',
+            'jobs'
+        ))->setPaper('legal', 'landscape');
+
+        $filename = $monthInput
+            ? "Jadwal_Piket_OS_" . \Carbon\Carbon::parse($monthInput . '-01')->translatedFormat('F_Y') . ".pdf"
+            : "Jadwal_Piket_OS_PPSDMA.pdf";
+
+        return $pdf->download($filename);
     }
+
 
     /**
      * Store a newly created resource in storage.

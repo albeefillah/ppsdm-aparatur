@@ -12,6 +12,8 @@ PPSDM Aparatur - User
 <link href="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/list-pegawai-index.css') }}" rel="stylesheet" type="text/css" />
 
+ <!-- Animate CSS -->
+ <link href="assets/plugins/animate/animate.css" rel="stylesheet" type="text/css">
 @endsection 
 @section('content')
 <!-- Start XP Breadcrumbbar -->                    
@@ -41,13 +43,32 @@ PPSDM Aparatur - User
               <div class="card-header bg-white">
                   {{-- <h4 class=" text-center text-black">Jadwal Piket CS Tahun 2025</h4> --}}
                   <div class="d-flex justify-content">
-                    <a href="{{ route('os.form-generate') }}" class="btn btn-warning btn-sm mr-2">
+                    <a href="{{ route('os.form-generate') }}" class="btn btn-secondary btn-sm mr-2">
                         <i class="fa fa-gear mr-2"> </i>Generate Jadwal
                     </a>
                     <button class="btn btn-sm btn-outline-info mr-2" onclick="showModal('{{ \Carbon\Carbon::today()->format('Y-m-d') }}')" title="Lihat siapa yang bekerja hari ini">
                         <i class="icon-calendar mr-2"></i>Bertugas Hari Ini
                     </button>
-                    <a href="{{ route('os.export.pdf') }}" class="btn btn-outline-success btn-sm mr-2"> <i class="ti-export mr-2"></i>Export PDF</a>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-success btn-sm mr-2 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Export PDF
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ route('os.export.pdf') }}">
+                                Semua Bulan
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            @foreach ($availableMonths as $month)
+                                <a class="dropdown-item" href="{{ route('os.export.pdf', ['month' => $month]) }}">
+                                    {{ \Carbon\Carbon::parse($month . '-01')->translatedFormat('F Y') }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    
+
+
                     <a href="{{ route('os.special-plot') }}" class="btn btn-outline-dark btn-sm mr-2" > <i class="icon-organization mr-2"></i>Ploting Spesial Pegawai</a>
                     
                     {{-- <button class="btn btn-success btn-sm" onclick="exportToExcel()">📥 Export Excel</button> --}}
@@ -452,6 +473,11 @@ PPSDM Aparatur - User
 <!-- Sweet-Alert JS -->
 <script src="{{ asset('assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/js/init/sweet-alert-init.js') }}"></script>
+
+
+<!-- Model JS -->
+<script src="assets/js/init/model-init.js"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
