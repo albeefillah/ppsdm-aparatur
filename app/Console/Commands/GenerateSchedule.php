@@ -47,7 +47,8 @@ class GenerateMonthlySchedule extends Command
         $employees = Employee::with('jobEligibilities')->get();
         $jobs = Job::all();
 
-        $workCycle = ['Kerja', 'Kerja', 'Kerja', 'Kerja', 'Libur', 'Libur'];
+        $workCycle = ['Kerja', 'Kerja', 'Kerja', 'Malam', 'Libur', 'Libur'];
+
         $cycleLength = count($workCycle);
         $employeeCycles = [];
         $datesArray = iterator_to_array($dates);
@@ -55,6 +56,8 @@ class GenerateMonthlySchedule extends Command
         foreach ($employees as $index => $employee) {
             $defaultOffset = $index % $cycleLength;
             $offset = $this->getLastCycleOffset($employee->id, $startDate, $defaultOffset);
+
+
 
             foreach ($datesArray as $i => $date) {
                 $dateStr = $date->toDateString();
@@ -73,7 +76,7 @@ class GenerateMonthlySchedule extends Command
                 if ($employee->category === 'koor') {
                     return !$isHoliday && !$date->isWeekend();
                 }
-                return ($employeeCycles[$employee->id][$dateStr] ?? 'Libur') === 'Kerja';
+                return in_array($employeeCycles[$employee->id][$dateStr] ?? 'Libur', ['Kerja', 'Malam']);
             })->shuffle()->values();
 
             $jobEligibilityCounts = [];
@@ -92,6 +95,7 @@ class GenerateMonthlySchedule extends Command
                         && $employee->jobEligibilities->contains('id', $job->id)
                         && ($this->employeeCyclePosition[$employee->id][$dateStr] ?? null) === 3;
                 });
+
 
                 $safeEmployee = $eligibleEmployees
                     ->filter(fn($emp) => $this->isNotCrucialElsewhere($emp, $job, $workingEmployees, $jobs, $dateStr))
@@ -120,15 +124,30 @@ class GenerateMonthlySchedule extends Command
                 $this->employeeLastJob[$safeEmployee->id] = $job->id;
                 $this->jobAssignments[$dateStr][$job->id] = $safeEmployee->id;
             }
-
             foreach ($dayJobs as $job) {
                 $eligibleEmployees = $workingEmployees->filter(function ($employee) use ($job, $dateStr) {
-                    return !$this->hasJobAssigned($employee->id, $dateStr)
-                        && $employee->jobEligibilities->contains('id', $job->id);
+                    if ($this->hasJobAssigned($employee->id, $dateStr)) {
+                        return false;
+                    }
+
+                    if (!$employee->jobEligibilities->contains('id', $job->id)) {
+                        return false;
+                    }
+
+                    $cyclePos = $this->employeeCyclePosition[$employee->id][$dateStr] ?? null;
+
+                    // Hari ke-1,2,3 = wajib pagi
+                    if (in_array($cyclePos, [0, 1, 2])) {
+                        return $job->shift === 'pagi';
+                    }
+
+                    // Hari ke-4 = malam (dilakukan di loop nightJobs)
+                    // Hari ke-5,6 = libur
+                    return false;
                 })->shuffle();
 
+
                 if ($eligibleEmployees->isEmpty()) {
-                    // Fallback attempt: try reallocation if job is critical (like FOP)
                     $reallocated = $this->attemptReallocation($job, $workingEmployees, $jobs, $dateStr);
                     if ($reallocated) continue;
                     else continue;
@@ -151,6 +170,9 @@ class GenerateMonthlySchedule extends Command
                 $this->jobAssignments[$dateStr][$job->id] = $selectedEmployee->id;
             }
 
+
+
+
             foreach ($employees as $employee) {
                 if (!isset($this->employeeAssignments[$employee->id][$dateStr])) {
                     Schedule::create([
@@ -164,6 +186,9 @@ class GenerateMonthlySchedule extends Command
                 }
             }
         }
+
+
+
 
         $this->info("\u2705 Jadwal {$month}/{$year} berhasil dibuat dengan pola 4 kerja 2 libur dan shift malam pada hari ke-4.");
     }
@@ -270,7 +295,7 @@ class GenerateMonthlySchedule extends Command
         $last6 = Schedule::where('employee_id', $employeeId)
             ->whereDate('work_date', '<', $startDate)
             ->orderByDesc('work_date')
-            ->limit(6)
+            ->limit(12)
             ->pluck('job_role')
             ->reverse()
             ->map(fn($r) => $r === 'libur' ? 'Libur' : 'Kerja')

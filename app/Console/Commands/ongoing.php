@@ -1,5 +1,6 @@
 <?php
 // 4 kerja 2 libur 16 job
+// pola ongoing yang sampe oktober 4 kerja 2 Day 2 Malam 2 Libur
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -8,11 +9,12 @@ use App\Models\Employee;
 use App\Models\Job;
 use App\Models\Schedule;
 use App\Models\Holiday;
+use App\Models\SpecialPlot;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
 
-class GenerateMonthlyScheduleerewdas extends Command
+class GenerateMonthlySchedulesa extends Command
 {
     protected $signature = 'schedule:generate {month} {year} {--eligibility=}';
     protected $description = 'Generate monthly work schedule for all employees';
@@ -119,15 +121,50 @@ class GenerateMonthlyScheduleerewdas extends Command
                 $this->employeeLastJob[$safeEmployee->id] = $job->id;
                 $this->jobAssignments[$dateStr][$job->id] = $safeEmployee->id;
             }
-
             foreach ($dayJobs as $job) {
-                $eligibleEmployees = $workingEmployees->filter(function ($employee) use ($job, $dateStr) {
-                    return !$this->hasJobAssigned($employee->id, $dateStr)
-                        && $employee->jobEligibilities->contains('id', $job->id);
+                $eligibleEmployees = $workingEmployees->filter(function ($employee) use ($job, $dateStr, $date) {
+                    if ($this->hasJobAssigned($employee->id, $dateStr)) {
+                        return false;
+                    }
+
+                    if (!$employee->jobEligibilities->contains('id', $job->id)) {
+                        return false;
+                    }
+
+                    $cyclePos = $this->employeeCyclePosition[$employee->id][$dateStr] ?? null;
+
+                    // Hari ke-1 dan ke-2 → wajib shift pagi
+                    if (in_array($cyclePos, [0, 1])) {
+                        return $job->shift === 'pagi';
+                    }
+
+                    // Hari ke-3
+                    if ($cyclePos === 2) {
+                        if ($job->shift === 'sore') {
+                            // Cari tanggal besok
+                            $nextDate = Carbon::parse($dateStr)->addDay()->toDateString();
+                            $nextCyclePos = $this->employeeCyclePosition[$employee->id][$nextDate] ?? null;
+
+                            // Pastikan next day (hari ke-4) adalah cyclePos 3 dan pegawai eligible shift malam
+                            return $nextCyclePos === 3 &&
+                                !$this->hasJobAssigned($employee->id, $nextDate) &&
+                                $employee->jobEligibilities->contains(fn($j) => $j->shift === 'malam');
+                        }
+
+                        // Shift apapun boleh (pagi, sore, malam), pengecekan sore sudah ditangani di atas
+                        return true;
+                    }
+
+                    // Hari ke-4
+                    if ($cyclePos === 3) {
+                        return true; // tidak dibatasi — validasi kombinasi sudah ditangani dari hari sebelumnya
+                    }
+
+                    // Hari libur
+                    return false;
                 })->shuffle();
 
                 if ($eligibleEmployees->isEmpty()) {
-                    // Fallback attempt: try reallocation if job is critical (like FOP)
                     $reallocated = $this->attemptReallocation($job, $workingEmployees, $jobs, $dateStr);
                     if ($reallocated) continue;
                     else continue;
@@ -150,6 +187,9 @@ class GenerateMonthlyScheduleerewdas extends Command
                 $this->jobAssignments[$dateStr][$job->id] = $selectedEmployee->id;
             }
 
+
+
+
             foreach ($employees as $employee) {
                 if (!isset($this->employeeAssignments[$employee->id][$dateStr])) {
                     Schedule::create([
@@ -164,8 +204,12 @@ class GenerateMonthlyScheduleerewdas extends Command
             }
         }
 
+
+
+
         $this->info("\u2705 Jadwal {$month}/{$year} berhasil dibuat dengan pola 4 kerja 2 libur dan shift malam pada hari ke-4.");
     }
+
 
     protected function hasJobAssigned($employeeId, $dateStr)
     {

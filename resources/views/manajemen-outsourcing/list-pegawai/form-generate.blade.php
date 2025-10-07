@@ -117,7 +117,7 @@ PPSDM Aparatur - Generate Jadwal Otomatis
                                     <th rowspan="2" class="text-center align-middle">Nama</th>
                                     <th colspan="{{ $pagiJobs->count() }}" class="text-center pagiClass">Pagi</th>
                                     {{-- <th colspan="{{ $siangJobs->count() }}" class="text-center siangClass">Siang</th> --}}
-                                    <th colspan="{{ $soreJobs->count() }}" class="text-center soreClass">Sore</th>
+                                    {{-- <th colspan="{{ $soreJobs->count() }}" class="text-center soreClass">Sore</th> --}}
                                     <th colspan="{{ $malamJobs->count() }}" class="text-center malamClass">Malam</th>
                                     <th rowspan="2" class="text-center align-middle"> <center>Jml</center></th>
                                 </tr>

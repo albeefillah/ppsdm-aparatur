@@ -14,6 +14,7 @@ use App\Models\SpecialPlot;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
@@ -673,5 +674,18 @@ class OutsourcingController extends Controller
         $plot->delete();
 
         return redirect()->route('os.special-plot')->with('success', 'Plotting spesial dihapus dan jadwal dikembalikan.');
+    }
+
+    public function sendTestMessage()
+    {
+        $response = Http::withHeaders([
+            'Authorization' => env('FONNTE_API_KEY')
+        ])->post(env('FONNTE_API_URL'), [
+            'target' => '089676849427', // nomor tujuan (bisa nomor sendiri)
+            'message' => "*Assalamualaikum wr.wb*\n\nIni adalah tes kirim pesan dari Laravel ke WhatsApp via Fonnte.",
+            'countryCode' => '62' // opsional, default 62
+        ]);
+
+        return $response->body(); // cek respon dari Fonnte
     }
 }

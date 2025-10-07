@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\Schedule;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +26,54 @@ Route::get('/maintenance', [App\Http\Controllers\HomeController::class, 'mainten
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/test-wa', function () {
+    $response = Http::withHeaders([
+        'Authorization' => 'E8hd2JDQQ6jXMdT9fwDi', // GANTI dengan token kamu
+    ])->post('https://api.fonnte.com/send', [
+        'target' => '6289676849427', // GANTI dengan nomor yang sesuai
+        'message' => 'Tes dari Laravel route',
+    ]);
+
+    return $response->json(); // Untuk melihat hasilnya
+});
+
+Route::get('/test-wa', function () {
+    $today = Carbon::today()->format('Y-m-d');
+
+    $schedules = Schedule::with(['employee', 'job'])
+        ->whereDate('work_date', $today)
+        ->get();
+
+    $grouped = $schedules->groupBy(fn($s) => strtolower($s->job->shift ?? 'off'));
+
+    $shiftLabel = ['pagi' => 'Pagi', 'siang' => 'Siang', 'sore' => 'Sore', 'malam' => 'Malam'];
+
+    $message = "*Assalamualaikum wr.wb*\n\n";
+    $message .= "Izin menyampaikan jadwal piket CS PPSDM Aparatur.\n";
+    $message .= "Hari *" . Carbon::parse($today)->translatedFormat('l, d F Y') . "*\n\n";
+
+    foreach (['pagi', 'siang', 'sore', 'malam'] as $shift) {
+        if (!empty($grouped[$shift])) {
+            $message .= "*" . $shiftLabel[$shift] . ":*\n";
+            foreach ($grouped[$shift] as $item) {
+                $message .= $item->job->name . ' - ' . $item->employee->name . "\n";
+            }
+            $message .= "\n";
+        }
+    }
+
+
+    $response = Http::withHeaders([
+        'Authorization' => 'E8hd2JDQQ6jXMdT9fwDi', // GANTI dengan token kamu
+    ])->post('https://api.fonnte.com/send', [
+        'target' => '6289676849427', // GANTI dengan nomor yang sesuai
+        'message' => $message,
+    ]);
+
+    return $response->json();
+});
+
 
 Route::middleware('Kapus')->group(function () {
     Route::prefix('user')->group(function () {
